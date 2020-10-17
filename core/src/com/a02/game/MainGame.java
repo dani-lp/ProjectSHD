@@ -10,11 +10,13 @@ public class MainGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
 	GameObject smile;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		smile= new GameObject(1,"smile",0,0,"badlogic.jpg",0,0);
-		img= new Texture(smile.getSprite());
+		//TODO: Sprite debería ser un Texture o un Animation
+		smile = new GameObject(1,"smile",0,0,"badlogic.jpg",0,0);
+		img = new Texture(smile.getSprite());
 	}
 
 	@Override
@@ -24,8 +26,6 @@ public class MainGame extends ApplicationAdapter {
 		batch.begin();
 		batch.draw(img, smile.getX(), smile.getY());
 		batch.end();
-
-
 
 	}
 	

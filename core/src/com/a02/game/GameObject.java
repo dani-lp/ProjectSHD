@@ -2,14 +2,14 @@ package com.a02.game;
 
 import com.badlogic.gdx.utils.Null;
 
-public class GameObject {
-    protected int id;
-    protected String name;
-    protected int x;
-    protected int y;
-    protected String sprite;
-    protected int price;
-    protected  int unlock;
+public abstract class GameObject {
+    private int id;
+    private String name;
+    private int x;
+    private int y;
+    private String sprite;
+    private int price;
+    private  int unlock;
 
 
     public GameObject(int id, String name, int x, int y, String sprite, int price, int unlock) {
@@ -88,6 +88,7 @@ public class GameObject {
     public void setUnlock(int unlock) {
         this.unlock = unlock;
     }
+
     @Override
     public String toString() {
         return "ASD [id=" + id + ", name=" + name + ", x=" + x + ", y=" + y + ", sprite=" + sprite + ", price=" + price
