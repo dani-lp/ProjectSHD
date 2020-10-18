@@ -9,14 +9,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class MainGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
-	GameObject smile;
+	TestEnemy larry;
 
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
 		//TODO: Sprite debería ser un Texture o un Animation
-		smile = new GameObject(1,"smile",0,0,"badlogic.jpg",0,0);
-		img = new Texture(smile.getSprite());
+		larry = new TestEnemy(1, "Larry", 50, 50, "Test1.png", 100, 5, 2);
+		img = new Texture(Gdx.files.internal(larry.getSprite()));
 	}
 
 	@Override
@@ -24,7 +24,7 @@ public class MainGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.draw(img, smile.getX(), smile.getY());
+		batch.draw(img, larry.getX(), larry.getY());
 		batch.end();
 
 	}

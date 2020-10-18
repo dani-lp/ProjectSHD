@@ -1,36 +1,35 @@
 package com.a02.game;
 
-import com.badlogic.gdx.utils.Null;
-
-public abstract class GameObject {
+public abstract class Enemy {
     private int id;
     private String name;
     private int x;
     private int y;
     private String sprite;
-    private int price;
-    private boolean unlocked;
+    private int hp;
+    private int attackDamage;
+    private float speed;
 
-
-    public GameObject(int id, String name, int x, int y, String sprite, int price, boolean unlocked) {
-        super();
+    public Enemy(int id, String name, int x, int y, String sprite, int hp, int attackDamage, float speed) {
         this.id = id;
         this.name = name;
         this.x = x;
         this.y = y;
         this.sprite = sprite;
-        this.price = price;
-        this.unlocked = unlocked;
+        this.hp = hp;
+        this.attackDamage = attackDamage;
+        this.speed = speed;
     }
-    public GameObject() {
-        super();
+
+    public Enemy() {
         this.id = -1;
         this.name = "";
         this.x = 0;
         this.y = 0;
         this.sprite = "";
-        this.price = 0;
-        this.unlocked = false;
+        this.hp = 0;
+        this.attackDamage = 0;
+        this.speed = 0;
     }
 
     public int getId() {
@@ -73,25 +72,27 @@ public abstract class GameObject {
         this.sprite = sprite;
     }
 
-    public int getPrice() {
-        return price;
+    public int getHp() {
+        return hp;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
+    public void setHp(int hp) {
+        this.hp = hp;
     }
 
-    public boolean isUnlocked() {
-        return unlocked;
+    public int getAttackDamage() {
+        return attackDamage;
     }
 
-    public void setUnlocked(boolean unlocked) {
-        this.unlocked = unlocked;
+    public void setAttackDamage(int attackDamage) {
+        this.attackDamage = attackDamage;
     }
 
-    @Override
-    public String toString() {
-        return "ASD [id=" + id + ", name=" + name + ", x=" + x + ", y=" + y + ", sprite=" + sprite + ", price=" + price
-                + ", unlock=" + unlocked + "]";
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
     }
 }
