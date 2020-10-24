@@ -1,32 +1,25 @@
 package com.a02.game;
 
-public abstract class Enemy {
+public abstract class Enemy extends Entity{
     private int id;
     private String name;
-    private int x;
-    private int y;
-    private String sprite;
     private int hp;
     private int attackDamage;
     private int speed;
 
-    public Enemy(int id, String name, int x, int y, String sprite, int hp, int attackDamage, int speed) {
+    public Enemy(int x, int y, int width, int length, String sprite, int id, String name, int hp, int attackDamage, int speed) {
+        super(x, y, width, length, sprite);
         this.id = id;
         this.name = name;
-        this.x = x;
-        this.y = y;
-        this.sprite = sprite;
         this.hp = hp;
         this.attackDamage = attackDamage;
         this.speed = speed;
     }
 
     public Enemy() {
+        super();
         this.id = -1;
         this.name = "";
-        this.x = 0;
-        this.y = 0;
-        this.sprite = "";
         this.hp = 0;
         this.attackDamage = 0;
         this.speed = 0;
@@ -106,6 +99,14 @@ public abstract class Enemy {
             this.setY(this.getY()+this.speed);
         }   else if (this.getY()> beaconY){
             this.setY(this.getY()-this.speed);
+        }
+    }
+
+    public void attack(GameObject object){
+        if (this.overlaps(object)){
+            object.setHp(object.getHp()- this.getAttackDamage());
+
+
         }
     }
 }

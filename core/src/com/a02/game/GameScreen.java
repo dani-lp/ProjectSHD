@@ -13,12 +13,13 @@ public class GameScreen implements Screen {
     GameObject beacon;
     Texture imgB;
 
+
     public GameScreen() {
         batch = new SpriteBatch();
         //TODO: Sprite debería ser un Texture o un Animation
         larry = new TestEnemy(1, "Larry", 200, 100, "Test2.png", 100, 5, 2);
         imgL = new Texture(Gdx.files.internal(larry.getSprite()));
-        beacon= new GameObject(0,"BEACON", 20,50,"beacon.png",0,true);
+        beacon= new GameObject(0,"BEACON", 20,50,"beacon.png",0,true, 10);
         imgB= new Texture(Gdx.files.internal(beacon.getSprite()));
     }
 

@@ -1,6 +1,6 @@
 package com.a02.game;
 
-public class GameObject {
+public class GameObject extends Entity{
     private int id;
     private String name;
     private int x;
@@ -8,9 +8,9 @@ public class GameObject {
     private String sprite;
     private int price;
     private boolean unlocked;
+    private int hp;
 
-
-    public GameObject(int id, String name, int x, int y, String sprite, int price, boolean unlocked) {
+    public GameObject(int id, String name, int x, int y, String sprite, int price, boolean unlocked, int hp) {
         super();
         this.id = id;
         this.name = name;
@@ -19,7 +19,10 @@ public class GameObject {
         this.sprite = sprite;
         this.price = price;
         this.unlocked = unlocked;
+        this.hp = hp;
     }
+
+
     public GameObject() {
         super();
         this.id = -1;
@@ -85,6 +88,14 @@ public class GameObject {
 
     public void setUnlocked(boolean unlocked) {
         this.unlocked = unlocked;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
     }
 
     @Override
