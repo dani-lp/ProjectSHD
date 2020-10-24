@@ -1,6 +1,6 @@
 package com.a02.game;
 
-public class GameObject {
+public abstract class GameObject {
     private int id;
     private String name;
     private int x;
@@ -8,7 +8,6 @@ public class GameObject {
     private String sprite;
     private int price;
     private boolean unlocked;
-
 
     public GameObject(int id, String name, int x, int y, String sprite, int price, boolean unlocked) {
         super();

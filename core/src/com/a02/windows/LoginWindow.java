@@ -1,4 +1,4 @@
-package com.a02.game;
+package com.a02.windows;
 
 import javax.swing.*;
 import java.awt.*;
