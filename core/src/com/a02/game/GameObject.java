@@ -3,22 +3,15 @@ package com.a02.game;
 public class GameObject extends Entity{
     private int id;
     private String name;
-    private int x;
-    private int y;
-    private String sprite;
     private int price;
     private boolean unlocked;
     private int hp;
 
-    public GameObject(int id, String name, int x, int y, String sprite, int price, boolean unlocked, int hp) {
-        super();
+    public GameObject(int x, int y, int width, int height, String sprite, int id, String name,
+                      int price, boolean unlocked, int hp) {
+        super(x, y, width, height, sprite);
         this.id = id;
         this.name = name;
-        this.x = x;
-        this.y = y;
-        this.sprite = sprite;
-        this.price = price;
-        this.unlocked = unlocked;
         this.hp = hp;
     }
 
@@ -27,9 +20,6 @@ public class GameObject extends Entity{
         super();
         this.id = -1;
         this.name = "";
-        this.x = 0;
-        this.y = 0;
-        this.sprite = "";
         this.price = 0;
         this.unlocked = false;
     }
@@ -48,30 +38,6 @@ public class GameObject extends Entity{
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public String getSprite() {
-        return sprite;
-    }
-
-    public void setSprite(String sprite) {
-        this.sprite = sprite;
     }
 
     public int getPrice() {
@@ -100,7 +66,7 @@ public class GameObject extends Entity{
 
     @Override
     public String toString() {
-        return "ASD [id=" + id + ", name=" + name + ", x=" + x + ", y=" + y + ", sprite=" + sprite + ", price=" + price
+        return "ASD [id=" + id + ", name=" + name + ", x=" + this.getX() + ", y=" + this.getY() + ", sprite=" + getSprite() + ", price=" + price
                 + ", unlock=" + unlocked + "]";
     }
 }

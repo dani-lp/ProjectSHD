@@ -4,9 +4,9 @@ public class TestEnemy extends Enemy{
     public TestEnemy() {
         super();
     }
-    
-    public TestEnemy(int id, String name, int x, int y, String sprite, int hp, int attackDamage, int speed) {
-       super(id, name, x, y, sprite, hp, attackDamage, speed);
+
+    public TestEnemy(int x, int y, int width, int length, String sprite, int id, String name, int hp, int attackDamage, int speed) {
+        super(x, y, width, length, sprite, id, name, hp, attackDamage, speed);
     }
 
 }

@@ -1,14 +1,14 @@
 package com.a02.game;
 
-public abstract class Enemy extends Entity{
+public class Enemy extends Entity{
     private int id;
     private String name;
     private int hp;
     private int attackDamage;
     private int speed;
 
-    public Enemy(int x, int y, int width, int length, String sprite, int id, String name, int hp, int attackDamage, int speed) {
-        super(x, y, width, length, sprite);
+    public Enemy(int x, int y, int width, int height, String sprite, int id, String name, int hp, int attackDamage, int speed) {
+        super(x, y, width, height, sprite);
         this.id = id;
         this.name = name;
         this.hp = hp;
@@ -41,30 +41,6 @@ public abstract class Enemy extends Entity{
         this.name = name;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    public String getSprite() {
-        return sprite;
-    }
-
-    public void setSprite(String sprite) {
-        this.sprite = sprite;
-    }
-
     public int getHp() {
         return hp;
     }
@@ -92,12 +68,14 @@ public abstract class Enemy extends Entity{
     public void move(float beaconX, float beaconY){
         if (this.getX()<beaconX){
             this.setX(this.getX()+this.speed);
-        }   else if (this.getX()> beaconX){
+        }
+        else if (this.getX()> beaconX){
             this.setX(this.getX()-this.speed);
         }
         if (this.getY()<beaconY){
             this.setY(this.getY()+this.speed);
-        }   else if (this.getY()> beaconY){
+        }
+        else if (this.getY()> beaconY){
             this.setY(this.getY()-this.speed);
         }
     }
@@ -105,8 +83,6 @@ public abstract class Enemy extends Entity{
     public void attack(GameObject object){
         if (this.overlaps(object)){
             object.setHp(object.getHp()- this.getAttackDamage());
-
-
         }
     }
 }

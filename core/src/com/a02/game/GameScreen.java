@@ -9,17 +9,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class GameScreen implements Screen {
     SpriteBatch batch;
     Texture imgL;
-    TestEnemy larry;
+    Enemy larry;
     GameObject beacon;
     Texture imgB;
-
 
     public GameScreen() {
         batch = new SpriteBatch();
         //TODO: Sprite debería ser un Texture o un Animation
-        larry = new TestEnemy(1, "Larry", 200, 100, "Test2.png", 100, 5, 2);
+        larry = new Enemy(200, 100, 16, 16, "Test2.png", 1, "Larry", 200, 1, 1);
         imgL = new Texture(Gdx.files.internal(larry.getSprite()));
-        beacon= new GameObject(0,"BEACON", 20,50,"beacon.png",0,true, 10);
+        beacon= new GameObject(20,50,16,16,"beacon.png",0,"Beacon", 1000, true, 1000);
         imgB= new Texture(Gdx.files.internal(beacon.getSprite()));
     }
 
@@ -35,9 +34,11 @@ public class GameScreen implements Screen {
         batch.begin();
         batch.draw(imgL, larry.getX(), larry.getY());
         batch.draw(imgB, beacon.getX(), beacon.getY());
-        larry.move(beacon.getX(), beacon.getY());
         batch.end();
 
+        larry.move(beacon.getX(), beacon.getY());
+        larry.attack(beacon);
+        System.out.println(beacon.getHp());
     }
 
     @Override

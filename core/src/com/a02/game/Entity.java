@@ -1,26 +1,26 @@
 package com.a02.game;
 
-public class Entity {
+public abstract class Entity {
     private int x;
     private int y;
     private int width;
-    private int length;
-    private String Sprite;
+    private int height;
+    private String sprite;
 
-    public Entity(int x, int y, int width, int length, String sprite) {
+    public Entity(int x, int y, int width, int height, String sprite) {
         this.x = x;
         this.y = y;
         this.width = width;
-        this.length = length;
-        Sprite = sprite;
+        this.height = height;
+        this.sprite = sprite;
     }
 
     public Entity() {
         this.x = 0;
         this.y = 0;
         this.width =0;
-        this.length = 0;
-        Sprite = "";
+        this.height = 0;
+        this.sprite = "";
     }
 
     public int getX() {
@@ -35,12 +35,12 @@ public class Entity {
         return width;
     }
 
-    public int getLength() {
-        return length;
+    public int getHeight() {
+        return height;
     }
 
     public String getSprite() {
-        return Sprite;
+        return sprite;
     }
 
     public void setX(int x) {
@@ -55,12 +55,12 @@ public class Entity {
         this.width = width;
     }
 
-    public void setLength(int length) {
-        this.length = length;
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     public void setSprite(String sprite) {
-        Sprite = sprite;
+        sprite = sprite;
     }
 
     @Override
@@ -69,17 +69,16 @@ public class Entity {
                 "x=" + x +
                 ", y=" + y +
                 ", width=" + width +
-                ", length=" + length +
-                ", Sprite='" + Sprite + '\'' +
+                ", height=" + height +
+                ", Sprite='" + sprite + '\'' +
                 '}';
     }
 
-    public boolean intersect(Entity entity) {
-        //Devuelve true si existe colisión entre el jugador y el sprite
-        if ((this.topRightY < entity.botLeftY)  (this.botLeftY > entity.topRightY)) {
+    public boolean overlaps(Entity entity) { //Devuelve true si existe colisión dos entidades
+        if ((this.y + this.height < entity.y) || (this.y > entity.y + entity.height)) {
             return false;
         }
-        if ((this.topRightX < entity.botLeftX)  (this.botLeftX > entity.topRightX)) {
+        else if ((this.x + this.width < entity.x) || (this.x > entity.x + entity.width)) {
             return false;
         }
         return true;
