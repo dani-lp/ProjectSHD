@@ -1,7 +1,5 @@
 package com.a02.game;
 
-import com.badlogic.gdx.utils.Null;
-
 public abstract class GameObject {
     private int id;
     private String name;
