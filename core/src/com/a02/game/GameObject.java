@@ -1,6 +1,6 @@
 package com.a02.game;
 
-public abstract class GameObject {
+public class GameObject {
     private int id;
     private String name;
     private int x;

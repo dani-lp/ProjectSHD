@@ -8,14 +8,18 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameScreen implements Screen {
     SpriteBatch batch;
-    Texture img;
+    Texture imgL;
     TestEnemy larry;
+    GameObject beacon;
+    Texture imgB;
 
     public GameScreen() {
         batch = new SpriteBatch();
         //TODO: Sprite debería ser un Texture o un Animation
-        larry = new TestEnemy(1, "Larry", 50, 50, "Test1.png", 100, 5, 2);
-        img = new Texture(Gdx.files.internal(larry.getSprite()));
+        larry = new TestEnemy(1, "Larry", 200, 100, "Test2.png", 100, 5, 2);
+        imgL = new Texture(Gdx.files.internal(larry.getSprite()));
+        beacon= new GameObject(0,"BEACON", 20,50,"beacon.png",0,true);
+        imgB= new Texture(Gdx.files.internal(beacon.getSprite()));
     }
 
     @Override
@@ -28,8 +32,11 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
-        batch.draw(img, larry.getX(), larry.getY());
+        batch.draw(imgL, larry.getX(), larry.getY());
+        batch.draw(imgB, beacon.getX(), beacon.getY());
+        larry.move(beacon.getX(), beacon.getY());
         batch.end();
+
     }
 
     @Override
@@ -55,6 +62,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         batch.dispose();
-        img.dispose();
+        imgL.dispose();
+        imgB.dispose();
     }
 }

@@ -5,7 +5,7 @@ public class TestEnemy extends Enemy{
         super();
     }
     
-    public TestEnemy(int id, String name, int x, int y, String sprite, int hp, int attackDamage, float speed) {
+    public TestEnemy(int id, String name, int x, int y, String sprite, int hp, int attackDamage, int speed) {
        super(id, name, x, y, sprite, hp, attackDamage, speed);
     }
 

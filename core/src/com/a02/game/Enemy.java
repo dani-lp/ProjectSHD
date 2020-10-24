@@ -8,9 +8,9 @@ public abstract class Enemy {
     private String sprite;
     private int hp;
     private int attackDamage;
-    private float speed;
+    private int speed;
 
-    public Enemy(int id, String name, int x, int y, String sprite, int hp, int attackDamage, float speed) {
+    public Enemy(int id, String name, int x, int y, String sprite, int hp, int attackDamage, int speed) {
         this.id = id;
         this.name = name;
         this.x = x;
@@ -88,11 +88,24 @@ public abstract class Enemy {
         this.attackDamage = attackDamage;
     }
 
-    public float getSpeed() {
+    public int getSpeed() {
         return speed;
     }
 
-    public void setSpeed(float speed) {
+    public void setSpeed(int speed) {
         this.speed = speed;
+    }
+
+    public void move(float beaconX, float beaconY){
+        if (this.getX()<beaconX){
+            this.setX(this.getX()+this.speed);
+        }   else if (this.getX()> beaconX){
+            this.setX(this.getX()-this.speed);
+        }
+        if (this.getY()<beaconY){
+            this.setY(this.getY()+this.speed);
+        }   else if (this.getY()> beaconY){
+            this.setY(this.getY()-this.speed);
+        }
     }
 }

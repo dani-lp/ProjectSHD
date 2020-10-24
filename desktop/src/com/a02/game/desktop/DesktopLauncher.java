@@ -7,10 +7,9 @@ import com.a02.game.MainGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 640;
-		config.height = 360;
+		config.width = 320;
+		config.height = 180;
 		config.fullscreen = false;
-
 		new LwjglApplication(new MainGame(), config);
 	}
 }
