@@ -1,5 +1,8 @@
 package com.a02.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector3;
+
 public class GameObject extends Entity{
     private int id;
     private String name;
@@ -68,5 +71,14 @@ public class GameObject extends Entity{
     public String toString() {
         return "ASD [id=" + id + ", name=" + name + ", x=" + this.getX() + ", y=" + this.getY() + ", sprite=" + getSprite() + ", price=" + price
                 + ", unlock=" + unlocked + "]";
+    }
+
+    public void buy(){
+        if(Gdx.input.isTouched()) {
+            Vector3 touchPos = new Vector3();
+            touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            this.setX((int) (touchPos.x  - 16 / 2));
+            this.setY(180-((int) (touchPos.y + 16/ 2)));
+        }
     }
 }
