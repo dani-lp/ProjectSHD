@@ -11,7 +11,9 @@ public class GameScreen implements Screen {
     Texture imgL;
     Enemy larry;
     GameObject beacon;
+    Inventory inventory;
     Texture imgB;
+    Texture inventoryTexture;
 
     public GameScreen() {
         batch = new SpriteBatch();
@@ -20,6 +22,8 @@ public class GameScreen implements Screen {
         imgL = new Texture(Gdx.files.internal(larry.getSprite()));
         beacon= new GameObject(20,50,16,16,"beacon.png",0,"Beacon", 1000, true, 1000);
         imgB= new Texture(Gdx.files.internal(beacon.getSprite()));
+        inventory = new Inventory();
+        inventoryTexture = new Texture(Gdx.files.internal(inventory.getSprite()));
     }
 
     @Override
@@ -29,11 +33,12 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0.2f, 1);
+        Gdx.gl.glClearColor(0, 1, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(imgL, larry.getX(), larry.getY());
         batch.draw(imgB, beacon.getX(), beacon.getY());
+        batch.draw(inventoryTexture, inventory.getX(), inventory.getY());
         batch.end();
 
         larry.move(beacon.getX(), beacon.getY());
