@@ -10,11 +10,16 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameScreen implements Screen {
     final MainGame game;
-
     SpriteBatch batch;
     Texture imgL;
+    Texture imgL2;
+    Texture imgL3;
+    Texture imgL4;
     Texture imgBox;
     Enemy larry;
+    Enemy larry2;
+    Enemy larry3;
+    Enemy larry4;
     GameObject beacon;
     GameObject box;
     Inventory inventory;
@@ -26,10 +31,17 @@ public class GameScreen implements Screen {
     public GameScreen(MainGame game) {
         this.game = game;
 
-        //TODO: Sprite debería ser un Texture o un Animation
         larry = new Enemy(20, 100, 16, 16, "Test2.png", 1, "Larry", 200, 1, 1);
+        larry = new Enemy(150, 120, 16, 16, "Test2.png", 1, "Larry", 200, 1, 0.4f);
+        larry2 = new Enemy(80, 15, 16, 16, "Test2.png", 1, "Larry2", 200, 1, 0.4f);
+        larry3 = new Enemy(30, 160, 16, 16, "Test2.png", 1, "Larry3", 200, 1, 0.4f);
+        larry4 = new Enemy(200, 75, 16, 16, "Test2.png", 1, "Larry4", 200, 1, 0.4f);
         imgL = new Texture(Gdx.files.internal(larry.getSprite()));
         beacon= new GameObject(20,50,16,16,"beacon.png",0,"Beacon", 1000, true, 1000);
+        imgL2 = new Texture(Gdx.files.internal(larry2.getSprite()));
+        imgL3 = new Texture(Gdx.files.internal(larry3.getSprite()));
+        imgL4 = new Texture(Gdx.files.internal(larry4.getSprite()));
+        beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon", 1000, true, 1000);
         box= new GameObject(260,140,12,12,"Test1.png",0,"Box", 1000, true, 1000);
 
         imgBox=new Texture(Gdx.files.internal(box.getSprite()));
@@ -61,10 +73,19 @@ public class GameScreen implements Screen {
 
         box.buy(this);
         larry.move(beacon.getX(), beacon.getY());
+        larry2.move(beacon.getX(), beacon.getY());
+        larry3.move(beacon.getX(), beacon.getY());
+        larry4.move(beacon.getX(), beacon.getY());
         larry.attack(beacon);
+        larry2.attack(beacon);
+        larry3.attack(beacon);
+        larry4.attack(beacon);
 
         batch.begin();
         batch.draw(imgL, larry.getX(), larry.getY());
+        batch.draw(imgL2, larry2.getX(), larry2.getY());
+        batch.draw(imgL3, larry3.getX(), larry3.getY());
+        batch.draw(imgL4, larry4.getX(), larry4.getY());
         batch.draw(imgB, beacon.getX(), beacon.getY());
         batch.draw(inventoryTexture, inventory.getX(), inventory.getY());
         batch.draw(imgBox, box.getX(), box.getY());
