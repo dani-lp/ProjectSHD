@@ -1,3 +1,7 @@
+/**
+ *  Clase principal del juego, se encarga de inicializar y renderizar todos los objetos.
+ */
+
 package com.a02.game;
 
 import com.badlogic.gdx.Gdx;
@@ -6,7 +10,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameScreen implements Screen {
     final MainGame game;
@@ -20,12 +23,11 @@ public class GameScreen implements Screen {
     Texture imgB;
     Texture inventoryTexture;
 
-    OrthographicCamera camera;
+    static OrthographicCamera camera;
 
     public GameScreen(final MainGame game) {
         this.game = game;
 
-        //TODO: Sprite debería ser un Texture o un Animation
         larry = new Enemy(200, 100, 16, 16, "Test2.png", 1, "Larry", 200, 1, 1);
         imgL = new Texture(Gdx.files.internal(larry.getSprite()));
         beacon= new GameObject(20,50,16,16,"beacon.png",0,"Beacon", 1000, true, 1000);
@@ -40,7 +42,6 @@ public class GameScreen implements Screen {
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
-        game.entityBatch = new SpriteBatch();
     }
 
     @Override
@@ -55,13 +56,14 @@ public class GameScreen implements Screen {
 
         //Actualiza cámara
         camera.update();
-
         game.entityBatch.setProjectionMatrix(camera.combined);
 
+        //Físicas
         box.buy();
         larry.move(beacon.getX(), beacon.getY());
         larry.attack(beacon);
 
+        //Dibujado
         game.entityBatch.begin();
         game.entityBatch.draw(imgL, larry.getX(), larry.getY());
         game.entityBatch.draw(imgB, beacon.getX(), beacon.getY());
@@ -69,6 +71,7 @@ public class GameScreen implements Screen {
         game.entityBatch.draw(imgBox, box.getX(), box.getY());
         game.entityBatch.end();
 
+        //Salida manual, temporal
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
         }
