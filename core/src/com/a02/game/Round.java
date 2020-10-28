@@ -18,4 +18,36 @@ public class Round {
         this.objects = null;
     }
 
+    public int getN() {
+        return n;
+    }
+
+    public void setN(int n) {
+        this.n = n;
+    }
+
+    public ArrayList<Enemy> getEnemies() {
+        return enemies;
+    }
+
+    public void setEnemies(ArrayList<Enemy> enemies) {
+        this.enemies = enemies;
+    }
+
+    public ArrayList<GameObject> getObjects() {
+        return objects;
+    }
+
+    public void setObjects(ArrayList<GameObject> objects) {
+        this.objects = objects;
+    }
+
+    @Override
+    public String toString() {
+        return "Round{" +
+                "n=" + n +
+                ", enemies=" + enemies +
+                ", objects=" + objects +
+                '}';
+    }
 }
