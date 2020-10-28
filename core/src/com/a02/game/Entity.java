@@ -74,7 +74,7 @@ public abstract class Entity {
                 '}';
     }
 
-    public boolean overlaps(Entity entity) { //Devuelve true si existe colisión dos entidades
+    public boolean overlaps(Entity entity) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
         if ((this.y + this.height < entity.y) || (this.y > entity.y + entity.height)) {
             return false;
         }
