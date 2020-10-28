@@ -65,19 +65,33 @@ public class Enemy extends Entity{
         this.speed = speed;
     }
 
-    public void move(float beaconX, float beaconY){
-        if (this.getX()<beaconX){
+    public void move(float beaconX, float beaconY){     //Va comparando para intentar encontrar la ruta mas rapida
+        if (this.getX()<beaconX && this.getY()<beaconY){
             this.setX(this.getX()+this.speed);
-        }
-        else if (this.getX()> beaconX){
-            this.setX(this.getX()-this.speed);
-        }
-        if (this.getY()<beaconY){
             this.setY(this.getY()+this.speed);
         }
-        else if (this.getY()> beaconY){
+        else if (this.getX()<beaconX && this.getY()>beaconY){
+            this.setX(this.getX()+this.speed);
             this.setY(this.getY()-this.speed);
         }
+        else if (this.getX()<beaconX && this.getY()==beaconY){
+            this.setX(this.getX()+this.speed);
+        }
+        else if (this.getX()>beaconX && this.getY()==beaconY){
+            this.setX(this.getX()-this.speed);
+        }
+        else if (this.getX()> beaconX && this.getY()> beaconY){
+            this.setX(this.getX()-this.speed);
+            this.setY(this.getY()-this.speed);
+        }
+        else if (this.getX()> beaconX && this.getY()<beaconY){
+            this.setX(this.getX()-this.speed);
+            this.setY(this.getY()+this.speed);
+        }
+        else if (this.getX()==beaconX && this.getY()<beaconY){
+            this.setY(this.getY()+this.speed);
+        }
+
     }
 
     public void attack(GameObject object){
