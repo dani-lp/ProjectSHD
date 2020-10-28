@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameScreen implements Screen {
+    final MainGame game;
+
     SpriteBatch batch;
     Texture imgL;
     Texture imgBox;
@@ -19,9 +21,11 @@ public class GameScreen implements Screen {
     Texture imgB;
     Texture inventoryTexture;
 
-    static OrthographicCamera camera;
+    OrthographicCamera camera;
 
-    public GameScreen() {
+    public GameScreen(MainGame game) {
+        this.game = game;
+
         //TODO: Sprite debería ser un Texture o un Animation
         larry = new Enemy(20, 100, 16, 16, "Test2.png", 1, "Larry", 200, 1, 1);
         imgL = new Texture(Gdx.files.internal(larry.getSprite()));
@@ -55,7 +59,7 @@ public class GameScreen implements Screen {
 
         batch.setProjectionMatrix(camera.combined);
 
-        box.buy();
+        box.buy(this);
         larry.move(beacon.getX(), beacon.getY());
         larry.attack(beacon);
 
