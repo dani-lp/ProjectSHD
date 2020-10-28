@@ -73,13 +73,20 @@ public class GameObject extends Entity{
                 + ", unlock=" + unlocked + "]";
     }
 
+    static boolean temp = false;
     public void buy(){
-        if(Gdx.input.isTouched()) {
+        if (Gdx.input.isTouched() && this.overlapsPoint(Gdx.input.getX(), 180-Gdx.input.getY()) && temp == false) {
+            temp = true;
+        }
+        if (temp) {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             GameScreen.camera.unproject(touchPos);
-            this.setX((int) (touchPos.x  - 16 / 2));
-            this.setY((int) (touchPos.y - 16/ 2));
+            this.setX((int) (touchPos.x - 16 / 2));
+            this.setY((int) (touchPos.y - 16 / 2));
+        }
+        if (!Gdx.input.isTouched()) {
+            temp = false;
         }
     }
 }
