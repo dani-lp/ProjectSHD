@@ -5,9 +5,9 @@ public class Enemy extends Entity{
     private String name;
     private int hp;
     private int attackDamage;
-    private int speed;
+    private float speed;
 
-    public Enemy(int x, int y, int width, int height, String sprite, int id, String name, int hp, int attackDamage, int speed) {
+    public Enemy(float x, float y, int width, int height, String sprite, int id, String name, int hp, int attackDamage, float speed) {
         super(x, y, width, height, sprite);
         this.id = id;
         this.name = name;
@@ -57,15 +57,16 @@ public class Enemy extends Entity{
         this.attackDamage = attackDamage;
     }
 
-    public int getSpeed() {
+    public float getSpeed() {
         return speed;
     }
 
-    public void setSpeed(int speed) {
+    public void setSpeed(float speed) {
         this.speed = speed;
     }
 
     public void move(float beaconX, float beaconY){     //Va comparando para intentar encontrar la ruta mas rapida
+
         if (this.getX()<beaconX && this.getY()<beaconY){
             this.setX(this.getX()+this.speed);
             this.setY(this.getY()+this.speed);
@@ -90,6 +91,9 @@ public class Enemy extends Entity{
         }
         else if (this.getX()==beaconX && this.getY()<beaconY){
             this.setY(this.getY()+this.speed);
+        }
+        else if (this.getX()==beaconX && this.getY()>beaconY){
+            this.setY(this.getY()-this.speed);
         }
 
     }

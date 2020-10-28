@@ -1,13 +1,13 @@
 package com.a02.game;
 
 public abstract class Entity {
-    private int x;
-    private int y;
+    private float x;
+    private float y;
     private int width;
     private int height;
     private String sprite;
 
-    public Entity(int x, int y, int width, int height, String sprite) {
+    public Entity(float x, float y, int width, int height, String sprite) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -23,11 +23,11 @@ public abstract class Entity {
         this.sprite = "";
     }
 
-    public int getX() {
+    public float getX() {
         return x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 
@@ -43,11 +43,11 @@ public abstract class Entity {
         return sprite;
     }
 
-    public void setX(int x) {
+    public void setX(float x) {
         this.x = x;
     }
 
-    public void setY(int y) {
+    public void setY(float y) {
         this.y = y;
     }
 

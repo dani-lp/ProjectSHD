@@ -10,7 +10,7 @@ public class GameObject extends Entity{
     private boolean unlocked;
     private int hp;
 
-    public GameObject(int x, int y, int width, int height, String sprite, int id, String name,
+    public GameObject(float x, float y, int width, int height, String sprite, int id, String name,
                       int price, boolean unlocked, int hp) {
         super(x, y, width, height, sprite);
         this.id = id;
