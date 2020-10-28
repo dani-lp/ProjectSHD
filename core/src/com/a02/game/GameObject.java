@@ -77,7 +77,7 @@ public class GameObject extends Entity{
         if(Gdx.input.isTouched()) {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            GameScreen.camera.unproject(touchPos);
+            camera.unproject(touchPos);
             this.setX((int) (touchPos.x  - 16 / 2));
             this.setY((int) (touchPos.y - 16/ 2));
         }

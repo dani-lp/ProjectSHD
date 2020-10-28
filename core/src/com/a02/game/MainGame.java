@@ -8,9 +8,19 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Game;
 
 public class MainGame extends Game {
+	public SpriteBatch entityBatch;
 
 	@Override
 	public void create () {
-		this.setScreen(new GameScreen());
+		entityBatch = new SpriteBatch();
+		this.setScreen(new GameScreen(this));
+	}
+
+	public void render() {
+		super.render(); //important!
+	}
+
+	public void dispose() {
+		entityBatch.dispose();
 	}
 }

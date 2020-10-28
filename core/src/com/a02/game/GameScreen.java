@@ -9,7 +9,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class GameScreen implements Screen {
-    SpriteBatch batch;
+    final MainGame game;
+
     Texture imgL;
     Texture imgBox;
     Enemy larry;
@@ -19,9 +20,11 @@ public class GameScreen implements Screen {
     Texture imgB;
     Texture inventoryTexture;
 
-    static OrthographicCamera camera;
+    OrthographicCamera camera;
 
-    public GameScreen() {
+    public GameScreen(final MainGame game) {
+        this.game = game;
+
         //TODO: Sprite debería ser un Texture o un Animation
         larry = new Enemy(200, 100, 16, 16, "Test2.png", 1, "Larry", 200, 1, 1);
         imgL = new Texture(Gdx.files.internal(larry.getSprite()));
@@ -37,7 +40,7 @@ public class GameScreen implements Screen {
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
-        batch = new SpriteBatch();
+        game.entityBatch = new SpriteBatch();
     }
 
     @Override
@@ -53,18 +56,18 @@ public class GameScreen implements Screen {
         //Actualiza cámara
         camera.update();
 
-        batch.setProjectionMatrix(camera.combined);
+        game.entityBatch.setProjectionMatrix(camera.combined);
 
         box.buy();
         larry.move(beacon.getX(), beacon.getY());
         larry.attack(beacon);
 
-        batch.begin();
-        batch.draw(imgL, larry.getX(), larry.getY());
-        batch.draw(imgB, beacon.getX(), beacon.getY());
-        batch.draw(inventoryTexture, inventory.getX(), inventory.getY());
-        batch.draw(imgBox, box.getX(), box.getY());
-        batch.end();
+        game.entityBatch.begin();
+        game.entityBatch.draw(imgL, larry.getX(), larry.getY());
+        game.entityBatch.draw(imgB, beacon.getX(), beacon.getY());
+        game.entityBatch.draw(inventoryTexture, inventory.getX(), inventory.getY());
+        game.entityBatch.draw(imgBox, box.getX(), box.getY());
+        game.entityBatch.end();
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
@@ -93,7 +96,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
         imgL.dispose();
         imgB.dispose();
     }
