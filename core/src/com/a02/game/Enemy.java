@@ -65,7 +65,7 @@ public class Enemy extends Entity{
         this.speed = speed;
     }
 
-    public void move(float beaconX, float beaconY){
+    public void move(float beaconX, float beaconY){     //Va comparando para intentar encontrar la ruta mas rapida
         if (this.getX()<beaconX && this.getY()<beaconY){
             this.setX(this.getX()+this.speed);
             this.setY(this.getY()+this.speed);
