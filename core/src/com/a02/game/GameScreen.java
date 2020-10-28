@@ -1,8 +1,10 @@
 package com.a02.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -17,8 +19,9 @@ public class GameScreen implements Screen {
     Texture imgB;
     Texture inventoryTexture;
 
+    static OrthographicCamera camera;
+
     public GameScreen() {
-        batch = new SpriteBatch();
         //TODO: Sprite debería ser un Texture o un Animation
         larry = new Enemy(200, 100, 16, 16, "Test2.png", 1, "Larry", 200, 1, 1);
         imgL = new Texture(Gdx.files.internal(larry.getSprite()));
@@ -31,6 +34,10 @@ public class GameScreen implements Screen {
         inventory = new Inventory();
         inventoryTexture = new Texture(Gdx.files.internal(inventory.getSprite()));
         inventory.insert(box);
+
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, 320, 180);
+        batch = new SpriteBatch();
     }
 
     @Override
@@ -42,15 +49,26 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 1, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        //Actualiza cámara
+        camera.update();
+
+        batch.setProjectionMatrix(camera.combined);
+
+        box.buy();
+        larry.move(beacon.getX(), beacon.getY());
+        larry.attack(beacon);
+
         batch.begin();
         batch.draw(imgL, larry.getX(), larry.getY());
         batch.draw(imgB, beacon.getX(), beacon.getY());
         batch.draw(inventoryTexture, inventory.getX(), inventory.getY());
         batch.draw(imgBox, box.getX(), box.getY());
         batch.end();
-        box.buy();
-        larry.move(beacon.getX(), beacon.getY());
-        larry.attack(beacon);
+
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.exit();
+        }
     }
 
     @Override
