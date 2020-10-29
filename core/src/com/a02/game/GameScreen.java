@@ -115,6 +115,7 @@ public class GameScreen implements Screen {
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
+            System.exit(0);
         }
     }
 
