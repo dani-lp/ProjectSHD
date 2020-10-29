@@ -29,4 +29,8 @@ public class Inventory {
     public void insert(GameObject gameObject ){
         this.objects.add(gameObject);
     }
+
+    public void takeOut(GameObject gameObject ){
+        this.objects.remove(gameObject);
+    }
 }

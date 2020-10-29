@@ -13,7 +13,8 @@ import java.util.ArrayList;
 public class GameScreen implements Screen {
     final MainGame game;
     SpriteBatch batch;
-    ArrayList<GameObject> objects= new ArrayList<>();
+    ArrayList<GameObject> objects= new ArrayList<GameObject>();
+    ArrayList<Texture> textures= new ArrayList<Texture>();
     Texture imgL;
     Texture imgL2;
     Texture imgL3;
@@ -40,10 +41,11 @@ public class GameScreen implements Screen {
         larry3 = new Enemy(30, 160, 16, 16, "Test2.png", 1, "Larry3", 200, 1, 0.5f);
         larry4 = new Enemy(200, 75, 16, 16, "Test2.png", 1, "Larry4", 200, 1, 0.5f);
 
-        beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon", 1000, true, 1000);
-        box= new GameObject(260,140,12,12,"Test1.png",0,"Box", 1000, true, 1000);
-        objects.add(beacon);
+        beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon", 1000, true,1000,false);
+        box= new GameObject(260,140,12,12,"Test1.png",0,"Box", 1000, true,1000,true);
+
         objects.add(box);
+        objects.add(beacon);
 
         imgL = new Texture(Gdx.files.internal(larry.getSprite()));
         imgL2 = new Texture(Gdx.files.internal(larry2.getSprite()));
@@ -52,6 +54,9 @@ public class GameScreen implements Screen {
 
         imgBox=new Texture(Gdx.files.internal(box.getSprite()));
         imgB= new Texture(Gdx.files.internal(beacon.getSprite()));
+
+        textures.add(imgBox);
+        textures.add(imgB);
 
         inventory = new Inventory();
         inventoryTexture = new Texture(Gdx.files.internal(inventory.getSprite()));
@@ -76,8 +81,7 @@ public class GameScreen implements Screen {
         camera.update();
 
         batch.setProjectionMatrix(camera.combined);
-
-        box.buy(this);
+        box.buy(this,objects,textures,inventory);
         larry.move(beacon.getX(), beacon.getY());
         larry2.move(beacon.getX(), beacon.getY());
         larry3.move(beacon.getX(), beacon.getY());
@@ -87,14 +91,18 @@ public class GameScreen implements Screen {
         larry3.attack(objects);
         larry4.attack(objects);
 
+
         batch.begin();
         batch.draw(imgL, larry.getX(), larry.getY());
         batch.draw(imgL2, larry2.getX(), larry2.getY());
         batch.draw(imgL3, larry3.getX(), larry3.getY());
         batch.draw(imgL4, larry4.getX(), larry4.getY());
-        batch.draw(imgB, beacon.getX(), beacon.getY());
+        batch.draw(imgBox, beacon.getX(), beacon.getY());
         batch.draw(inventoryTexture, inventory.getX(), inventory.getY());
         batch.draw(imgBox, box.getX(), box.getY());
+        for (GameObject object:objects) {
+            batch.draw(imgBox, object.getX(), object.getY());
+        }
         batch.end();
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {

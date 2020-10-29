@@ -104,7 +104,6 @@ public class Enemy extends Entity{
         for (GameObject object:things) {
             if (this.overlaps(object)){
                 object.setHp(object.getHp()- this.getAttackDamage());
-                System.out.println(object.getHp());
             }
         }
 
