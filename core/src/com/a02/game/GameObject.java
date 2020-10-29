@@ -1,6 +1,7 @@
 package com.a02.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class GameObject extends Entity{
@@ -70,6 +71,20 @@ public class GameObject extends Entity{
         if (!Gdx.input.isTouched()) {
             temp = false;
         }
+    }
+
+    //Devuelve el número de casilla con la que colisiona del mapa recibido como parámetro, null si no lo hace
+    protected Vector2 mapGridCollision(Map map) {
+        int x;
+        int y;
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 16; j++) {
+                if (this.overlaps( map.getCoordGrid()[i][j] , 10, 16)) {
+                    return new Vector2(map.getCoordGrid()[i][j].x, map.getCoordGrid()[i][j].y);
+                }
+            }
+        }
+        return null;
     }
 
 }
