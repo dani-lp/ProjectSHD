@@ -38,11 +38,10 @@ public class GameScreen implements Screen {
     public GameScreen(MainGame game) {
         this.game = game;
 
-        larry = new Enemy(20, 100, 16, 16, "Test2.png", 1, "Larry", 200, 1, 0.5f);
-        larry = new Enemy(150, 120, 16, 16, "Test2.png", 1, "Larry", 200, 1, 0.5f);
-        larry2 = new Enemy(80, 15, 16, 16, "Test2.png", 1, "Larry2", 200, 1, 0.5f);
-        larry3 = new Enemy(30, 160, 16, 16, "Test2.png", 1, "Larry3", 200, 1, 0.5f);
-        larry4 = new Enemy(200, 75, 16, 16, "Test2.png", 1, "Larry4", 200, 1, 0.5f);
+        larry = new Enemy(150, 120, 16, 16, "Test2.png", 1, "Larry", 200, 1, 30);
+        larry2 = new Enemy(80, 15, 16, 16, "Test2.png", 1, "Larry2", 200, 1, 30);
+        larry3 = new Enemy(30, 160, 16, 16, "Test2.png", 1, "Larry3", 200, 1, 30);
+        larry4 = new Enemy(200, 75, 16, 16, "Test2.png", 1, "Larry4", 200, 1, 30);
 
         beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon", 1000, true,1000,false);
         box= new GameObject(260,140,12,12,"Test1.png",0,"Box", 1000, true,1000,true);
@@ -85,9 +84,10 @@ public class GameScreen implements Screen {
 
         //Actualiza cámara
         camera.update();
-
         batch.setProjectionMatrix(camera.combined);
+
         box.buy(this,objects,textures,inventory);
+
         larry.move(beacon.getX(), beacon.getY());
         larry2.move(beacon.getX(), beacon.getY());
         larry3.move(beacon.getX(), beacon.getY());

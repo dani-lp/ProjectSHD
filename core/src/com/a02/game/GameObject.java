@@ -110,17 +110,20 @@ public class GameObject extends Entity{
         if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && temp == false && buyable) {
             temp = true;
         }
-        if (temp) {
+        if (temp) { //Es objeto ya ha sido "cogido"
+            //Ajusta la posición del sprite a la del mouse
             this.setX((int) (touchPos.x - 16 / 2));
             this.setY((int) (touchPos.y - 16 / 2));
+
+            //Al "soltar" el objeto:
             if (!Gdx.input.isTouched()){
-                GameObject object =new GameObject(this);
-                Texture textu=new Texture(Gdx.files.internal(object.getSprite()));
-                object.setX(this.getX());
+                GameObject object = new GameObject(this);   //Objeto que va a ser colocado
+                Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
+                object.setX(this.getX());   //Fija la posición copia
                 object.setY(this.getY());
                 objects.add(object);
                 textures.add(textu);
-                this.setX(260);
+                this.setX(260); //Devuelve a su posición inicial al objeto original
                 this.setY(140);
             }
         }

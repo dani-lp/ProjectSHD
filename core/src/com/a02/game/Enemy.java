@@ -1,5 +1,7 @@
 package com.a02.game;
 
+import com.badlogic.gdx.Gdx;
+
 import java.util.ArrayList;
 
 public class Enemy extends Entity{
@@ -70,32 +72,32 @@ public class Enemy extends Entity{
     public void move(float beaconX, float beaconY){     //Va comparando para intentar encontrar la ruta mas rapida
 
         if (this.getX()<beaconX && this.getY()<beaconY){
-            this.setX(this.getX()+this.speed);
-            this.setY(this.getY()+this.speed);
+            this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
+            this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
         }
         else if (this.getX()<beaconX && this.getY()>beaconY){
-            this.setX(this.getX()+this.speed);
-            this.setY(this.getY()-this.speed);
+            this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
+            this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
         }
         else if (this.getX()<beaconX && this.getY()==beaconY){
-            this.setX(this.getX()+this.speed);
+            this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
         }
         else if (this.getX()>beaconX && this.getY()==beaconY){
-            this.setX(this.getX()-this.speed);
+            this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
         }
         else if (this.getX()> beaconX && this.getY()> beaconY){
-            this.setX(this.getX()-this.speed);
-            this.setY(this.getY()-this.speed);
+            this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
+            this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
         }
         else if (this.getX()> beaconX && this.getY()<beaconY){
-            this.setX(this.getX()-this.speed);
-            this.setY(this.getY()+this.speed);
+            this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
+            this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
         }
         else if (this.getX()==beaconX && this.getY()<beaconY){
-            this.setY(this.getY()+this.speed);
+            this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
         }
         else if (this.getX()==beaconX && this.getY()>beaconY){
-            this.setY(this.getY()-this.speed);
+            this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
         }
 
     }
