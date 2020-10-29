@@ -8,9 +8,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.util.ArrayList;
+
 public class GameScreen implements Screen {
     final MainGame game;
     SpriteBatch batch;
+    ArrayList<GameObject> objects= new ArrayList<>();
     Texture imgL;
     Texture imgL2;
     Texture imgL3;
@@ -31,18 +34,21 @@ public class GameScreen implements Screen {
     public GameScreen(MainGame game) {
         this.game = game;
 
-        larry = new Enemy(20, 100, 16, 16, "Test2.png", 1, "Larry", 200, 1, 1);
-        larry = new Enemy(150, 120, 16, 16, "Test2.png", 1, "Larry", 200, 1, 0.4f);
-        larry2 = new Enemy(80, 15, 16, 16, "Test2.png", 1, "Larry2", 200, 1, 0.4f);
-        larry3 = new Enemy(30, 160, 16, 16, "Test2.png", 1, "Larry3", 200, 1, 0.4f);
-        larry4 = new Enemy(200, 75, 16, 16, "Test2.png", 1, "Larry4", 200, 1, 0.4f);
+        larry = new Enemy(20, 100, 16, 16, "Test2.png", 1, "Larry", 200, 1, 0.5f);
+        larry = new Enemy(150, 120, 16, 16, "Test2.png", 1, "Larry", 200, 1, 0.5f);
+        larry2 = new Enemy(80, 15, 16, 16, "Test2.png", 1, "Larry2", 200, 1, 0.5f);
+        larry3 = new Enemy(30, 160, 16, 16, "Test2.png", 1, "Larry3", 200, 1, 0.5f);
+        larry4 = new Enemy(200, 75, 16, 16, "Test2.png", 1, "Larry4", 200, 1, 0.5f);
+
+        beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon", 1000, true, 1000);
+        box= new GameObject(260,140,12,12,"Test1.png",0,"Box", 1000, true, 1000);
+        objects.add(beacon);
+        objects.add(box);
+
         imgL = new Texture(Gdx.files.internal(larry.getSprite()));
-        beacon= new GameObject(20,50,16,16,"beacon.png",0,"Beacon", 1000, true, 1000);
         imgL2 = new Texture(Gdx.files.internal(larry2.getSprite()));
         imgL3 = new Texture(Gdx.files.internal(larry3.getSprite()));
         imgL4 = new Texture(Gdx.files.internal(larry4.getSprite()));
-        beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon", 1000, true, 1000);
-        box= new GameObject(260,140,12,12,"Test1.png",0,"Box", 1000, true, 1000);
 
         imgBox=new Texture(Gdx.files.internal(box.getSprite()));
         imgB= new Texture(Gdx.files.internal(beacon.getSprite()));
@@ -76,10 +82,10 @@ public class GameScreen implements Screen {
         larry2.move(beacon.getX(), beacon.getY());
         larry3.move(beacon.getX(), beacon.getY());
         larry4.move(beacon.getX(), beacon.getY());
-        larry.attack(beacon);
-        larry2.attack(beacon);
-        larry3.attack(beacon);
-        larry4.attack(beacon);
+        larry.attack(objects);
+        larry2.attack(objects);
+        larry3.attack(objects);
+        larry4.attack(objects);
 
         batch.begin();
         batch.draw(imgL, larry.getX(), larry.getY());

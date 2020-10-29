@@ -1,5 +1,7 @@
 package com.a02.game;
 
+import java.util.ArrayList;
+
 public class Enemy extends Entity{
     private int id;
     private String name;
@@ -98,9 +100,13 @@ public class Enemy extends Entity{
 
     }
 
-    public void attack(GameObject object){
-        if (this.overlaps(object)){
-            object.setHp(object.getHp()- this.getAttackDamage());
+    public void attack(ArrayList<GameObject> things){
+        for (GameObject object:things) {
+            if (this.overlaps(object)){
+                object.setHp(object.getHp()- this.getAttackDamage());
+                System.out.println(object.getHp());
+            }
         }
+
     }
 }
