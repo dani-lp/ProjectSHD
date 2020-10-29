@@ -14,7 +14,6 @@ public class GameScreen implements Screen {
     final MainGame game;
     SpriteBatch batch;
     ArrayList<GameObject> objects= new ArrayList<>();
-    ArrayList<InventoryObject> objectsInv = new ArrayList<>();
     Texture imgL;
     Texture imgL2;
     Texture imgL3;
@@ -27,11 +26,8 @@ public class GameScreen implements Screen {
     GameObject beacon;
     GameObject box;
     Inventory inventory;
-    InventoryObject boxInv;
-
     Texture imgB;
     Texture inventoryTexture;
-    Texture imgBoxInv;
 
     OrthographicCamera camera;
 
@@ -45,19 +41,16 @@ public class GameScreen implements Screen {
         larry4 = new Enemy(200, 75, 16, 16, "Test2.png", 1, "Larry4", 200, 1, 0.5f);
 
         beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon", 1000);
-        //box= new GameObject(260,140,12,12,"Test1.png",0,"Box", 1000);
+        box= new GameObject(260,140,16,16,"Test1.png",0,"Box", 1000);
         objects.add(beacon);
-        //objects.add(box);
-
-        boxInv = new InventoryObject(260,140,12,12,"Test1.png","Box",20, true );
+        objects.add(box);
 
         imgL = new Texture(Gdx.files.internal(larry.getSprite()));
         imgL2 = new Texture(Gdx.files.internal(larry2.getSprite()));
         imgL3 = new Texture(Gdx.files.internal(larry3.getSprite()));
         imgL4 = new Texture(Gdx.files.internal(larry4.getSprite()));
 
-        //imgBox=new Texture(Gdx.files.internal(box.getSprite()));
-        imgBoxInv = new Texture(Gdx.files.internal(boxInv.getSprite()));
+        imgBox=new Texture(Gdx.files.internal(box.getSprite()));
         imgB= new Texture(Gdx.files.internal(beacon.getSprite()));
 
         inventory = new Inventory();
@@ -84,7 +77,7 @@ public class GameScreen implements Screen {
 
         batch.setProjectionMatrix(camera.combined);
 
-        box.place(this);
+        //box.buy(this);
         larry.move(beacon.getX(), beacon.getY());
         larry2.move(beacon.getX(), beacon.getY());
         larry3.move(beacon.getX(), beacon.getY());
@@ -101,7 +94,7 @@ public class GameScreen implements Screen {
         batch.draw(imgL4, larry4.getX(), larry4.getY());
         batch.draw(imgB, beacon.getX(), beacon.getY());
         batch.draw(inventoryTexture, inventory.getX(), inventory.getY());
-        batch.draw(imgBoxInv, boxInv.getX(), boxInv.getY());
+        batch.draw(imgBox, box.getX(), box.getY());
         batch.end();
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {

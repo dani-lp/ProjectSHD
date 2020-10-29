@@ -7,7 +7,7 @@ public class InventoryObject extends Entity {
     protected String name;
     protected int price;
     protected boolean unlocked;
-
+    protected GameObject object;
 
     public InventoryObject(float x, float y, int width, int height, String sprite, String name, int price, boolean unlocked) {
         super(x, y, width, height, sprite);
@@ -61,8 +61,8 @@ public class InventoryObject extends Entity {
         game.camera.unproject(touchPos);
 
         if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && temp == false) {
-            temp = true;
+            new GameObject().place(game);
+            System.out.println("AA");
         }
-
     }
 }
