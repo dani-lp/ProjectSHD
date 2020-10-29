@@ -114,17 +114,14 @@ public class GameObject extends Entity{
             this.setX((int) (touchPos.x - 16 / 2));
             this.setY((int) (touchPos.y - 16 / 2));
             if (!Gdx.input.isTouched()){
-                buyable=false;
                 GameObject object =new GameObject(this);
                 Texture textu=new Texture(Gdx.files.internal(object.getSprite()));
-                object.setX(260);
-                object.setY(140);
-                object.setId(1);
-                object.setBuyable(true);
+                object.setX(this.getX());
+                object.setY(this.getY());
                 objects.add(object);
-                inventory.takeOut(this);
-                inventory.insert(object);
                 textures.add(textu);
+                this.setX(260);
+                this.setY(140);
             }
         }
         if (!Gdx.input.isTouched()) {
