@@ -1,8 +1,11 @@
 package com.a02.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+
+import java.util.ArrayList;
 
 public class GameObject extends Entity{
     private int id;
@@ -98,7 +101,7 @@ public class GameObject extends Entity{
     }
 
     static boolean temp = false;
-    public void buy(GameScreen game, ArrayList<GameObject> objects,ArrayList<Texture> textures, Inventory inventory){
+    public void buy(GameScreen game, ArrayList<GameObject> objects, ArrayList<Texture> textures, Inventory inventory){
         System.out.println(this);
         Vector3 touchPos = new Vector3();
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
