@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 public abstract class Entity {
     private float x;
@@ -84,6 +85,16 @@ public abstract class Entity {
             return false;
         }
         else if ((this.x + this.width < entity.x) || (this.x > entity.x + entity.width)) {
+            return false;
+        }
+        return true;
+    }
+
+    protected boolean overlaps(Vector2 vec2, int height, int width) { //Devuelve true si la Entity que llama colisiona con el Vector2 parámetro
+        if ((this.y + this.height < vec2.y) || (this.y > vec2.y + height)) {
+            return false;
+        }
+        else if ((this.x + this.width < vec2.x) || (this.x > vec2.x + width)) {
             return false;
         }
         return true;

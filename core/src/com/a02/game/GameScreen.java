@@ -30,6 +30,9 @@ public class GameScreen implements Screen {
     Texture imgB;
     Texture inventoryTexture;
 
+    Map map;
+    Texture mapTexture;
+
     OrthographicCamera camera;
 
     public GameScreen(MainGame game) {
@@ -62,6 +65,9 @@ public class GameScreen implements Screen {
         inventoryTexture = new Texture(Gdx.files.internal(inventory.getSprite()));
         inventory.insert(box);
 
+        map = new Map("map1.png");
+        mapTexture = new Texture(Gdx.files.internal(map.getSprite()));
+
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
         batch = new SpriteBatch();
@@ -91,8 +97,10 @@ public class GameScreen implements Screen {
         larry3.attack(objects);
         larry4.attack(objects);
 
-
         batch.begin();
+
+        batch.draw(mapTexture, 0, 0);
+
         batch.draw(imgL, larry.getX(), larry.getY());
         batch.draw(imgL2, larry2.getX(), larry2.getY());
         batch.draw(imgL3, larry3.getX(), larry3.getY());
