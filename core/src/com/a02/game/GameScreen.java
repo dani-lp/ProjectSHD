@@ -41,7 +41,7 @@ public class GameScreen implements Screen {
         larry4 = new Enemy(200, 75, 16, 16, "Test2.png", 1, "Larry4", 200, 1, 0.5f);
 
         beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon", 1000, true, 1000);
-        box= new GameObject(260,140,12,12,"Test1.png",0,"Box", 1000, true, 1000);
+        box= new GameObject(260,140,16,16,"Test1.png",0,"Box", 1000, true, 1000);
         objects.add(beacon);
         objects.add(box);
 
