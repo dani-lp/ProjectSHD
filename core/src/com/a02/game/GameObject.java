@@ -117,7 +117,7 @@ public class GameObject extends Entity{
 
             //Al "soltar" el objeto:
             if (!Gdx.input.isTouched()){
-                Vector2 temp = this.mapGridCollision(map);
+                Vector2 temp = this.mapGridCollisionMouse(map, touchPos.x, touchPos.y);
                 GameObject object = new GameObject(this);   //Objeto que va a ser colocado
                 Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
                 object.setX(temp.x);   //Fija la posición copia
@@ -139,6 +139,28 @@ public class GameObject extends Entity{
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 10; j++) {
                 if (this.overlaps( map.getCoordGrid()[i][j] , 18, 16)) {
+                    return new Vector2(map.getCoordGrid()[i][j].x, map.getCoordGrid()[i][j].y);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Devuelve el número de casilla con la que colisiona del mapa recibido como parámetro, null si no lo hace,
+     * con la colisión adaptada a la posición del ratón
+     * @param map   mapa introducido
+     * @param xMouse    x del ratón
+     * @param yMouse    y delratón
+     * @return  índice de la casilla o null
+     */
+    protected Vector2 mapGridCollisionMouse(Map map, float xMouse, float yMouse) {
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 10; j++) {
+                if(map.getCoordGrid()[i][j].x <= xMouse &&
+                        map.getCoordGrid()[i][j].x + 16 >= xMouse &&
+                        map.getCoordGrid()[i][j].y <= yMouse &&
+                        map.getCoordGrid()[i][j].y + 18 >= yMouse){
                     return new Vector2(map.getCoordGrid()[i][j].x, map.getCoordGrid()[i][j].y);
                 }
             }
