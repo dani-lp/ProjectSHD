@@ -102,7 +102,6 @@ public class GameObject extends Entity{
 
     static boolean temp = false;
     public void buy(GameScreen game, ArrayList<GameObject> objects, ArrayList<Texture> textures, Inventory inventory, Map map){
-        //System.out.println(this);
         Vector3 touchPos = new Vector3();
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         game.camera.unproject(touchPos);
@@ -117,13 +116,19 @@ public class GameObject extends Entity{
 
             //Al "soltar" el objeto:
             if (!Gdx.input.isTouched()){
-                Vector2 temp = this.mapGridCollisionMouse(map, touchPos.x, touchPos.y);
-                GameObject object = new GameObject(this);   //Objeto que va a ser colocado
-                Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
-                object.setX(temp.x);   //Fija la posición copia
-                object.setY(temp.y);
-                objects.add(object);
-                textures.add(textu);
+                Vector2 temp = this.mapGridCollisionMouse(map, touchPos.x, touchPos.y); //Pos. del mouse
+
+                if (!map.getOccGrid()[(int)temp.x/16][(int)temp.y/18]) {    //Comprueba si la casilla está libre
+                    GameObject object = new GameObject(this);   //Objeto que va a ser colocado
+                    Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
+
+                    object.setX(temp.x);   //Fija la posición copia
+                    object.setY(temp.y);
+                    objects.add(object);
+                    textures.add(textu);
+
+                    map.getOccGrid()[(int)temp.x/16][(int)temp.y/18] = true;
+                }
                 this.setX(260); //Devuelve a su posición inicial al objeto original
                 this.setY(140); //260 140
             }
