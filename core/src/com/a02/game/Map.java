@@ -9,18 +9,18 @@ public class Map {
     private String sprite;
 
     protected final int GRID_WIDTH = 16;
-    protected final int GRID_HEIGHT = 8;
+    protected final int GRID_HEIGHT = 18;
 
     protected Map(String sprite) {
-        occGrid = new boolean[10][16];
-        entityGrid = new GameObject[10][16];
+        occGrid = new boolean[16][10];
+        entityGrid = new GameObject[16][10];
         this.sprite = sprite;
 
         //Creación de coordenadas
-        coordGrid = new Vector2[10][16];
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 16; j++) {
-                coordGrid[i][j] = new Vector2(10*i, 16*j);
+        coordGrid = new Vector2[16][10];
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 10; j++) {
+                coordGrid[i][j] = new Vector2(16*i, 18*j);
             }
         }
     }

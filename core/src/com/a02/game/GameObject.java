@@ -101,8 +101,8 @@ public class GameObject extends Entity{
     }
 
     static boolean temp = false;
-    public void buy(GameScreen game, ArrayList<GameObject> objects, ArrayList<Texture> textures, Inventory inventory){
-        System.out.println(this);
+    public void buy(GameScreen game, ArrayList<GameObject> objects, ArrayList<Texture> textures, Inventory inventory, Map map){
+        //System.out.println(this);
         Vector3 touchPos = new Vector3();
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         game.camera.unproject(touchPos);
@@ -110,21 +110,22 @@ public class GameObject extends Entity{
         if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && temp == false && buyable) {
             temp = true;
         }
-        if (temp) { //Es objeto ya ha sido "cogido"
+        if (temp) { //El objeto ya ha sido "cogido"
             //Ajusta la posición del sprite a la del mouse
             this.setX((int) (touchPos.x - 16 / 2));
             this.setY((int) (touchPos.y - 16 / 2));
 
             //Al "soltar" el objeto:
             if (!Gdx.input.isTouched()){
+                Vector2 temp = this.mapGridCollision(map);
                 GameObject object = new GameObject(this);   //Objeto que va a ser colocado
                 Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
-                object.setX(this.getX());   //Fija la posición copia
-                object.setY(this.getY());
+                object.setX(temp.x);   //Fija la posición copia
+                object.setY(temp.y);
                 objects.add(object);
                 textures.add(textu);
                 this.setX(260); //Devuelve a su posición inicial al objeto original
-                this.setY(140);
+                this.setY(140); //260 140
             }
         }
         if (!Gdx.input.isTouched()) {
@@ -134,11 +135,10 @@ public class GameObject extends Entity{
 
     //Devuelve el número de casilla con la que colisiona del mapa recibido como parámetro, null si no lo hace
     protected Vector2 mapGridCollision(Map map) {
-        int x;
-        int y;
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 16; j++) {
-                if (this.overlaps( map.getCoordGrid()[i][j] , 10, 16)) {
+        int x, y;
+        for (int i = 0; i < 16; i++) {
+            for (int j = 0; j < 10; j++) {
+                if (this.overlaps( map.getCoordGrid()[i][j] , 18, 16)) {
                     return new Vector2(map.getCoordGrid()[i][j].x, map.getCoordGrid()[i][j].y);
                 }
             }

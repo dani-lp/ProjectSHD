@@ -86,7 +86,7 @@ public class GameScreen implements Screen {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
-        box.buy(this,objects,textures,inventory);
+        box.buy(this,objects,textures,inventory,map);
 
         larry.move(beacon.getX(), beacon.getY());
         larry2.move(beacon.getX(), beacon.getY());
