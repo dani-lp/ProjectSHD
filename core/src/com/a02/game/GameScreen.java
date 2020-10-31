@@ -1,5 +1,6 @@
 package com.a02.game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -9,12 +10,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class GameScreen implements Screen {
     final MainGame game;
     SpriteBatch batch;
     ArrayList<GameObject> objects= new ArrayList<GameObject>();
     ArrayList<Texture> textures= new ArrayList<Texture>();
+    ArrayList<GameObject> deadObject = new ArrayList<GameObject>();
     Texture imgL;
     Texture imgL2;
     Texture imgL3;
@@ -111,6 +114,13 @@ public class GameScreen implements Screen {
         for (GameObject object:objects) {
             batch.draw(imgBox, object.getX(), object.getY());
         }
+        for(Iterator i = objects.iterator(); i.hasNext();){
+            GameObject deadObject = (GameObject) i.next();
+            if (deadObject.getHp() <= 0){
+                objects.remove(deadObject);
+            }
+        }
+
         batch.end();
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
