@@ -69,45 +69,46 @@ public class Enemy extends Entity{
         this.speed = speed;
     }
 
-    public void move(float beaconX, float beaconY){     //Va comparando para intentar encontrar la ruta mas rapida
+    public void move(float beaconX, float beaconY,ArrayList<GameObject> objects){     //Va comparando para intentar encontrar la ruta mas rapida
+        for (GameObject object: objects) {
+            if (!this.overlaps(object)) {
+                if (this.getX() < beaconX && this.getY() < beaconY) {
+                    this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
+                    this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
+                } else if (this.getX() < beaconX && this.getY() > beaconY) {
+                    this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
+                    this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
+                } else if (this.getX() < beaconX && this.getY() == beaconY) {
+                    this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
+                } else if (this.getX() > beaconX && this.getY() == beaconY) {
+                    this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
+                } else if (this.getX() > beaconX && this.getY() > beaconY) {
+                    this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
+                    this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
+                } else if (this.getX() > beaconX && this.getY() < beaconY) {
+                    this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
+                    this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
+                } else if (this.getX() == beaconX && this.getY() < beaconY) {
+                    this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
+                } else if (this.getX() == beaconX && this.getY() > beaconY) {
+                    this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
+                }
+            }else{
+                while (object.getHp()!=0){
+                    this.attack(object);
+                    for (int i = 0; i < 10000000; i++){
 
-        if (this.getX()<beaconX && this.getY()<beaconY){
-            this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
-            this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
-        }
-        else if (this.getX()<beaconX && this.getY()>beaconY){
-            this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
-            this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
-        }
-        else if (this.getX()<beaconX && this.getY()==beaconY){
-            this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
-        }
-        else if (this.getX()>beaconX && this.getY()==beaconY){
-            this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
-        }
-        else if (this.getX()> beaconX && this.getY()> beaconY){
-            this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
-            this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
-        }
-        else if (this.getX()> beaconX && this.getY()<beaconY){
-            this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
-            this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
-        }
-        else if (this.getX()==beaconX && this.getY()<beaconY){
-            this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
-        }
-        else if (this.getX()==beaconX && this.getY()>beaconY){
-            this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
+                    }
+                }
+            }
         }
 
     }
 
-    public void attack(ArrayList<GameObject> things){
-        for (GameObject object:things) {
-            if (this.overlaps(object)){
-                object.setHp(object.getHp()- this.getAttackDamage());
+    public void attack(GameObject thing){
+            if (this.overlaps(thing)){
+                thing.setHp(thing.getHp()- this.getAttackDamage());
+                System.out.println(thing.getHp());
             }
-        }
-
     }
 }
