@@ -96,12 +96,12 @@ public class GameScreen implements Screen {
         for (GameObject object:objects) {
             batch.draw(textures.get(objects.indexOf(object)), object.getX(), object.getY());
         }
-        for(Iterator i = objects.iterator(); i.hasNext();){
-            GameObject deadObject = (GameObject) i.next();
-            if (deadObject.getHp() <= 0){
-                objects.remove(deadObject);
-            }
-        }
+//        for(Iterator i = objects.iterator(); i.hasNext();){
+//            GameObject deadObject = (GameObject) i.next();
+//            if (deadObject.getHp() <= 0){
+//                objects.remove(deadObject);
+//            }
+//        }
 
         batch.end();
 
