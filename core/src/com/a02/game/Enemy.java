@@ -97,7 +97,6 @@ public class Enemy extends Entity{
                 while (object.getHp()!=0){
                     this.attack(object);
                     for (int i = 0; i < 10000000; i++){
-
                     }
                 }
             }
@@ -108,7 +107,6 @@ public class Enemy extends Entity{
     public void attack(GameObject thing){
             if (this.overlaps(thing)){
                 thing.setHp(thing.getHp()- this.getAttackDamage());
-                System.out.println(thing.getHp());
             }
     }
 }

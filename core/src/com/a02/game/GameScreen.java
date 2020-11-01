@@ -18,24 +18,27 @@ public class GameScreen implements Screen {
     ArrayList<GameObject> objects= new ArrayList<GameObject>();
     ArrayList<Texture> textures= new ArrayList<Texture>();
     ArrayList<GameObject> deadObject = new ArrayList<GameObject>();
+    ArrayList<Boolean> disponible = new ArrayList<Boolean>();
     Texture imgL;
     Texture imgL2;
     Texture imgL3;
     Texture imgL4;
-    Texture imgBox;
+    Texture imgWall;
+    Texture imgFire;
+    Texture imgElec;
     Enemy larry;
     Enemy larry2;
     Enemy larry3;
     Enemy larry4;
     GameObject beacon;
-    GameObject box;
+    GameObject wall;
+    Attacker elec;
+    Trap fire;
     Inventory inventory;
     Texture imgB;
     Texture inventoryTexture;
-
     Map map;
     Texture mapTexture;
-
     OrthographicCamera camera;
 
     public GameScreen(MainGame game) {
@@ -44,21 +47,31 @@ public class GameScreen implements Screen {
         larry = new Enemy(12, 90, 16, 16, "Test2.png", 1, "Larry", 200, 1, 10);
 
         beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon", 1000, true,1000,false);
-        box= new GameObject(260,140,12,12,"Test1.png",0,"Box", 1000, true,1000,true);
+        wall= new GameObject(260,135,16,18,"Muro.png",0,"Wall", 1000, true,1000,true);
+        elec= new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity",100,true,1000,true,"Spark",20);
+        fire=new Trap(260,115,16,18,"Fuego.png",3,"Fire",1000,true,1000,true,"Burn",15);
 
-        objects.add(box);
+        objects.add(wall);
+        objects.add(elec);
+        objects.add(fire);
         objects.add(beacon);
 
         imgL = new Texture(Gdx.files.internal(larry.getSprite()));
-        imgBox=new Texture(Gdx.files.internal(box.getSprite()));
+        imgWall=new Texture(Gdx.files.internal(wall.getSprite()));
+        imgElec=new Texture(Gdx.files.internal(elec.getSprite()));
+        imgFire=new Texture(Gdx.files.internal(fire.getSprite()));
         imgB= new Texture(Gdx.files.internal(beacon.getSprite()));
 
-        textures.add(imgBox);
+        textures.add(imgWall);
+        textures.add(imgElec);
+        textures.add(imgFire);
         textures.add(imgB);
 
         inventory = new Inventory();
         inventoryTexture = new Texture(Gdx.files.internal(inventory.getSprite()));
-        inventory.insert(box);
+        inventory.insert(wall);
+        inventory.insert(elec);
+        inventory.insert(fire);
 
         map = new Map("map1.png");
         mapTexture = new Texture(Gdx.files.internal(map.getSprite()));
@@ -82,7 +95,9 @@ public class GameScreen implements Screen {
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
-        box.buy(this,objects,textures,inventory,map);
+        wall.buy(this,objects,textures,inventory,map);
+        elec.buy(this,objects,textures,inventory,map);
+        fire.buy(this,objects,textures,inventory,map);
 
         larry.move(beacon.getX(), beacon.getY(),objects);
 
@@ -92,7 +107,10 @@ public class GameScreen implements Screen {
 
         batch.draw(imgL, larry.getX(), larry.getY());
         batch.draw(inventoryTexture, inventory.getX(), inventory.getY());
-        batch.draw(imgBox, box.getX(), box.getY());
+        batch.draw(imgWall, wall.getX(), wall.getY());
+        batch.draw(imgElec, elec.getX(), elec.getY());
+        batch.draw(imgFire, fire.getX(), fire.getY());
+
         for (GameObject object:objects) {
             batch.draw(textures.get(objects.indexOf(object)), object.getX(), object.getY());
         }
