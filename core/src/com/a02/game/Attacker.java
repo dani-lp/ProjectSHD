@@ -11,8 +11,8 @@ public class Attacker extends GameObject{
     private float attackDamage;
     private String attackType;
 
-    public Attacker(float x, float y, int width, int height, String sprite, int id, String name, int price, boolean unlocked, int hp, boolean buyable, String attackType, float attackDamage) {
-        super(x, y, width, height, sprite, id, name, price, unlocked, hp, buyable);
+    public Attacker(float x, float y, int width, int height, String sprite, int id, String name, int price, boolean unlocked, int hp, boolean buyable, boolean selected, String attackType, float attackDamage) {
+        super(x, y, width, height, sprite, id, name, price, unlocked, hp, buyable,selected);
         this.attackType = attackType;
         this.attackDamage = attackDamage;
     }
@@ -22,7 +22,7 @@ public class Attacker extends GameObject{
         this.attackDamage = 0;
     }
     public Attacker(Attacker other) {
-        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite(), other.getId(), other.getName(), other.getPrice(), other.isUnlocked(), other.getHp(), other.isBuyable());
+        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite(), other.getId(), other.getName(), other.getPrice(), other.isUnlocked(), other.getHp(), other.isBuyable(),other.isSelected());
         this.attackType = other.getAttackType();
         this.attackDamage = other.getAttackDamage();
     }
@@ -48,35 +48,35 @@ public class Attacker extends GameObject{
         Vector3 touchPos = new Vector3();
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         game.camera.unproject(touchPos);
-            if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !temp  && isBuyable()) {
-                temp = true;
-            }
-            if (temp) { //El objeto ya ha sido "cogido"
-                //Ajusta la posición del sprite a la del mouse
-                this.setX((int) (touchPos.x - 16 / 2));
-                this.setY((int) (touchPos.y - 16 / 2));
+        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !temp  && isBuyable() && objects.get(0).isSelected()) {
+            temp = true;
+            objects.get(0).setSelected(false);
+        }
+        if (temp) { //El objeto ya ha sido "cogido"
+            //Ajusta la posición del sprite a la del mouse
+            this.setX((int) (touchPos.x - 16 / 2));
+            this.setY((int) (touchPos.y - 16 / 2));
+            //Al "soltar" el objeto:
+            if (!Gdx.input.isTouched()){
+                Vector2 temp = this.mapGridCollisionMouse(map, touchPos.x, touchPos.y); //Pos. del mouse
+                if (!map.getOccGrid()[(int)temp.x/16][(int)temp.y/18]) {    //Comprueba si la casilla está libre
+                    Attacker object = new Attacker(this);   //Objeto que va a ser colocado
+                    Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
+                    object.setX(temp.x);   //Fija la posición copia
+                    object.setY(temp.y);
 
-                //Al "soltar" el objeto:
-                if (!Gdx.input.isTouched()){
-                    Vector2 temp = this.mapGridCollisionMouse(map, touchPos.x, touchPos.y); //Pos. del mouse
+                    objects.add(object);
+                    textures.add(textu);
 
-                    if (!map.getOccGrid()[(int)temp.x/16][(int)temp.y/18]) {    //Comprueba si la casilla está libre
-                        Attacker object = new Attacker(this);   //Objeto que va a ser colocado
-                        Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
-
-                        object.setX(temp.x);   //Fija la posición copia
-                        object.setY(temp.y);
-                        objects.add(object);
-                        textures.add(textu);
-
-                        map.getOccGrid()[(int)temp.x/16][(int)temp.y/18] = true;
-                    }
-                    this.setX(280); //Devuelve a su posición inicial al objeto original
-                    this.setY(135); //260 140
+                    map.getOccGrid()[(int)temp.x/16][(int)temp.y/18] = true;
                 }
+                this.setX(280); //Devuelve a su posición inicial al objeto original
+                this.setY(135); //260 140
+                objects.get(0).setSelected(true);
             }
-            if (!Gdx.input.isTouched()) {
-                temp = false;
-            }
+        }
+        if (!Gdx.input.isTouched()) {
+            temp = false;
+        }
     }
 }

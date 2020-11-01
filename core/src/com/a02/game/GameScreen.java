@@ -40,16 +40,17 @@ public class GameScreen implements Screen {
     Map map;
     Texture mapTexture;
     OrthographicCamera camera;
+    boolean ver=false;
 
     public GameScreen(MainGame game) {
         this.game = game;
 
         larry = new Enemy(12, 90, 16, 16, "Test2.png", 1, "Larry", 200, 1, 10);
 
-        beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon", 1000, true,1000,false);
-        wall= new GameObject(260,135,16,18,"Muro.png",0,"Wall", 1000, true,1000,true);
-        elec= new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity",100,true,1000,true,"Spark",20);
-        fire=new Trap(260,115,16,18,"Fuego.png",3,"Fire",1000,true,1000,true,"Burn",15);
+        beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon", 1000, true,1000,false,true);
+        wall= new GameObject(260,135,16,18,"Muro.png",0,"Wall", 1000, true,1000,true,true);
+        elec= new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity",100,true,1000,true,true,"Spark",20);
+        fire=new Trap(260,115,16,18,"Fuego.png",3,"Fire",1000,true,1000,true,true,"Burn",15);
 
         objects.add(wall);
         objects.add(elec);
@@ -94,7 +95,6 @@ public class GameScreen implements Screen {
         //Actualiza cámara
         camera.update();
         batch.setProjectionMatrix(camera.combined);
-
         wall.buy(this,objects,textures,inventory,map);
         elec.buy(this,objects,textures,inventory,map);
         fire.buy(this,objects,textures,inventory,map);

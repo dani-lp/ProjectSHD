@@ -13,10 +13,11 @@ public class GameObject extends Entity{
     private int price;
     private boolean unlocked;
     private boolean buyable=true;
+    private boolean selected=true;
     private int hp;
 
     public GameObject(float x, float y, int width, int height, String sprite, int id, String name,
-                      int price, boolean unlocked, int hp, boolean buyable) {
+                      int price, boolean unlocked, int hp, boolean buyable, boolean selected) {
         super(x, y, width, height, sprite);
         this.id = id;
         this.name = name;
@@ -24,6 +25,7 @@ public class GameObject extends Entity{
         this.unlocked = unlocked;
         this.buyable = buyable;
         this.hp = hp;
+        this.selected = selected;
     }
 
     public GameObject(GameObject other){
@@ -34,6 +36,7 @@ public class GameObject extends Entity{
         this.unlocked = other.unlocked;
         this.buyable = other.buyable;
         this.hp = other.hp;
+        this.selected = other.selected;
     }
 
     public GameObject() {
@@ -42,7 +45,8 @@ public class GameObject extends Entity{
         this.name = "";
         this.price = 0;
         this.unlocked = false;
-        this.unlocked = true;
+        this.buyable = true;
+        this.selected = true;
         this.hp = 0;
     }
 
@@ -94,6 +98,14 @@ public class GameObject extends Entity{
         this.hp = hp;
     }
 
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
     @Override
     public String toString() {
         return "ASD [id=" + id + ", name=" + name + ", x=" + this.getX() + ", y=" + this.getY() + ", sprite=" + getSprite() + ", price=" + price
@@ -107,36 +119,39 @@ public class GameObject extends Entity{
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         game.camera.unproject(touchPos);
 
-            if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !temp && buyable) {
-                temp = true;
-            }
-            if (temp) { //El objeto ya ha sido "cogido"
-                //Ajusta la posición del sprite a la del mouse
-                this.setX((int) (touchPos.x - 16 / 2));
-                this.setY((int) (touchPos.y - 16 / 2));
+        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !temp && buyable && objects.get(0).isSelected()) {
+            temp = true;
+            objects.get(0).setSelected(false);
+        }
+        if (temp) { //El objeto ya ha sido "cogido"
+            //Ajusta la posición del sprite a la del mouse
+            this.setX((int) (touchPos.x - 16 / 2));
+            this.setY((int) (touchPos.y - 16 / 2));
+            //Al "soltar" el objeto:
+            if (!Gdx.input.isTouched()){
+                Vector2 temp = this.mapGridCollisionMouse(map, touchPos.x, touchPos.y); //Pos. del mouse
 
-                //Al "soltar" el objeto:
-                if (!Gdx.input.isTouched()){
-                    Vector2 temp = this.mapGridCollisionMouse(map, touchPos.x, touchPos.y); //Pos. del mouse
+                if (!map.getOccGrid()[(int)temp.x/16][(int)temp.y/18]) {    //Comprueba si la casilla está libre
 
-                    if (!map.getOccGrid()[(int)temp.x/16][(int)temp.y/18]) {    //Comprueba si la casilla está libre
-                        GameObject object = new GameObject(this);   //Objeto que va a ser colocado
-                        Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
+                    GameObject object = new GameObject(this);   //Objeto que va a ser colocado
+                    Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
 
-                        object.setX(temp.x);   //Fija la posición copia
-                        object.setY(temp.y);
-                        objects.add(object);
-                        textures.add(textu);
+                    object.setX(temp.x);   //Fija la posición copia
+                    object.setY(temp.y);
+                    objects.add(object);
+                    textures.add(textu);
 
-                        map.getOccGrid()[(int)temp.x/16][(int)temp.y/18] = true;
-                    }
-                    this.setX(260); //Devuelve a su posición inicial al objeto original
-                    this.setY(135); //260 140
+                    map.getOccGrid()[(int)temp.x/16][(int)temp.y/18] = true;
                 }
+                this.setX(260); //Devuelve a su posición inicial al objeto original
+                this.setY(135); //260 140
+                objects.get(0).setSelected(true);
             }
-            if (!Gdx.input.isTouched()) {
-                temp = false;
-            }
+
+        }
+        if (!Gdx.input.isTouched()) {
+            temp = false;
+        }
 
 
     }

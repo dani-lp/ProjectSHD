@@ -11,14 +11,14 @@ public class Trap extends GameObject{
     private String effect;
     private float attackDamage;
 
-    public Trap(float x, float y, int width, int height, String sprite, int id, String name, int price, boolean unlocked, int hp, boolean buyable, String effect, float attackDamage) {
-        super(x, y, width, height, sprite, id, name, price, unlocked, hp, buyable);
+    public Trap(float x, float y, int width, int height, String sprite, int id, String name, int price, boolean unlocked, int hp, boolean buyable, boolean selected, String effect, float attackDamage) {
+        super(x, y, width, height, sprite, id, name, price, unlocked, hp, buyable,selected);
         this.effect = effect;
         this.attackDamage = attackDamage;
     }
 
     public Trap(Trap other) {
-        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite(), other.getId(), other.getName(), other.getPrice(), other.isUnlocked(), other.getHp(), other.isBuyable());
+        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite(), other.getId(), other.getName(), other.getPrice(), other.isUnlocked(), other.getHp(), other.isBuyable(), other.isSelected());
         this.effect = other.getEffect();
         this.attackDamage = other.getAttackDamage();
     }
@@ -51,8 +51,9 @@ public class Trap extends GameObject{
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         game.camera.unproject(touchPos);
 
-        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y)&& !temp && isBuyable()) {
+        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y)&& !temp && isBuyable() && objects.get(0).isSelected()) {
             temp = true;
+            objects.get(0).setSelected(false);
         }
         if (temp) { //El objeto ya ha sido "cogido"
             //Ajusta la posición del sprite a la del mouse
@@ -76,6 +77,7 @@ public class Trap extends GameObject{
                 }
                 this.setX(260); //Devuelve a su posición inicial al objeto original
                 this.setY(115); //260 140
+                objects.get(0).setSelected(true);
             }
         }
         if (!Gdx.input.isTouched()) {
