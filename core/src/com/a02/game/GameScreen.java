@@ -95,6 +95,8 @@ public class GameScreen implements Screen {
         //Actualiza cámara
         camera.update();
         batch.setProjectionMatrix(camera.combined);
+
+        //Compra de Objetos
         wall.buy(this,objects,textures,inventory,map);
         elec.buy(this,objects,textures,inventory,map);
         fire.buy(this,objects,textures,inventory,map);
@@ -114,14 +116,19 @@ public class GameScreen implements Screen {
         for (GameObject object:objects) {
             batch.draw(textures.get(objects.indexOf(object)), object.getX(), object.getY());
         }
-//        for(Iterator i = objects.iterator(); i.hasNext();){
-//            GameObject deadObject = (GameObject) i.next();
-//            if (deadObject.getHp() <= 0){
-//                objects.remove(deadObject);
-//            }
-//        }
+
 
         batch.end();
+
+        //Borrado de Objetos cuando su vida baja a 0
+        Iterator iterator = objects.iterator();
+        while (iterator.hasNext())
+        {
+            GameObject object = (GameObject) iterator.next();
+            if (object.getHp()<=0){
+                iterator.remove();
+            }
+        }
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
