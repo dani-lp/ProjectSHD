@@ -15,11 +15,10 @@ public class GameScreen implements Screen {
     final MainGame game;
     ArrayList<GameObject> objects = new ArrayList<GameObject>(); //Objetos en el juego
     ArrayList<Texture> textures = new ArrayList<Texture>();  //Texturas de los objetos del juego
-    ArrayList<GameObject> deadObject = new ArrayList<GameObject>(); //No usado de momento
 
     Texture imgL;
     Texture imgWall;
-    Texture imgFire;
+    Texture imgFire;        //Las texturas
     Texture imgElec;
     Texture imgB;
     Texture inventoryTexture;
@@ -27,7 +26,7 @@ public class GameScreen implements Screen {
 
     Enemy larry;
     GameObject beacon;
-    GameObject wall;
+    GameObject wall;        //Enemigos y objetos
     Attacker elec;
     Trap fire;
     Inventory inventory;
@@ -119,7 +118,7 @@ public class GameScreen implements Screen {
         game.entityBatch.draw(mapTexture, 0, 0);
 
         game.entityBatch.draw(imgL, larry.getX(), larry.getY());
-        game.entityBatch.draw(inventoryTexture, inventory.getX(), inventory.getY());
+        game.entityBatch.draw(inventoryTexture, inventory.getX(), inventory.getY());            //Dibujado de objetos
         game.entityBatch.draw(imgWall, wall.getX(), wall.getY());
         game.entityBatch.draw(imgElec, elec.getX(), elec.getY());
         game.entityBatch.draw(imgFire, fire.getX(), fire.getY());
@@ -135,16 +134,6 @@ public class GameScreen implements Screen {
 //        }
 
         game.entityBatch.end();
-
-        //Borrado de Objetos cuando su vida baja a 0
-        Iterator iterator = objects.iterator();
-        while (iterator.hasNext())
-        {
-            GameObject object = (GameObject) iterator.next();
-            if (object.getHp()<=0){
-                iterator.remove();
-            }
-        }
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();

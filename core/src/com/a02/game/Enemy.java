@@ -16,7 +16,7 @@ public class Enemy extends Entity{
 
     State state;
 
-    public Enemy(float x, float y, int width, int height, String sprite, int id, String name, int hp, int attackDamage, float speed) {
+    public Enemy(float x, float y, int width, int height, String sprite, int id, String name, int hp, int attackDamage, float speed) {  //Constructor de enemigos
         super(x, y, width, height, sprite);
         this.id = id;
         this.name = name;
@@ -26,7 +26,7 @@ public class Enemy extends Entity{
         this.state = State.WALKING;
     }
 
-    public Enemy() {
+    public Enemy() {        //Constructor vacio de enemigos
         super();
         this.id = -1;
         this.name = "";
@@ -120,26 +120,26 @@ public class Enemy extends Entity{
         }
     }
 
-    protected void move(float beaconX, float beaconY) {
-        if (this.getX() < beaconX && this.getY() < beaconY) {
+    protected void move(float beaconX, float beaconY) {             //Dependiendo de donde se encuentre el beacon respecto al objeto se aumenta o decrementan la X y la Y hasta que sean iguales
+        if (this.getX() < beaconX && this.getY() < beaconY) {                  //El beacon esta por encima y a la derecha
             this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
             this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
-        } else if (this.getX() < beaconX && this.getY() > beaconY) {
+        } else if (this.getX() < beaconX && this.getY() > beaconY) {            //El beacon esta por debajo y a la derecha
             this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
             this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
-        } else if (this.getX() < beaconX && this.getY() == beaconY) {
+        } else if (this.getX() < beaconX && this.getY() == beaconY) {           //El beacon esta a la misma altura y a la derecha
             this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
-        } else if (this.getX() > beaconX && this.getY() == beaconY) {
+        } else if (this.getX() > beaconX && this.getY() == beaconY) {           //El beacon esta a la misma altura y a la izquierda
             this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
-        } else if (this.getX() > beaconX && this.getY() > beaconY) {
+        } else if (this.getX() > beaconX && this.getY() > beaconY) {            //El beacon esta por debajo y a la izquierda
             this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
             this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
-        } else if (this.getX() > beaconX && this.getY() < beaconY) {
+        } else if (this.getX() > beaconX && this.getY() < beaconY) {            //El beacon esta por encima y a la izquierda
             this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
             this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
-        } else if (this.getX() == beaconX && this.getY() < beaconY) {
+        } else if (this.getX() == beaconX && this.getY() < beaconY) {           //El beacon esta por debajo y en la misma posicion
             this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
-        } else if (this.getX() == beaconX && this.getY() > beaconY) {
+        } else if (this.getX() == beaconX && this.getY() > beaconY) {           //El beacon esta por arriba y en la misma posicion
             this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
         }
     }
@@ -173,7 +173,7 @@ public class Enemy extends Entity{
     }
 
     public void attack(GameObject thing){
-        if (this.overlaps(thing)){
+        if (this.overlaps(thing)){      //Si estan en contacto empieza a restarle vida
             thing.setHp(thing.getHp()- this.getAttackDamage());
             System.out.println(thing.getHp());
         }

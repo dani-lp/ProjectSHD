@@ -112,7 +112,8 @@ public class GameObject extends Entity{
                 + ", unlock=" + unlocked + ", buyable=" + buyable + ", hp=" + hp+"]";
     }
 
-
+    float x= this.getX();
+    float y = this.getY();
     static boolean temp = false;
     public void buy(GameScreen game, ArrayList<GameObject> objects, ArrayList<Texture> textures, Inventory inventory, Map map){
         Vector3 touchPos = new Vector3();
@@ -143,9 +144,9 @@ public class GameObject extends Entity{
 
                     map.getOccGrid()[(int)temp.x/16][(int)temp.y/18] = true;
                 }
-                this.setX(260); //Devuelve a su posición inicial al objeto original
-                this.setY(135); //260 140
-                objects.get(0).setSelected(true);
+                this.setX(x); //Devuelve a su posición inicial al objeto original
+                this.setY(y); //260 135
+                objects.get(0).setSelected(true); //Para que al pasar por encima de otros objetos del inventario no se seleccione mas de uno
             }
 
         }
