@@ -45,6 +45,8 @@ public class Trap extends GameObject{
         this.attackDamage = attackDamage;
     }
 
+    float x= this.getX();
+    float y = this.getY();
     static boolean temp = false;
     public void buy(GameScreen game, ArrayList<GameObject> objects, ArrayList<Texture> textures, Inventory inventory, Map map){
         Vector3 touchPos = new Vector3();
@@ -75,8 +77,8 @@ public class Trap extends GameObject{
 
                     map.getOccGrid()[(int)temp.x/16][(int)temp.y/18] = true;
                 }
-                this.setX(260); //Devuelve a su posición inicial al objeto original
-                this.setY(115); //260 140
+                this.setX(x); //Devuelve a su posición inicial al objeto original
+                this.setY(y); //260 115
                 objects.get(0).setSelected(true);
             }
         }
