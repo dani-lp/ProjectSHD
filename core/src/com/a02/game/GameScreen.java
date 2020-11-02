@@ -1,6 +1,5 @@
 package com.a02.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -36,13 +35,13 @@ public class GameScreen implements Screen {
     Map map;
     OrthographicCamera camera;
 
-    float secTimer;
+    int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
 
     public GameScreen(MainGame game) {
         this.game = game;
         secTimer = 0;
 
-        larry = new Enemy(12, 90, 16, 16, "Test2.png", 1, "Larry", 200, 1, 30);
+        larry = new Enemy(12, 90, 16, 16, "Test2.png", 1, "Larry", 200, 100, 30);
 
         beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon", 1000, true,1000,false,true);
         wall= new GameObject(260,135,16,18,"Muro.png",0,"Wall", 1000, true,500,true,true);
@@ -89,12 +88,11 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 1, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        secTimer += Gdx.graphics.getDeltaTime();
+        secTimer += 1;
 
-        //System.out.println(secTimer);
+        ArrayList<GameObject> copy = new ArrayList<GameObject>();
+        ArrayList<Texture> copyt = new ArrayList<Texture>();
 
-        ArrayList<GameObject> copy=new ArrayList<GameObject>();
-        ArrayList<Texture> copyt=new ArrayList<Texture>();
         //Actualiza cámara
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
@@ -104,14 +102,16 @@ public class GameScreen implements Screen {
         fire.buy(this,objects,textures,inventory,map);
 
         larry.update(beacon.getX(), beacon.getY(),objects, secTimer);
+
         for (GameObject object:objects) {
             if (object.getHp()!=0){
                 copy.add(object);
                 copyt.add(textures.get(objects.indexOf(object)));
             }
         }
-        objects=copy;
-        textures=copyt;
+
+        objects = copy;
+        textures = copyt;
 
         game.entityBatch.begin();
 

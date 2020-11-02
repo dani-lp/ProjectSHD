@@ -1,10 +1,6 @@
 package com.a02.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-
-import javax.rmi.ssl.SslRMIClientSocketFactory;
 import java.util.ArrayList;
 
 public class Enemy extends Entity{
@@ -79,10 +75,17 @@ public class Enemy extends Entity{
         this.speed = speed;
     }
 
+    /**
+     * Actualiza la posición y estado de un enemigo.
+     * @param beaconX Coordenada X del beacon
+     * @param beaconY Coordenada Y del beacon
+     * @param objects Arraylist de objetos defensivos
+     * @param secTimer Reloj de juego
+     */
     protected void update(float beaconX, float beaconY, ArrayList<GameObject> objects, float secTimer) {
         switch (this.state) {
             case WALKING:
-                this.move(beaconX, beaconY);
+                this.move(beaconX, beaconY);    //Movimiento a beacon
 
                 if (this.getHp() == 0) {
                     this.state = State.DYING;
@@ -94,14 +97,21 @@ public class Enemy extends Entity{
 
             case ATTACKING:
                 if (this.overlapsArray(objects)) {
-                    int tempIndex = objects.indexOf(this.overlappedObject(objects));
-                    System.out.println(objects.get(tempIndex).getHp());
-                    if (objects.get(tempIndex).getHp() > 0 || secTimer % 60 == 0) {
-                        objects.get(tempIndex).setHp(objects.get(tempIndex).getHp() - this.attackDamage);
-                    } else if (this.overlappedObject(objects).getHp() > 0) {
-                        //target.delete() ?
+                    GameObject tempObj = this.overlappedObject(objects);    //Objeto siendo colisionado
+
+                    if (tempObj.getHp() > 0 && secTimer % 60 == 0) {    //Pegar 1 vez por segundo
+                        tempObj.setHp(tempObj.getHp() - this.attackDamage);
+                    } else if (tempObj.getHp() <= 0) {
+                        //target.delete()?
                         this.state = State.WALKING;
                     }
+                }
+                else {
+                    this.state = State.WALKING;
+                }
+
+                if (this.getHp() == 0) {
+                    this.state = State.DYING;
                 }
 
             case DYING:
