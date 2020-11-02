@@ -42,10 +42,10 @@ public class GameScreen implements Screen {
 
         larry = new Enemy(12, 90, 16, 16, "Test2.png", 1, "Larry", 200, 100, 30);
 
-        beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon", 1000, true,1000,false,true);
-        wall= new GameObject(260,135,16,18,"Muro.png",0,"Wall", 1000, true,500,true,true);
-        elec= new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity",100,true,1000,true,true,"Spark",20);
-        fire=new Trap(260,115,16,18,"Fuego.png",3,"Fire",1000,true,1000,true,true,"Burn",15);
+        beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon","Beacon", 1000, true,1000,false,true);
+        wall= new GameObject(260,135,16,18,"Muro.png",0,"Wall","Defense", 1000, true,500,true,true);
+        elec= new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity","Attack",100,true,1000,true,true,"Spark",20);
+        fire=new Trap(260,115,16,18,"Fuego.png",3,"Fire","Trap",1000,true,1000,true,true,"Burn",15);
 
         objects.add(wall);
         objects.add(elec);
@@ -117,21 +117,13 @@ public class GameScreen implements Screen {
         game.entityBatch.draw(mapTexture, 0, 0);
         game.entityBatch.draw(mapTexture, 0, 0);
 
-        game.entityBatch.draw(imgL, larry.getX(), larry.getY());
+
         game.entityBatch.draw(inventoryTexture, inventory.getX(), inventory.getY());            //Dibujado de objetos
-        game.entityBatch.draw(imgWall, wall.getX(), wall.getY());
-        game.entityBatch.draw(imgElec, elec.getX(), elec.getY());
-        game.entityBatch.draw(imgFire, fire.getX(), fire.getY());
 
         for (GameObject object:objects) {
             game.entityBatch.draw(textures.get(objects.indexOf(object)), object.getX(), object.getY());
         }
-//        for(Iterator i = objects.iterator(); i.hasNext();){
-//            GameObject deadObject = (GameObject) i.next();
-//            if (deadObject.getHp() <= 0){
-//                objects.remove(deadObject);
-//            }
-//        }
+        game.entityBatch.draw(imgL, larry.getX(), larry.getY());
 
         game.entityBatch.end();
 

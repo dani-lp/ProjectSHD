@@ -11,14 +11,14 @@ public class Trap extends GameObject{
     private String effect;
     private float attackDamage;
 
-    public Trap(float x, float y, int width, int height, String sprite, int id, String name, int price, boolean unlocked, int hp, boolean buyable, boolean selected, String effect, float attackDamage) {
-        super(x, y, width, height, sprite, id, name, price, unlocked, hp, buyable,selected);
+    public Trap(float x, float y, int width, int height, String sprite, int id, String name, String type, int price, boolean unlocked, int hp, boolean buyable, boolean selected, String effect, float attackDamage) {
+        super(x, y, width, height, sprite, id, name, type,price, unlocked, hp, buyable,selected);
         this.effect = effect;
         this.attackDamage = attackDamage;
     }
 
     public Trap(Trap other) {
-        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite(), other.getId(), other.getName(), other.getPrice(), other.isUnlocked(), other.getHp(), other.isBuyable(), other.isSelected());
+        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite(), other.getId(), other.getName(), other.getType(), other.getPrice(), other.isUnlocked(), other.getHp(), other.isBuyable(), other.isSelected());
         this.effect = other.getEffect();
         this.attackDamage = other.getAttackDamage();
     }

@@ -150,6 +150,8 @@ public class Enemy extends Entity{
                 continue;
             } else if ((this.getX() + this.getWidth() < object.getX()) || (this.getX() > object.getX() + object.getWidth())) {
                 continue;
+            }else if(object.getType()=="Trap"){
+                continue;
             }
             else {
                 return true;
