@@ -93,6 +93,8 @@ public class GameScreen implements Screen {
 
         //System.out.println(secTimer);
 
+        ArrayList<GameObject> copy=new ArrayList<GameObject>();
+        ArrayList<Texture> copyt=new ArrayList<Texture>();
         //Actualiza cámara
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
@@ -102,9 +104,18 @@ public class GameScreen implements Screen {
         fire.buy(this,objects,textures,inventory,map);
 
         larry.update(beacon.getX(), beacon.getY(),objects, secTimer);
+        for (GameObject object:objects) {
+            if (object.getHp()!=0){
+                copy.add(object);
+                copyt.add(textures.get(objects.indexOf(object)));
+            }
+        }
+        objects=copy;
+        textures=copyt;
 
         game.entityBatch.begin();
 
+        game.entityBatch.draw(mapTexture, 0, 0);
         game.entityBatch.draw(mapTexture, 0, 0);
 
         game.entityBatch.draw(imgL, larry.getX(), larry.getY());

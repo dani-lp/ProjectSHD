@@ -2,7 +2,9 @@ package com.a02.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 
+import javax.rmi.ssl.SslRMIClientSocketFactory;
 import java.util.ArrayList;
 
 public class Enemy extends Entity{
@@ -93,6 +95,7 @@ public class Enemy extends Entity{
             case ATTACKING:
                 if (this.overlapsArray(objects)) {
                     int tempIndex = objects.indexOf(this.overlappedObject(objects));
+                    System.out.println(objects.get(tempIndex).getHp());
                     if (objects.get(tempIndex).getHp() > 0 || secTimer % 60 == 0) {
                         objects.get(tempIndex).setHp(objects.get(tempIndex).getHp() - this.attackDamage);
                     } else if (this.overlappedObject(objects).getHp() > 0) {
@@ -163,38 +166,6 @@ public class Enemy extends Entity{
         if (this.overlaps(thing)){
             thing.setHp(thing.getHp()- this.getAttackDamage());
             System.out.println(thing.getHp());
-        }
-    }
-
-    public void move1(float beaconX, float beaconY, ArrayList<GameObject> objects){     //Va comparando para intentar encontrar la ruta mas rapida
-        for (GameObject object: objects) {
-            if (!this.overlaps(object)) {
-                if (this.getX() < beaconX && this.getY() < beaconY) {
-                    this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
-                    this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
-                } else if (this.getX() < beaconX && this.getY() > beaconY) {
-                    this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
-                    this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
-                } else if (this.getX() < beaconX && this.getY() == beaconY) {
-                    this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
-                } else if (this.getX() > beaconX && this.getY() == beaconY) {
-                    this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
-                } else if (this.getX() > beaconX && this.getY() > beaconY) {
-                    this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
-                    this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
-                } else if (this.getX() > beaconX && this.getY() < beaconY) {
-                    this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
-                    this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
-                } else if (this.getX() == beaconX && this.getY() < beaconY) {
-                    this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
-                } else if (this.getX() == beaconX && this.getY() > beaconY) {
-                    this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
-                }
-            } else {
-                while (object.getHp()!=0){
-                    this.attack(object);
-                }
-            }
         }
     }
 }
