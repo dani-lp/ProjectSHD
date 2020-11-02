@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,10 +37,12 @@ public class GameScreen implements Screen {
     OrthographicCamera camera;
 
     int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
+    float animationTimer;   //Contador para animaciones
 
     public GameScreen(MainGame game) {
         this.game = game;
         secTimer = 0;
+        animationTimer = 0;
 
         larry = new Enemy(12, 90, 16, 16, "Test2.png", 1, "Larry", 200, 100, 30);
 
@@ -91,6 +94,7 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         secTimer += 1;
+        animationTimer += Gdx.graphics.getDeltaTime();
 
         ArrayList<GameObject> copy = new ArrayList<GameObject>();
         ArrayList<Texture> copyt = new ArrayList<Texture>();
@@ -107,27 +111,31 @@ public class GameScreen implements Screen {
         elec.update(larry.getX(), larry.getY(), enemies,secTimer);
 
         for (GameObject object:objects) {
-            if (object.getHp()!=0){
+            if (object.getHp() > 0){
                 copy.add(object);
                 copyt.add(textures.get(objects.indexOf(object)));
+            }
+            else {
+                map.getOccGrid()[(int) object.getX()/16][(int) object.getY()/18] = false;
             }
         }
 
         objects = copy;
         textures = copyt;
 
+        TextureRegion currentLarryWalk = larry.walkAnimation.getKeyFrame(animationTimer, true);
+
         game.entityBatch.begin();
 
         game.entityBatch.draw(mapTexture, 0, 0);
         game.entityBatch.draw(mapTexture, 0, 0);
-
 
         game.entityBatch.draw(inventoryTexture, inventory.getX(), inventory.getY());            //Dibujado de objetos
 
         for (GameObject object:objects) {
             game.entityBatch.draw(textures.get(objects.indexOf(object)), object.getX(), object.getY());
         }
-        game.entityBatch.draw(imgL, larry.getX(), larry.getY());
+        game.entityBatch.draw(currentLarryWalk, larry.getX(), larry.getY());
 
         game.entityBatch.end();
 

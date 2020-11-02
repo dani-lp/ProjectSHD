@@ -3,6 +3,9 @@ package com.a02.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import java.util.ArrayList;
 
 public class Enemy extends Entity{
@@ -11,6 +14,8 @@ public class Enemy extends Entity{
     private int hp;
     private int attackDamage;
     private float speed;
+
+    protected Animation<TextureRegion> walkAnimation;
 
     private enum State {
         WALKING, ATTACKING, DYING
@@ -26,6 +31,7 @@ public class Enemy extends Entity{
         this.attackDamage = attackDamage;
         this.speed = speed;
         this.state = State.WALKING;
+        this.walkAnimation = createAnimation("larry-walk.png", 3, 1, 0.2f);
     }
 
     public Enemy() {        //Constructor vacio de enemigos
