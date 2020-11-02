@@ -13,58 +13,39 @@ public class GameObjectTest {
         assertEquals(5,testObject.getId());
     }
 
-//    @Test
-//    public void setId() {
-//    }
-//
-//    @Test
-//    public void getName() {
-//    }
-//
-//    @Test
-//    public void setName() {
-//    }
-//
-//    @Test
-//    public void getPrice() {
-//    }
-//
-//    @Test
-//    public void setPrice() {
-//    }
-//
-//    @Test
-//    public void isUnlocked() {
-//    }
-//
-//    @Test
-//    public void setUnlocked() {
-//    }
-//
-//    @Test
-//    public void isBuyable() {
-//    }
-//
-//    @Test
-//    public void setBuyable() {
-//    }
-//
-//    @Test
-//    public void getHp() {
-//    }
-//
-//    @Test
-//    public void setHp() {
-//    }
-//
-//    @Test
-//    public void isSelected() {
-//    }
-//
-//    @Test
-//    public void setSelected() {
-//    }
-//
+
+    @Test
+    public void getName() {
+        assertEquals("test",testObject.getName());
+    }
+
+    @Test
+    public void getPrice() {
+        assertEquals(6,testObject.getPrice());
+    }
+
+    @Test
+    public void isUnlocked() {
+        assertTrue(testObject.isUnlocked());
+    }
+
+    @Test
+    public void isBuyable() {
+        assertFalse(testObject.isBuyable());
+    }
+
+   @Test
+    public void getHp() {
+        assertEquals(7,testObject.getHp());
+    }
+
+
+    @Test
+    public void isSelected() {
+        assertTrue(testObject.isSelected());
+    }
+
+
 //    @Test
 //    public void testToString() {
 //    }
