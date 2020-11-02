@@ -19,6 +19,8 @@ public class Attacker extends GameObject {
 
     public Attacker(float x, float y, int width, int height, String sprite, int id, String name, int price, boolean unlocked, int hp, boolean buyable, boolean selected, String attackType, float attackDamage) {
         super(x, y, width, height, sprite, id, name, price, unlocked, hp, buyable, selected);
+    public Attacker(float x, float y, int width, int height, String sprite, int id, String name, String type, int price, boolean unlocked, int hp, boolean buyable, boolean selected, String attackType, float attackDamage) {
+        super(x, y, width, height, sprite, id, name, type, price, unlocked, hp, buyable,selected);
         this.attackType = attackType;
         this.attackDamage = attackDamage;
         this.state = State1.IDLE;
@@ -32,6 +34,7 @@ public class Attacker extends GameObject {
 
     public Attacker(Attacker other) {
         super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite(), other.getId(), other.getName(), other.getPrice(), other.isUnlocked(), other.getHp(), other.isBuyable(), other.isSelected());
+        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite(), other.getId(), other.getName(), other.getType(), other.getPrice(), other.isUnlocked(), other.getHp(), other.isBuyable(),other.isSelected());
         this.attackType = other.getAttackType();
         this.attackDamage = other.getAttackDamage();
     }

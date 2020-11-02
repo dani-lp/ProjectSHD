@@ -1,6 +1,5 @@
 package com.a02.game;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -36,18 +35,18 @@ public class GameScreen implements Screen {
     Map map;
     OrthographicCamera camera;
 
-    float secTimer;
+    int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
 
     public GameScreen(MainGame game) {
         this.game = game;
         secTimer = 0;
 
-        larry = new Enemy(12, 90, 16, 16, "Test2.png", 1, "Larry", 2000, 1, 30);
+        larry = new Enemy(12, 90, 16, 16, "Test2.png", 1, "Larry", 200, 100, 30);
 
-        beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon", 1000, true,1000,false,true);
-        wall= new GameObject(260,135,16,18,"Muro.png",0,"Wall", 1000, true,500,true,true);
-        elec= new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity",100,true,1000,true,true,"Spark",5);
-        fire=new Trap(260,115,16,18,"Fuego.png",3,"Fire",1000,true,1000,true,true,"Burn",15);
+        beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon","Beacon", 1000, true,1000,false,true);
+        wall= new GameObject(260,135,16,18,"Muro.png",0,"Wall","Defense", 1000, true,500,true,true);
+        elec= new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity","Attack",100,true,1000,true,true,"Spark",20);
+        fire=new Trap(260,115,16,18,"Fuego.png",3,"Fire","Trap",1000,true,1000,true,true,"Burn",15);
 
         enemies.add(larry);
 
@@ -91,9 +90,10 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 1, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        secTimer += Gdx.graphics.getDeltaTime();
+        secTimer += 1;
 
-        //System.out.println(secTimer);
+        ArrayList<GameObject> copy = new ArrayList<GameObject>();
+        ArrayList<Texture> copyt = new ArrayList<Texture>();
 
         //Actualiza cámara
         camera.update();
@@ -106,37 +106,28 @@ public class GameScreen implements Screen {
         larry.update(beacon.getX(), beacon.getY(),objects, secTimer);
         elec.update(larry.getX(), larry.getY(), enemies,secTimer);
 
-        ArrayList<GameObject> copy=new ArrayList<GameObject>();     //Creamos dos ArrayList para que se eliminen los objetos que esten "Muertos"
-        ArrayList<Texture> copyt=new ArrayList<Texture>();
         for (GameObject object:objects) {
             if (object.getHp()!=0){
                 copy.add(object);
                 copyt.add(textures.get(objects.indexOf(object)));
             }
         }
-        objects=copy;
-        textures=copyt;
+
+        objects = copy;
+        textures = copyt;
 
         game.entityBatch.begin();
 
         game.entityBatch.draw(mapTexture, 0, 0);
         game.entityBatch.draw(mapTexture, 0, 0);
 
-        game.entityBatch.draw(imgL, larry.getX(), larry.getY());
+
         game.entityBatch.draw(inventoryTexture, inventory.getX(), inventory.getY());            //Dibujado de objetos
-        game.entityBatch.draw(imgWall, wall.getX(), wall.getY());
-        game.entityBatch.draw(imgElec, elec.getX(), elec.getY());
-        game.entityBatch.draw(imgFire, fire.getX(), fire.getY());
 
         for (GameObject object:objects) {
             game.entityBatch.draw(textures.get(objects.indexOf(object)), object.getX(), object.getY());
         }
-//        for(Iterator i = objects.iterator(); i.hasNext();){
-//            GameObject deadObject = (GameObject) i.next();
-//            if (deadObject.getHp() <= 0){
-//                objects.remove(deadObject);
-//            }
-//        }
+        game.entityBatch.draw(imgL, larry.getX(), larry.getY());
 
         game.entityBatch.end();
 

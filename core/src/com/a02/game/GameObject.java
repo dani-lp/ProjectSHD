@@ -10,17 +10,19 @@ import java.util.ArrayList;
 public class GameObject extends Entity{
     private int id;
     private String name;
+    private String type;
     private int price;
     private boolean unlocked;
     private boolean buyable=true;
     private boolean selected=true;
     private int hp;
 
-    public GameObject(float x, float y, int width, int height, String sprite, int id, String name,
+    public GameObject(float x, float y, int width, int height, String sprite, int id, String name,String type,
                       int price, boolean unlocked, int hp, boolean buyable, boolean selected) {
         super(x, y, width, height, sprite);
         this.id = id;
         this.name = name;
+        this.type = type;
         this.price = price;
         this.unlocked = unlocked;
         this.buyable = buyable;
@@ -32,6 +34,7 @@ public class GameObject extends Entity{
         super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite());
         this.id = other.id;
         this.name = other.name;
+        this.type = other.type;
         this.price = other.price;
         this.unlocked = other.unlocked;
         this.buyable = other.buyable;
@@ -43,6 +46,7 @@ public class GameObject extends Entity{
         super();
         this.id = -1;
         this.name = "";
+        this.type = "";
         this.price = 0;
         this.unlocked = false;
         this.buyable = true;
@@ -64,6 +68,14 @@ public class GameObject extends Entity{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getPrice() {
@@ -108,7 +120,7 @@ public class GameObject extends Entity{
 
     @Override
     public String toString() {
-        return "ASD [id=" + id + ", name=" + name + ", x=" + this.getX() + ", y=" + this.getY() + ", sprite=" + getSprite() + ", price=" + price
+        return "ASD [id=" + id + ", name=" + name + ", type=" + type + ", x=" + this.getX() + ", y=" + this.getY() + ", sprite=" + getSprite() + ", price=" + price
                 + ", unlock=" + unlocked + ", buyable=" + buyable + ", hp=" + hp+"]";
     }
 
