@@ -16,6 +16,7 @@ public class GameScreen implements Screen {
     final MainGame game;
     ArrayList<GameObject> objects = new ArrayList<GameObject>(); //Objetos en el juego
     ArrayList<Texture> textures = new ArrayList<Texture>();  //Texturas de los objetos del juego
+    ArrayList<Enemy> enemies = new ArrayList<Enemy>(); // Enemigos
 
     Texture imgL;
     Texture imgWall;
@@ -41,12 +42,14 @@ public class GameScreen implements Screen {
         this.game = game;
         secTimer = 0;
 
-        larry = new Enemy(12, 90, 16, 16, "Test2.png", 1, "Larry", 200, 1, 30);
+        larry = new Enemy(12, 90, 16, 16, "Test2.png", 1, "Larry", 2000, 1, 30);
 
         beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon", 1000, true,1000,false,true);
         wall= new GameObject(260,135,16,18,"Muro.png",0,"Wall", 1000, true,500,true,true);
-        elec= new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity",100,true,1000,true,true,"Spark",20);
+        elec= new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity",100,true,1000,true,true,"Spark",5);
         fire=new Trap(260,115,16,18,"Fuego.png",3,"Fire",1000,true,1000,true,true,"Burn",15);
+
+        enemies.add(larry);
 
         objects.add(wall);
         objects.add(elec);
@@ -101,6 +104,7 @@ public class GameScreen implements Screen {
         fire.buy(this,objects,textures,inventory,map);
 
         larry.update(beacon.getX(), beacon.getY(),objects, secTimer);
+        elec.update(larry.getX(), larry.getY(), enemies,secTimer);
 
         ArrayList<GameObject> copy=new ArrayList<GameObject>();     //Creamos dos ArrayList para que se eliminen los objetos que esten "Muertos"
         ArrayList<Texture> copyt=new ArrayList<Texture>();
