@@ -125,6 +125,16 @@ public class GameScreen implements Screen {
 
         game.entityBatch.end();
 
+        //Borrado de Objetos cuando su vida baja a 0
+        Iterator iterator = objects.iterator();
+        while (iterator.hasNext())
+        {
+            GameObject object = (GameObject) iterator.next();
+            if (object.getHp()<=0){
+                iterator.remove();
+            }
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
             System.exit(0);
