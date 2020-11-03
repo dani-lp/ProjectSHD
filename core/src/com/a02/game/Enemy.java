@@ -155,7 +155,7 @@ public class Enemy extends Entity{
 
     protected boolean overlapsArray(ArrayList<GameObject> objects) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro y esta no es una trampa
         for (GameObject object: objects) {
-            if ((this.getY() + this.getHeight() < object.getY()) || (this.getY() > object.getY() + object.getHeight())) {
+            if ((this.getY() + this.getHeight() < object.getY()) || (this.getY() > object.getY() + object.getHeight()-1)) {
                 continue;
             } else if (((this.getX() + this.getWidth() < object.getX()) || (this.getX() > object.getX() + object.getWidth()))) {
                 continue;
