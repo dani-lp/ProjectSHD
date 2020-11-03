@@ -58,6 +58,7 @@ public class Trap extends GameObject{
             objects.get(0).setSelected(false);
         }
         if (temp) { //El objeto ya ha sido "cogido"
+            this.setBuyable(false);
             //Ajusta la posición del sprite a la del mouse
             this.setX((int) (touchPos.x - 16 / 2));
             this.setY((int) (touchPos.y - 16 / 2));
@@ -67,6 +68,7 @@ public class Trap extends GameObject{
                 Vector2 temp = this.mapGridCollisionMouse(map, touchPos.x, touchPos.y); //Pos. del mouse
 
                 if (!map.getOccGrid()[(int)temp.x/16][(int)temp.y/18]) {    //Comprueba si la casilla está libre
+                    this.setBuyable(true);
                     Trap object = new Trap(this);   //Objeto que va a ser colocado
                     Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
 

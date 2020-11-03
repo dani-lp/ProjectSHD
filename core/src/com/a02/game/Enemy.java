@@ -1,6 +1,7 @@
 package com.a02.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -152,16 +153,17 @@ public class Enemy extends Entity{
         }
     }
 
-    protected boolean overlapsArray(ArrayList<GameObject> objects) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
+    protected boolean overlapsArray(ArrayList<GameObject> objects) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro y esta no es una trampa
         for (GameObject object: objects) {
             if ((this.getY() + this.getHeight() < object.getY()) || (this.getY() > object.getY() + object.getHeight())) {
                 continue;
-            } else if ((this.getX() + this.getWidth() < object.getX()) || (this.getX() > object.getX() + object.getWidth())) {
+            } else if (((this.getX() + this.getWidth() < object.getX()) || (this.getX() > object.getX() + object.getWidth()))) {
                 continue;
-            }else if(object.getType()=="Trap"){
+            } else if(object.getType()=="Trap"){
                 continue;
-            }
-            else {
+            } else if (Gdx.input.isTouched() && !object.isBuyable()) {
+                continue;
+            } else {
                 return true;
             }
         }

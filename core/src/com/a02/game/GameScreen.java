@@ -17,6 +17,7 @@ public class GameScreen implements Screen {
     ArrayList<GameObject> objects = new ArrayList<GameObject>(); //Objetos en el juego
     ArrayList<Texture> textures = new ArrayList<Texture>();  //Texturas de los objetos del juego
     ArrayList<Enemy> enemies = new ArrayList<Enemy>(); // Enemigos
+    ArrayList<Texture> enemyTextures = new ArrayList<Texture>();  //Texturas de los enemigos del juego
 
     Texture imgL;
     Texture imgWall;
@@ -47,7 +48,7 @@ public class GameScreen implements Screen {
         larry = new Enemy(12, 90, 16, 16, "Test2.png", 1, "Larry", 200, 100, 30);
 
         beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon","Beacon", 1000, true,1000,false,true);
-        wall= new GameObject(260,135,16,18,"Muro.png",0,"Wall","Defense", 1000, true,500,true,true);
+        wall= new GameObject(260,135,16,18,"Muro.png",0,"Wall","Defense", 1000, true,1000,true,true);
         elec= new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity","Attack",100,true,1000,true,true,"Spark",20);
         fire=new Trap(260,115,16,18,"Fuego.png",3,"Fire","Trap",1000,true,1000,true,true,"Burn",15);
 
@@ -63,6 +64,8 @@ public class GameScreen implements Screen {
         imgElec=new Texture(Gdx.files.internal(elec.getSprite()));
         imgFire=new Texture(Gdx.files.internal(fire.getSprite()));
         imgB= new Texture(Gdx.files.internal(beacon.getSprite()));
+
+        enemyTextures.add(imgL);
 
         textures.add(imgWall);
         textures.add(imgElec);
@@ -96,8 +99,7 @@ public class GameScreen implements Screen {
         secTimer += 1;
         animationTimer += Gdx.graphics.getDeltaTime();
 
-        ArrayList<GameObject> copy = new ArrayList<GameObject>();
-        ArrayList<Texture> copyt = new ArrayList<Texture>();
+
 
         //Actualiza cámara
         camera.update();
@@ -109,6 +111,9 @@ public class GameScreen implements Screen {
 
         larry.update(beacon.getX(), beacon.getY(),objects, secTimer);
         elec.update(larry.getX(), larry.getY(), enemies,secTimer);
+
+        ArrayList<GameObject> copy = new ArrayList<GameObject>();
+        ArrayList<Texture> copyt = new ArrayList<Texture>();
 
         for (GameObject object:objects) {
             if (object.getHp() > 0){
@@ -122,6 +127,18 @@ public class GameScreen implements Screen {
 
         objects = copy;
         textures = copyt;
+
+        ArrayList<Enemy> copyn = new ArrayList<Enemy>();
+        ArrayList<Texture> copynt = new ArrayList<Texture>();
+
+        for (Enemy enemy:enemies) {
+            if (enemy.getHp() > 0){
+                copyn.add(enemy);
+            }
+        }
+
+        enemies = copyn;
+        enemyTextures = copynt;
 
         TextureRegion currentLarryWalk = larry.walkAnimation.getKeyFrame(animationTimer, true);
 

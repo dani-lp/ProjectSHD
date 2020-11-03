@@ -64,12 +64,11 @@ public class Attacker extends GameObject {
             case ATTACKING:
                 if (this.overlapsArrayEnemies(enemies)) {
                     int tempIndex = enemies.indexOf(this.overlappedEnemy(enemies));
-                    System.out.println(enemies.get(tempIndex).getHp());
                     if (enemies.get(tempIndex).getHp() > 0 || secTimer % 60 == 0) {
                         enemies.get(tempIndex).setHp((int) (enemies.get(tempIndex).getHp() - this.attackDamage));
+                        System.out.println(enemies.get(tempIndex).getHp());
                     } else if (this.overlappedEnemy(enemies).getHp() > 0) {
-                        //target.delete() ?
-                        this.state = State1.IDLE;
+
                     }
                 }
 
@@ -91,6 +90,7 @@ public class Attacker extends GameObject {
                 objects.get(0).setSelected(false);
             }
             if (temp) { //El objeto ya ha sido "cogido"
+                this.setBuyable(false);
                 //Ajusta la posición del sprite a la del mouse
                 this.setX((int) (touchPos.x - 16 / 2));
                 this.setY((int) (touchPos.y - 16 / 2));
@@ -98,6 +98,7 @@ public class Attacker extends GameObject {
                 if (!Gdx.input.isTouched()) {
                     Vector2 temp = this.mapGridCollisionMouse(map, touchPos.x, touchPos.y); //Pos. del mouse
                     if (!map.getOccGrid()[(int) temp.x / 16][(int) temp.y / 18]) {    //Comprueba si la casilla está libre
+                        this.setBuyable(true);
                         Attacker object = new Attacker(this);   //Objeto que va a ser colocado
                         Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
                         object.setX(temp.x);   //Fija la posición copia
