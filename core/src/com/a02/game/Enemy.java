@@ -174,9 +174,9 @@ public class Enemy extends Entity{
                 continue;
             } else if (((this.getX() + this.getWidth() < object.getX()) || (this.getX() > object.getX() + object.getWidth()))) {
                 continue;
-            } else if(object.getType().equals("Trap")) {
+            } else if(Gdx.input.isTouched() && !object.isBuyable()){
                 continue;
-            } else if (Gdx.input.isTouched() && !object.isBuyable()) {
+            } else if (object.getType().equals("Trap")) {
                 continue;
             } else {
                 return true;

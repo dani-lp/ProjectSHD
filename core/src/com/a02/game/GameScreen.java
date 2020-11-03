@@ -28,6 +28,9 @@ public class GameScreen implements Screen {
     Texture mapTexture;
 
     Enemy larry;
+    Enemy larry2;
+    Enemy larry3;
+    Enemy larry4;
     GameObject beacon;
     GameObject wall;        //Enemigos y objetos
     Attacker elec;
@@ -46,6 +49,9 @@ public class GameScreen implements Screen {
         animationTimer = 0;
 
         larry = new Enemy(12, 90, 16, 16, "Test2.png", 1, "Larry", 200, 100, 30);
+        larry2 = new Enemy(45, -25, 16, 16, "Test2.png", 2, "Jeremy", 200, 100, 30);
+        larry3 = new Enemy(100, 200, 16, 16, "Test2.png", 1, "Larry", 200, 100, 30);
+        larry4 = new Enemy(450, 20, 16, 16, "Test2.png", 2, "Jeremy", 200, 100, 30);
 
         beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon","Beacon", 1000, true,1000,false,true);
         wall= new GameObject(260,135,16,18,"Muro.png",0,"Wall","Defense", 1000, true,1000,true,true);
@@ -53,6 +59,9 @@ public class GameScreen implements Screen {
         fire=new Trap(260,115,16,18,"Fuego.png",3,"Fire","Trap",1000,true,1000,true,true,"Burn",15);
 
         enemies.add(larry);
+        enemies.add(larry2);
+        enemies.add(larry3);
+        enemies.add(larry4);
 
         objects.add(wall);
         objects.add(elec);
@@ -97,10 +106,6 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 1, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        //larry.setHp(larry.getHp() - 1);
-        System.out.println(larry.getHp());
-
-        //Relojes
         secTimer += 1;
         animationTimer += Gdx.graphics.getDeltaTime();
 
@@ -114,6 +119,16 @@ public class GameScreen implements Screen {
 
         larry.update(beacon.getX(), beacon.getY(), objects, enemies, secTimer);
         elec.update(larry.getX(), larry.getY(), enemies, secTimer);
+
+        if (secTimer>500){
+            larry2.update(beacon.getX(), beacon.getY(), objects, enemies, secTimer);
+        }
+        if (secTimer>800){
+            larry3.update(beacon.getX(), beacon.getY(), objects, enemies, secTimer);
+        }
+        if (secTimer>1400){
+            larry4.update(beacon.getX(), beacon.getY(), objects, enemies, secTimer);
+        }
 
         ArrayList<GameObject> copy = new ArrayList<GameObject>();
         ArrayList<Texture> copyt = new ArrayList<Texture>();
@@ -149,6 +164,11 @@ public class GameScreen implements Screen {
 
         game.entityBatch.draw(mapTexture, 0, 0);
         game.entityBatch.draw(mapTexture, 0, 0);
+
+        if (larry.state != Enemy.State.DEAD)game.entityBatch.draw(currentLarryWalk, larry.getX(), larry.getY());
+        if (larry2.state != Enemy.State.DEAD)game.entityBatch.draw(currentLarryWalk, larry2.getX(), larry2.getY());
+        if (larry3.state != Enemy.State.DEAD)game.entityBatch.draw(currentLarryWalk, larry3.getX(), larry3.getY());
+        if (larry4.state != Enemy.State.DEAD)game.entityBatch.draw(currentLarryWalk, larry4.getX(), larry4.getY());
 
         game.entityBatch.draw(inventoryTexture, inventory.getX(), inventory.getY());            //Dibujado de objetos
 

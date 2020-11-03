@@ -154,6 +154,7 @@ public class Attacker extends GameObject {
                 System.out.println(thing.getHp());
             }
         }
+
 }
 
 
