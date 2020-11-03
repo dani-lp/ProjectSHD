@@ -17,9 +17,10 @@ public class Enemy extends Entity{
     private float speed;
 
     protected Animation<TextureRegion> walkAnimation;
+    protected Animation<TextureRegion> deathAnimation;
 
-    private enum State {
-        WALKING, ATTACKING, DYING
+    enum State {
+        WALKING, ATTACKING, DYING, DEAD
     }
 
     State state;
@@ -33,6 +34,7 @@ public class Enemy extends Entity{
         this.speed = speed;
         this.state = State.WALKING;
         this.walkAnimation = createAnimation("larry-walk.png", 3, 1, 0.2f);
+        this.deathAnimation = createAnimation("larry-death.png", 2, 2, 0.25f);
     }
 
     public Enemy() {        //Constructor vacio de enemigos
@@ -91,18 +93,19 @@ public class Enemy extends Entity{
      * @param objects Arraylist de objetos defensivos
      * @param secTimer Reloj de juego
      */
-    protected void update(float beaconX, float beaconY, ArrayList<GameObject> objects, float secTimer) {
+    protected void update(float beaconX, float beaconY, ArrayList<GameObject> objects, ArrayList<Enemy> enemies, float secTimer) {
         switch (this.state) {
             case WALKING:
                 this.move(beaconX, beaconY);    //Movimiento a beacon
 
-                if (this.getHp() == 0) {
+                if (this.getHp() <= 0) {
                     this.state = State.DYING;
                 }
 
                 else if (this.overlapsArray(objects)) {
                     this.state = State.ATTACKING;
                 }
+                break;
 
             case ATTACKING:
                 if (this.overlapsArray(objects)) {
@@ -119,12 +122,25 @@ public class Enemy extends Entity{
                     this.state = State.WALKING;
                 }
 
-                if (this.getHp() == 0) {
+                if (this.getHp() <= 0) {
                     this.state = State.DYING;
                 }
 
+                break;
+
             case DYING:
-                //Muere;
+                //playAnimation();
+                System.out.println("Muerte");
+                try {
+                    if (enemies.size() > 0) enemies.remove(enemies.indexOf(this));
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+                this.state = State.DEAD;
+                break;
+
+            case DEAD:
+                break;
 
         }
     }

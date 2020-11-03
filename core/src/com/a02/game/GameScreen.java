@@ -16,7 +16,7 @@ public class GameScreen implements Screen {
     final MainGame game;
     ArrayList<GameObject> objects = new ArrayList<GameObject>(); //Objetos en el juego
     ArrayList<Texture> textures = new ArrayList<Texture>();  //Texturas de los objetos del juego
-    ArrayList<Enemy> enemies = new ArrayList<Enemy>(); // Enemigos
+    ArrayList<Enemy> enemies = new ArrayList<Enemy>(); // Enemigos del juego
     ArrayList<Texture> enemyTextures = new ArrayList<Texture>();  //Texturas de los enemigos del juego
 
     Texture imgL;
@@ -99,8 +99,6 @@ public class GameScreen implements Screen {
         secTimer += 1;
         animationTimer += Gdx.graphics.getDeltaTime();
 
-
-
         //Actualiza cámara
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
@@ -109,8 +107,8 @@ public class GameScreen implements Screen {
         elec.buy(this,objects,textures,inventory,map);
         fire.buy(this,objects,textures,inventory,map);
 
-        larry.update(beacon.getX(), beacon.getY(),objects, secTimer);
-        elec.update(larry.getX(), larry.getY(), enemies,secTimer);
+        larry.update(beacon.getX(), beacon.getY(), objects, enemies, secTimer);
+        elec.update(larry.getX(), larry.getY(), enemies, secTimer);
 
         ArrayList<GameObject> copy = new ArrayList<GameObject>();
         ArrayList<Texture> copyt = new ArrayList<Texture>();
@@ -131,7 +129,7 @@ public class GameScreen implements Screen {
         ArrayList<Enemy> copyn = new ArrayList<Enemy>();
         ArrayList<Texture> copynt = new ArrayList<Texture>();
 
-        for (Enemy enemy:enemies) {
+        for (Enemy enemy : enemies) {
             if (enemy.getHp() > 0){
                 copyn.add(enemy);
             }
@@ -152,7 +150,7 @@ public class GameScreen implements Screen {
         for (GameObject object:objects) {
             game.entityBatch.draw(textures.get(objects.indexOf(object)), object.getX(), object.getY());
         }
-        game.entityBatch.draw(currentLarryWalk, larry.getX(), larry.getY());
+        if (larry.state != Enemy.State.DEAD)game.entityBatch.draw(currentLarryWalk, larry.getX(), larry.getY());
 
         game.entityBatch.end();
 

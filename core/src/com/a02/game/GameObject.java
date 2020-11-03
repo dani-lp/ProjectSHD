@@ -124,50 +124,60 @@ public class GameObject extends Entity{
                 + ", unlock=" + unlocked + ", buyable=" + buyable + ", hp=" + hp+"]";
     }
 
-    float x= this.getX();
+    float x = this.getX();
     float y = this.getY();
-    static boolean temp = false;
+    static boolean grabbed = false;
+
+    /**
+     *
+     * @param game
+     * @param objects
+     * @param textures
+     * @param inventory
+     * @param map
+     */
     public void buy(GameScreen game, ArrayList<GameObject> objects, ArrayList<Texture> textures, Inventory inventory, Map map){
+        //Coge posición del ratón y la escala al tamaño de la cámara
         Vector3 touchPos = new Vector3();
         touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
         game.camera.unproject(touchPos);
 
-        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !temp && buyable && objects.get(0).isSelected()) {
-            temp = true;
+        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !grabbed && buyable && objects.get(0).isSelected()) {
+            grabbed = true;
             objects.get(0).setSelected(false);
         }
-        if (temp) {//El objeto ya ha sido "cogido"
+        if (grabbed) {//El objeto ya ha sido "cogido"
             this.setBuyable(false);
             //Ajusta la posición del sprite a la del mouse
             this.setX((int) (touchPos.x - 16 / 2));
             this.setY((int) (touchPos.y - 16 / 2));
+
             //Al "soltar" el objeto:
-            if (!Gdx.input.isTouched()){
+            if (!Gdx.input.isTouched()){    //TODO: sólo poner objeto si touchPos.x < 255
                 Vector2 temp = this.mapGridCollisionMouse(map, touchPos.x, touchPos.y); //Pos. del mouse
+                if (touchPos.x < 255) {
+                    if (!map.getOccGrid()[(int) temp.x / 16][(int) temp.y / 18]) {    //Comprueba si la casilla está libre
+                        this.setBuyable(true);
+                        GameObject object = new GameObject(this);   //Objeto que va a ser colocado
+                        Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
+                        object.setX(temp.x);   //Fija la posición copia
+                        object.setY(temp.y);
+                        objects.add(object);
+                        textures.add(textu);
 
-                if (!map.getOccGrid()[(int)temp.x/16][(int)temp.y/18]) {    //Comprueba si la casilla está libre
-                    this.setBuyable(true);
-                    GameObject object = new GameObject(this);   //Objeto que va a ser colocado
-                    Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
-                    object.setX(temp.x);   //Fija la posición copia
-                    object.setY(temp.y);
-                    objects.add(object);
-                    textures.add(textu);
-
-                    map.getOccGrid()[(int)temp.x/16][(int)temp.y/18] = true;
+                        map.getOccGrid()[(int) temp.x / 16][(int) temp.y / 18] = true;
+                    }
                 }
                 this.setX(x); //Devuelve a su posición inicial al objeto original
                 this.setY(y); //260 135
                 objects.get(0).setSelected(true); //Para que al pasar por encima de otros objetos del inventario no se seleccione mas de uno
             }
-
         }
         if (!Gdx.input.isTouched()) {
-            temp = false;
+            grabbed = false;
         }
-
-
     }
+
     //Devuelve el número de casilla con la que colisiona del mapa recibido como parámetro, null si no lo hace
     protected Vector2 mapGridCollision(Map map) {
         int x, y;

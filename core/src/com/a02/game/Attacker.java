@@ -16,7 +16,8 @@ public class Attacker extends GameObject {
     }
 
     State1 state;
-    public Attacker(float x, float y, int width, int height, String sprite, int id, String name, String type, int price, boolean unlocked, int hp, boolean buyable, boolean selected, String attackType, float attackDamage) {
+    public Attacker(float x, float y, int width, int height, String sprite, int id, String name, String type, int price,
+                    boolean unlocked, int hp, boolean buyable, boolean selected, String attackType, float attackDamage) {
         super(x, y, width, height, sprite, id, name, type, price, unlocked, hp, buyable,selected);
         this.attackType = attackType;
         this.attackDamage = attackDamage;
@@ -28,7 +29,8 @@ public class Attacker extends GameObject {
         this.attackDamage = 0;
     }
     public Attacker(Attacker other) {
-        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite(), other.getId(), other.getName(), other.getType(), other.getPrice(), other.isUnlocked(), other.getHp(), other.isBuyable(),other.isSelected());
+        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite(), other.getId(),
+                other.getName(), other.getType(), other.getPrice(), other.isUnlocked(), other.getHp(), other.isBuyable(),other.isSelected());
         this.attackType = other.getAttackType();
         this.attackDamage = other.getAttackDamage();
     }
@@ -97,17 +99,19 @@ public class Attacker extends GameObject {
                 //Al "soltar" el objeto:
                 if (!Gdx.input.isTouched()) {
                     Vector2 temp = this.mapGridCollisionMouse(map, touchPos.x, touchPos.y); //Pos. del mouse
-                    if (!map.getOccGrid()[(int) temp.x / 16][(int) temp.y / 18]) {    //Comprueba si la casilla está libre
-                        this.setBuyable(true);
-                        Attacker object = new Attacker(this);   //Objeto que va a ser colocado
-                        Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
-                        object.setX(temp.x);   //Fija la posición copia
-                        object.setY(temp.y);
+                    if (touchPos.x < 255) {
+                        if (!map.getOccGrid()[(int) temp.x / 16][(int) temp.y / 18]) {    //Comprueba si la casilla está libre
+                            this.setBuyable(true);
+                            Attacker object = new Attacker(this);   //Objeto que va a ser colocado
+                            Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
+                            object.setX(temp.x);   //Fija la posición copia
+                            object.setY(temp.y);
 
-                        objects.add(object);
-                        textures.add(textu);
+                            objects.add(object);
+                            textures.add(textu);
 
-                        map.getOccGrid()[(int) temp.x / 16][(int) temp.y / 18] = true;
+                            map.getOccGrid()[(int) temp.x / 16][(int) temp.y / 18] = true;
+                        }
                     }
                     this.setX(x); //Devuelve a su posición inicial al objeto original
                     this.setY(y); //280 135
