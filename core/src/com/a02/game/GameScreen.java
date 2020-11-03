@@ -93,9 +93,14 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        //Reset de OpenGL
         Gdx.gl.glClearColor(0, 1, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        //larry.setHp(larry.getHp() - 1);
+        System.out.println(larry.getHp());
+
+        //Relojes
         secTimer += 1;
         animationTimer += Gdx.graphics.getDeltaTime();
 
@@ -150,7 +155,7 @@ public class GameScreen implements Screen {
         for (GameObject object:objects) {
             game.entityBatch.draw(textures.get(objects.indexOf(object)), object.getX(), object.getY());
         }
-        if (larry.state != Enemy.State.DEAD)game.entityBatch.draw(currentLarryWalk, larry.getX(), larry.getY());
+        if (larry.state != Enemy.State.DEAD) game.entityBatch.draw(currentLarryWalk, larry.getX(), larry.getY());
 
         game.entityBatch.end();
 

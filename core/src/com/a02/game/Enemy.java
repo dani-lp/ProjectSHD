@@ -130,16 +130,15 @@ public class Enemy extends Entity{
 
             case DYING:
                 //playAnimation();
-                System.out.println("Muerte");
                 try {
-                    if (enemies.size() > 0) enemies.remove(enemies.indexOf(this));
+                    enemies.remove(this);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
                 this.state = State.DEAD;
                 break;
 
-            case DEAD:
+            case DEAD:  //Igual hay que eliminar manualmente el objeto, si es que es posible
                 break;
 
         }
@@ -175,7 +174,7 @@ public class Enemy extends Entity{
                 continue;
             } else if (((this.getX() + this.getWidth() < object.getX()) || (this.getX() > object.getX() + object.getWidth()))) {
                 continue;
-            } else if(object.getType()=="Trap"){
+            } else if(object.getType().equals("Trap")) {
                 continue;
             } else if (Gdx.input.isTouched() && !object.isBuyable()) {
                 continue;

@@ -153,12 +153,20 @@ public class GameObject extends Entity{
             this.setY((int) (touchPos.y - 16 / 2));
 
             //Al "soltar" el objeto:
-            if (!Gdx.input.isTouched()){    //TODO: sólo poner objeto si touchPos.x < 255
+            if (!Gdx.input.isTouched()){
                 Vector2 temp = this.mapGridCollisionMouse(map, touchPos.x, touchPos.y); //Pos. del mouse
                 if (touchPos.x < 255) {
                     if (!map.getOccGrid()[(int) temp.x / 16][(int) temp.y / 18]) {    //Comprueba si la casilla está libre
                         this.setBuyable(true);
-                        GameObject object = new GameObject(this);   //Objeto que va a ser colocado
+
+                        GameObject object = new GameObject(this);
+                        if (this instanceof Trap) {
+                            object = new Trap( (Trap) this);       //Objeto que va a ser colocado
+                        }
+                        else if (this instanceof Attacker) {
+                            object = new Attacker( (Attacker) this);
+                        }
+
                         Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
                         object.setX(temp.x);   //Fija la posición copia
                         object.setY(temp.y);
