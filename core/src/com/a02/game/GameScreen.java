@@ -55,7 +55,7 @@ public class GameScreen implements Screen {
 
         beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon","Beacon", 1000, true,1000,false,true);
         wall= new GameObject(260,135,16,18,"Muro.png",0,"Wall","Defense", 1000, true,1000,true,true);
-        elec= new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity","Attack",100,true,1000,true,true,"Spark",20);
+        elec= new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity","Attack",100,true,1000,true,true,"Spark",1);
         fire=new Trap(260,115,16,18,"Fuego.png",3,"Fire","Trap",1000,true,1000,true,true,"Burn",15);
 
         enemies.add(larry);
@@ -109,6 +109,8 @@ public class GameScreen implements Screen {
         secTimer += 1;
         animationTimer += Gdx.graphics.getDeltaTime();
 
+        System.out.println(larry.getHp());
+
         //Actualiza cámara
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
@@ -118,7 +120,7 @@ public class GameScreen implements Screen {
         fire.buy(this,objects,textures,inventory,map);
 
         larry.update(beacon.getX(), beacon.getY(), objects, enemies, secTimer);
-        elec.update(larry.getX(), larry.getY(), enemies, secTimer);
+        elec.update(objects, enemies, secTimer);
 
         if (secTimer>500){
             larry2.update(beacon.getX(), beacon.getY(), objects, enemies, secTimer);
@@ -134,7 +136,7 @@ public class GameScreen implements Screen {
         ArrayList<Texture> copyt = new ArrayList<Texture>();
 
         for (GameObject object:objects) {
-            if (object.getHp() > 0){
+            if (object.getHp() > 0) {
                 copy.add(object);
                 copyt.add(textures.get(objects.indexOf(object)));
             }
