@@ -1,13 +1,14 @@
 package com.a02.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import static com.a02.utils.Utils.*;
 
 public class Enemy extends Entity{
     private int id;
@@ -93,7 +94,7 @@ public class Enemy extends Entity{
      * @param objects Arraylist de objetos defensivos
      * @param secTimer Reloj de juego
      */
-    protected void update(float beaconX, float beaconY, ArrayList<GameObject> objects, ArrayList<Enemy> enemies, float secTimer) {
+    protected void update(float beaconX, float beaconY, List<GameObject> objects, List<Enemy> enemies, float secTimer) {
         switch (this.state) {
             case WALKING:
                 this.move(beaconX, beaconY);    //Movimiento a beacon
@@ -168,16 +169,13 @@ public class Enemy extends Entity{
         }
     }
 
-    protected boolean overlapsArray(ArrayList<GameObject> objects) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro y esta no es una trampa
+    protected boolean overlapsArray(List<GameObject> objects) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro y esta no es una trampa
         for (GameObject object: objects) {
             if ((this.getY() + this.getHeight() < object.getY()) || (this.getY() > object.getY() + object.getHeight()-1)) {
-                continue;
             } else if (((this.getX() + this.getWidth() < object.getX()) || (this.getX() > object.getX() + object.getWidth()))) {
-                continue;
             } else if(Gdx.input.isTouched() && !object.isBuyable()){
-                continue;
             } else if (object.getType().equals("Trap")) {
-                continue;
+            } else if (object.isGrabbed()) {
             } else {
                 return true;
             }
@@ -185,7 +183,7 @@ public class Enemy extends Entity{
         return false;
     }
 
-    protected GameObject overlappedObject(ArrayList<GameObject> objects) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
+    protected GameObject overlappedObject(List<GameObject> objects) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
         for (GameObject object: objects) {
             if ((this.getY() + this.getHeight() < object.getY()) || (this.getY() > object.getY() + object.getHeight())) {
                 continue;

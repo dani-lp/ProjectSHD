@@ -6,16 +6,20 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class GameObject extends Entity{
+import static com.a02.utils.Utils.*;
+
+public abstract class GameObject extends Entity {
     private int id;
     private String name;
     private String type;
     private int price;
     private boolean unlocked;
-    private boolean buyable=true;
-    private boolean selected=true;
+    private boolean buyable = true;
+    private boolean selected = true;
     private int hp;
+    private boolean grabbed;
 
     public GameObject(float x, float y, int width, int height, String sprite, int id, String name,String type,
                       int price, boolean unlocked, int hp, boolean buyable, boolean selected) {
@@ -30,7 +34,7 @@ public class GameObject extends Entity{
         this.selected = selected;
     }
 
-    public GameObject(GameObject other){
+    public GameObject(GameObject other) {
         super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite());
         this.id = other.id;
         this.name = other.name;
@@ -118,6 +122,10 @@ public class GameObject extends Entity{
         this.selected = selected;
     }
 
+    public boolean isGrabbed() {
+        return grabbed;
+    }
+
     @Override
     public String toString() {
         return "ASD [id=" + id + ", name=" + name + ", type=" + type + ", x=" + this.getX() + ", y=" + this.getY() + ", sprite=" + getSprite() + ", price=" + price
@@ -126,25 +134,15 @@ public class GameObject extends Entity{
 
     float x = this.getX();
     float y = this.getY();
-    static boolean grabbed = false;
 
-    /**
-     *
-     * @param game
-     * @param objects
-     * @param textures
-     * @param inventory
-     * @param map
-     */
-    public void buy(GameScreen game, ArrayList<GameObject> objects, ArrayList<Texture> textures, Inventory inventory, Map map){
+    /*
+    public void buy(GameScreen game, ArrayList<GameObject> objects, ArrayList<Texture> textures, Inventory inventory, Map map) {
         //Coge posición del ratón y la escala al tamaño de la cámara
-        Vector3 touchPos = new Vector3();
-        touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-        game.camera.unproject(touchPos);
+        Vector3 touchPos = getRelativeMousePos();
 
         if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !grabbed && buyable && objects.get(0).isSelected()) {
             grabbed = true;
-            objects.get(0).setSelected(false);
+            objects.get(0).setSelected(false);  //TODO: porqué get(0)?
         }
         if (grabbed) {//El objeto ya ha sido "cogido"
             this.setBuyable(false);
@@ -153,8 +151,8 @@ public class GameObject extends Entity{
             this.setY((int) (touchPos.y - 16 / 2));
 
             //Al "soltar" el objeto:
-            if (!Gdx.input.isTouched()){
-                Vector2 temp = this.mapGridCollisionMouse(map, touchPos.x, touchPos.y); //Pos. del mouse
+            if (!Gdx.input.isTouched()) {
+                Vector2 temp = this.mapGridCollisionMouse(map); //Pos. del mouse
                 if (touchPos.x < 255) {
                     if (!map.getOccGrid()[(int) temp.x / 16][(int) temp.y / 18]) {    //Comprueba si la casilla está libre
                         this.setBuyable(true);
@@ -185,8 +183,68 @@ public class GameObject extends Entity{
             grabbed = false;
         }
     }
+    */
+    
+    public void grabObject(Map map, List<GameObject> objects, List<Texture> textures) {  //Agarra el objeto y lo suelta
+        //4.- Volver a colocar en lugar original
+        Vector3 touchPos = getRelativeMousePos();
 
-    //Devuelve el número de casilla con la que colisiona del mapa recibido como parámetro, null si no lo hace
+        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !GameScreen.buying) {
+            this.grabbed = true;
+            GameScreen.buying = true;
+        }
+        if (this.grabbed) {
+            this.setX((int) touchPos.x - 8);
+            this.setY((int) touchPos.y - 8);
+
+            if (!Gdx.input.isTouched()) {
+                this.grabbed = false;
+
+                this.setObjectInGrid(map, objects, textures);
+
+                this.setX(x);
+                this.setY(y);
+
+                GameScreen.buying = false;
+            }
+        }
+    }
+
+    public void setObjectInGrid(Map map, List<GameObject> objects, List<Texture> textures) {  //Coloca el objeto en su posición asignada, si está libre
+        Vector3 touchPos = getRelativeMousePos();
+        if (touchPos.x < 255) {
+            Vector2 tempPos = this.mapGridCollisionMouse(map);
+            if (!map.getOccGrid()[(int) tempPos.x / 16][(int) tempPos.y / 18]) {
+                GameObject copy = this.copyObject();
+                copy.setX(tempPos.x);
+                copy.setY(tempPos.y);
+                map.getOccGrid()[(int) tempPos.x / 16][(int) tempPos.y / 18] = true;
+                objects.add(copy);
+                textures.add(new Texture(Gdx.files.internal(copy.getSprite())));
+            }
+        }
+    }
+
+    public GameObject copyObject() {
+        if (this instanceof Attacker) { //TODO: Es posible que haya que crear constructores copia nuevos
+            return new Attacker((Attacker) this);
+        }
+        else if (this instanceof Defender) {
+            return new Defender((Defender) this);
+        }
+        else if (this instanceof Trap) {
+            return new Trap((Trap) this);
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * Devuelve las coordenadas de la casilla en la que está el objeto que realiza la llamada.
+     * @param map Objeto Map
+     * @return
+     */
     protected Vector2 mapGridCollision(Map map) {
         int x, y;
         for (int i = 0; i < 16; i++) {
@@ -202,18 +260,19 @@ public class GameObject extends Entity{
     /**
      * Devuelve el número de casilla con la que colisiona del mapa recibido como parámetro, null si no lo hace,
      * con la colisión adaptada a la posición del ratón
-     * @param map   mapa introducido
-     * @param xMouse    x del ratón
-     * @param yMouse    y delratón
-     * @return  índice de la casilla o null
+     * @param map mapa introducido
+     * @return índice de la casilla o null
      */
-    protected Vector2 mapGridCollisionMouse(Map map, float xMouse, float yMouse) {
+    protected Vector2 mapGridCollisionMouse(Map map) {
+        Vector3 touchPos = getRelativeMousePos();
+        touchPos.x = (int) touchPos.x;
+        touchPos.y = (int) touchPos.y;
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 10; j++) {
-                if(map.getCoordGrid()[i][j].x <= xMouse &&
-                        map.getCoordGrid()[i][j].x + 16 >= xMouse &&
-                        map.getCoordGrid()[i][j].y <= yMouse &&
-                        map.getCoordGrid()[i][j].y + 18 >= yMouse){
+                if(map.getCoordGrid()[i][j].x <= touchPos.x &&
+                        map.getCoordGrid()[i][j].x + 16 >= touchPos.x &&
+                        map.getCoordGrid()[i][j].y <= touchPos.y &&
+                        map.getCoordGrid()[i][j].y + 18 >= touchPos.y){
                     return new Vector2(map.getCoordGrid()[i][j].x, map.getCoordGrid()[i][j].y);
                 }
             }

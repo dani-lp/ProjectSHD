@@ -10,14 +10,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.List;
 
 public class GameScreen implements Screen {
     final MainGame game;
-    ArrayList<GameObject> objects = new ArrayList<GameObject>(); //Objetos en el juego
-    ArrayList<Texture> textures = new ArrayList<Texture>();  //Texturas de los objetos del juego
-    ArrayList<Enemy> enemies = new ArrayList<Enemy>(); // Enemigos del juego
-    ArrayList<Texture> enemyTextures = new ArrayList<Texture>();  //Texturas de los enemigos del juego
+
+    public static boolean buying;
+
+    List<GameObject> objects = new ArrayList<GameObject>(); //Objetos en el juego
+    List<Texture> textures = new ArrayList<Texture>();  //Texturas de los objetos del juego
+    List<Enemy> enemies = new ArrayList<Enemy>(); // Enemigos del juego
+    List<Texture> enemyTextures = new ArrayList<Texture>();  //Texturas de los enemigos del juego
 
     Texture imgL;
     Texture imgWall;
@@ -31,8 +34,8 @@ public class GameScreen implements Screen {
     Enemy larry2;
     Enemy larry3;
     Enemy larry4;
-    GameObject beacon;
-    GameObject wall;        //Enemigos y objetos
+    Defender beacon;
+    Defender wall;        //Enemigos y objetos
     Attacker elec;
     Trap fire;
     Inventory inventory;
@@ -45,6 +48,8 @@ public class GameScreen implements Screen {
 
     public GameScreen(MainGame game) {
         this.game = game;
+        buying = false;
+
         secTimer = 0;
         animationTimer = 0;
 
@@ -53,10 +58,10 @@ public class GameScreen implements Screen {
         larry3 = new Enemy(100, 200, 16, 16, "Test2.png", 1, "Larry", 200, 100, 30);
         larry4 = new Enemy(450, 20, 16, 16, "Test2.png", 2, "Jeremy", 200, 100, 30);
 
-        beacon= new GameObject(145,90,16,16,"beacon.png",0,"Beacon","Beacon", 1000, true,1000,false,true);
-        wall= new GameObject(260,135,16,18,"Muro.png",0,"Wall","Defense", 1000, true,1000,true,true);
-        elec= new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity","Attack",100,true,1000,true,true,"Spark",1);
-        fire=new Trap(260,115,16,18,"Fuego.png",3,"Fire","Trap",1000,true,1000,true,true,"Burn",15);
+        beacon = new Defender(145,90,16,16,"beacon.png",0,"Beacon","Beacon", 1000, true,1000,false,true);
+        wall = new Defender(260,135,16,18,"Muro.png",0,"Wall","Defense", 1000, true,1000,true,true);
+        elec = new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity","Attack",100,true,1000,true,true,"Spark",1);
+        fire = new Trap(260,115,16,18,"Fuego.png",3,"Fire","Trap",1000,true,1000,true,true,"Burn",15);
 
         enemies.add(larry);
         enemies.add(larry2);
@@ -69,10 +74,10 @@ public class GameScreen implements Screen {
         objects.add(beacon);
 
         imgL = new Texture(Gdx.files.internal(larry.getSprite()));
-        imgWall=new Texture(Gdx.files.internal(wall.getSprite()));
-        imgElec=new Texture(Gdx.files.internal(elec.getSprite()));
-        imgFire=new Texture(Gdx.files.internal(fire.getSprite()));
-        imgB= new Texture(Gdx.files.internal(beacon.getSprite()));
+        imgWall = new Texture(Gdx.files.internal(wall.getSprite()));
+        imgElec = new Texture(Gdx.files.internal(elec.getSprite()));
+        imgFire = new Texture(Gdx.files.internal(fire.getSprite()));
+        imgB = new Texture(Gdx.files.internal(beacon.getSprite()));
 
         enemyTextures.add(imgL);
 
@@ -109,26 +114,24 @@ public class GameScreen implements Screen {
         secTimer += 1;
         animationTimer += Gdx.graphics.getDeltaTime();
 
-        System.out.println(larry.getHp());
-
         //Actualiza cámara
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
 
-        wall.buy(this,objects,textures,inventory,map);
-        elec.buy(this,objects,textures,inventory,map);
-        fire.buy(this,objects,textures,inventory,map);
+        wall.grabObject(map,objects,textures);
+        elec.grabObject(map,objects,textures);
+        fire.grabObject(map,objects,textures);
 
         larry.update(beacon.getX(), beacon.getY(), objects, enemies, secTimer);
-        elec.update(objects, enemies, secTimer);
+        //elec.update(objects, enemies, secTimer);
 
-        if (secTimer>500){
+        if (secTimer > 500){
             larry2.update(beacon.getX(), beacon.getY(), objects, enemies, secTimer);
         }
-        if (secTimer>800){
+        if (secTimer > 800){
             larry3.update(beacon.getX(), beacon.getY(), objects, enemies, secTimer);
         }
-        if (secTimer>1400){
+        if (secTimer > 1400){
             larry4.update(beacon.getX(), beacon.getY(), objects, enemies, secTimer);
         }
 
@@ -167,17 +170,16 @@ public class GameScreen implements Screen {
         game.entityBatch.draw(mapTexture, 0, 0);
         game.entityBatch.draw(mapTexture, 0, 0);
 
-        if (larry.state != Enemy.State.DEAD)game.entityBatch.draw(currentLarryWalk, larry.getX(), larry.getY());
-        if (larry2.state != Enemy.State.DEAD)game.entityBatch.draw(currentLarryWalk, larry2.getX(), larry2.getY());
-        if (larry3.state != Enemy.State.DEAD)game.entityBatch.draw(currentLarryWalk, larry3.getX(), larry3.getY());
-        if (larry4.state != Enemy.State.DEAD)game.entityBatch.draw(currentLarryWalk, larry4.getX(), larry4.getY());
+        if (larry.state != Enemy.State.DEAD) game.entityBatch.draw(currentLarryWalk, larry.getX(), larry.getY());
+        if (larry2.state != Enemy.State.DEAD) game.entityBatch.draw(currentLarryWalk, larry2.getX(), larry2.getY());
+        if (larry3.state != Enemy.State.DEAD) game.entityBatch.draw(currentLarryWalk, larry3.getX(), larry3.getY());
+        if (larry4.state != Enemy.State.DEAD) game.entityBatch.draw(currentLarryWalk, larry4.getX(), larry4.getY());
 
         game.entityBatch.draw(inventoryTexture, inventory.getX(), inventory.getY());            //Dibujado de objetos
 
         for (GameObject object:objects) {
             game.entityBatch.draw(textures.get(objects.indexOf(object)), object.getX(), object.getY());
         }
-        if (larry.state != Enemy.State.DEAD) game.entityBatch.draw(currentLarryWalk, larry.getX(), larry.getY());
 
         game.entityBatch.end();
 
@@ -214,5 +216,7 @@ public class GameScreen implements Screen {
         imgB.dispose();
     }
 
-
+    public OrthographicCamera getCamera() {
+        return camera;
+    }
 }

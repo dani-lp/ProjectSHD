@@ -1,4 +1,4 @@
-/**
+/*
  * Esta clase es llamada desde el método main. Gestiona la creación de
  * distintas Screens, y posee el SpriteBatch que se encarga del dibujado.
  */
@@ -10,11 +10,13 @@ import com.badlogic.gdx.Game;
 
 public class MainGame extends Game {
 	public SpriteBatch entityBatch;
+	public static GameScreen mainGameScreen;
 
 	@Override
 	public void create () {
 		entityBatch = new SpriteBatch();
-		this.setScreen(new GameScreen(this));
+		mainGameScreen = new GameScreen(this);
+		this.setScreen(mainGameScreen);
 	}
 
 	public void render() {
