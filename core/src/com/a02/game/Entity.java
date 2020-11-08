@@ -76,35 +76,15 @@ public abstract class Entity {
                 '}';
     }
 
-    protected boolean overlaps(Entity entity) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
-        if ((this.y + this.height < entity.y) || (this.y > entity.y + entity.height)) {
-            return false;
-        }
-        else if ((this.x + this.width < entity.x) || (this.x > entity.x + entity.width)) {
-            return false;
-        }
-        return true;
-    }
-
-    protected boolean overlaps(Vector2 vec2, int height, int width) { //Devuelve true si la Entity que llama colisiona con el Vector2 parámetro
-        if ((this.y + this.height < vec2.y) || (this.y > vec2.y + height)) {
-            return false;
-        }
-        else if ((this.x + this.width < vec2.x) || (this.x > vec2.x + width)) {
-            return false;
-        }
-        return true;
-    }
-
-    protected boolean overlaps2(Vector2 vec, int height, int width) {
+    protected boolean overlaps(Vector2 vec, int height, int width) {
         return x < vec.x + width && x + width > vec.x && y < vec.y + height && y + height > vec.y;
     }
 
-    protected boolean overlaps2(Entity entity) {
+    protected boolean overlaps(Entity entity) {
         return x < entity.x + entity.width && x + width > entity.x && y < entity.y + entity.height && y + height > entity.y;
     }
 
-    protected boolean overlapsPoint (float x, float y) {
+    protected boolean overlapsPoint(float x, float y) {
         return this.x <= x && this.x + this.width >= x && this.y <= y && this.y + this.height >= y;
     }
 

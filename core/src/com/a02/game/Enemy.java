@@ -108,7 +108,7 @@ public class Enemy extends Entity{
                     this.state = State.DYING;
                 }
 
-                else if (this.overlapsArray(objects)) {
+                else if (this.overlapsArray(objects)) { //TODO: es posible que se pueda resumir en un sólo método
                     this.state = State.ATTACKING;
                 }
                 break;
@@ -175,38 +175,36 @@ public class Enemy extends Entity{
         }
     }
 
-    protected boolean overlapsArray(List<GameObject> objects) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro y esta no es una trampa
+    /**
+     * Comprueba si existe colisión con algún objeto dentro de una Lista.
+     * @param objects List de objetos con los que es posible hallar colisión.
+     * @return True si hay colisión, false si no la hay.
+     */
+    protected boolean overlapsArray(List<GameObject> objects) {
         for (GameObject object: objects) {
-            if ((this.getY() + this.getHeight() < object.getY()) || (this.getY() > object.getY() + object.getHeight()-1)) {
-            } else if (((this.getX() + this.getWidth() < object.getX()) || (this.getX() > object.getX() + object.getWidth()))) {
-
-            } else if (object.getType().equals("Trap")) {
-            } else if (object.isGrabbed()) {
-            } else {
+            if (object instanceof Trap || object.isGrabbed()) {
+                continue;
+            }
+            else if (this.getX() < object.getX() + object.getWidth() && this.getX() + this.getWidth() > object.getX() &&
+                    this.getY() < object.getY() + object.getHeight() && this.getY() + this.getHeight() > object.getY()) {
                 return true;
             }
         }
         return false;
     }
 
-    protected GameObject overlappedObject(List<GameObject> objects) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
+    /**
+     * Halla que objeto está colisionando con el enemigo.
+     * @param objects List de objetos con los que es posible hallar colisión.
+     * @return Objecto colisionado.
+     */
+    protected GameObject overlappedObject(List<GameObject> objects) {
         for (GameObject object: objects) {
-            if ((this.getY() + this.getHeight() < object.getY()) || (this.getY() > object.getY() + object.getHeight())) {
-                continue;
-            } else if ((this.getX() + this.getWidth() < object.getX()) || (this.getX() > object.getX() + object.getWidth())) {
-                continue;
-            }
-            else {
+            if (this.getX() < object.getX() + object.getWidth() && this.getX() + this.getWidth() > object.getX() &&
+                    this.getY() < object.getY() + object.getHeight() && this.getY() + this.getHeight() > object.getY()) {
                 return object;
             }
         }
         return null;
-    }
-
-    public void attack(GameObject thing){
-        if (this.overlaps(thing)){      //Si estan en contacto empieza a restarle vida
-            thing.setHp(thing.getHp()- this.getAttackDamage());
-            System.out.println(thing.getHp());
-        }
     }
 }

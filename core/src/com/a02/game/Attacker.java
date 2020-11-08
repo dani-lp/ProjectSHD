@@ -8,7 +8,7 @@ public class Attacker extends GameObject {
     private String attackType;
 
     private enum State {
-        IDLE, ATTACKING, DYING, DEAD
+        IDLE, ATTACKING
     }
 
     State state;
@@ -55,9 +55,7 @@ public class Attacker extends GameObject {
     public void update(List<GameObject> objects, List<Enemy> enemies, float secTimer) {
         switch (this.state) {
             case IDLE:
-                if (this.getHp() <= 0) {
-                    this.state = State.DYING;
-                } else if (this.overlapsArrayEnemies(enemies)) {
+                if (this.overlapsArrayEnemies(enemies)) {
                     this.state = State.ATTACKING;
                 }
                 break;
@@ -73,16 +71,6 @@ public class Attacker extends GameObject {
                     }
                 }
                 break;
-
-            case DYING:
-                try {
-                    objects.remove(this);
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
-                this.state = State.DEAD;
-                break;
-
         }
     }
 

@@ -1,5 +1,7 @@
 package com.a02.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 public class Map {
@@ -7,6 +9,7 @@ public class Map {
     private GameObject[][] entityGrid; //Cuadrícula de ocupación por GameObject
     private final Vector2[][] coordGrid; //Cuadrícula de coordenadas
     private String sprite;
+    private Texture texture;
 
     protected final int GRID_WIDTH = 16;
     protected final int GRID_HEIGHT = 18;
@@ -15,6 +18,7 @@ public class Map {
         occGrid = new boolean[16][10];
         entityGrid = new GameObject[16][10];
         this.sprite = sprite;
+        this.texture = new Texture(Gdx.files.internal(this.sprite));
 
         //Creación de coordenadas
         coordGrid = new Vector2[16][10];
@@ -39,5 +43,9 @@ public class Map {
 
     protected Vector2[][] getCoordGrid() {
         return coordGrid;
+    }
+
+    public Texture getTexture() {
+        return texture;
     }
 }

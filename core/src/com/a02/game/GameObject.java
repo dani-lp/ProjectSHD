@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.a02.utils.Utils.*;
@@ -20,6 +19,7 @@ public abstract class GameObject extends Entity {
     private boolean selected = true;
     private int hp;
     private boolean grabbed;
+    private Texture texture;
 
     public GameObject(float x, float y, int width, int height, String sprite, int id, String name,String type,
                       int price, boolean unlocked, int hp, boolean buyable, boolean selected) {
@@ -32,6 +32,7 @@ public abstract class GameObject extends Entity {
         this.buyable = buyable;
         this.hp = hp;
         this.selected = selected;
+        this.texture = new Texture(Gdx.files.internal(sprite));
     }
 
     public GameObject(GameObject other) {
@@ -44,6 +45,7 @@ public abstract class GameObject extends Entity {
         this.buyable = other.buyable;
         this.hp = other.hp;
         this.selected = other.selected;
+        this.texture = new Texture(Gdx.files.internal(other.getSprite()));
     }
 
     public GameObject() {
@@ -126,6 +128,10 @@ public abstract class GameObject extends Entity {
         return grabbed;
     }
 
+    public Texture getTexture() {
+        return texture;
+    }
+
     @Override
     public String toString() {
         return "ASD [id=" + id + ", name=" + name + ", type=" + type + ", x=" + this.getX() + ", y=" + this.getY() + ", sprite=" + getSprite() + ", price=" + price
@@ -135,60 +141,14 @@ public abstract class GameObject extends Entity {
     float x = this.getX();
     float y = this.getY();
 
-    /*
-    public void buy(GameScreen game, ArrayList<GameObject> objects, ArrayList<Texture> textures, Inventory inventory, Map map) {
-        //Coge posición del ratón y la escala al tamaño de la cámara
-        Vector3 touchPos = getRelativeMousePos();
-
-        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !grabbed && buyable && objects.get(0).isSelected()) {
-            grabbed = true;
-            objects.get(0).setSelected(false);  //TODO: porqué get(0)?
-        }
-        if (grabbed) {//El objeto ya ha sido "cogido"
-            this.setBuyable(false);
-            //Ajusta la posición del sprite a la del mouse
-            this.setX((int) (touchPos.x - 16 / 2));
-            this.setY((int) (touchPos.y - 16 / 2));
-
-            //Al "soltar" el objeto:
-            if (!Gdx.input.isTouched()) {
-                Vector2 temp = this.mapGridCollisionMouse(map); //Pos. del mouse
-                if (touchPos.x < 255) {
-                    if (!map.getOccGrid()[(int) temp.x / 16][(int) temp.y / 18]) {    //Comprueba si la casilla está libre
-                        this.setBuyable(true);
-
-                        GameObject object = new GameObject(this);
-                        if (this instanceof Trap) {
-                            object = new Trap( (Trap) this);       //Objeto que va a ser colocado
-                        }
-                        else if (this instanceof Attacker) {
-                            object = new Attacker( (Attacker) this);
-                        }
-
-                        Texture textu = new Texture(Gdx.files.internal(object.getSprite())); //Textura del objeto copia
-                        object.setX(temp.x);   //Fija la posición copia
-                        object.setY(temp.y);
-                        objects.add(object);
-                        textures.add(textu);
-
-                        map.getOccGrid()[(int) temp.x / 16][(int) temp.y / 18] = true;
-                    }
-                }
-                this.setX(x); //Devuelve a su posición inicial al objeto original
-                this.setY(y); //260 135
-                objects.get(0).setSelected(true); //Para que al pasar por encima de otros objetos del inventario no se seleccione mas de uno
-            }
-        }
-        if (!Gdx.input.isTouched()) {
-            grabbed = false;
-        }
-    }
-    */
-
     public abstract void update(List<GameObject> objects, List<Enemy> enemies, float secTimer);
 
-    public void grabObject(Map map, List<GameObject> objects, List<Texture> textures) {  //Agarra el objeto y lo suelta
-        //4.- Volver a colocar en lugar original
+    /**
+     * Comprueba y gestiona el agarre y colocación de los objetos.
+     * @param map mapa en el que colocar el objeto
+     * @param objects lista de objetos en las que guardar el objeto colocado
+     */
+    public void grabObject(Map map, List<GameObject> objects) {  //Agarra el objeto y lo suelta
         Vector3 touchPos = getRelativeMousePos();
 
         if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !GameScreen.isBuying()) {
@@ -206,12 +166,17 @@ public abstract class GameObject extends Entity {
 
                 GameScreen.setBuying(false);
 
-                if (GameScreen.getGold() >= this.price) this.setObjectInGrid(map, objects, textures);
+                if (GameScreen.getGold() >= this.price) this.setObjectInGrid(map, objects);
             }
         }
     }
 
-    public void setObjectInGrid(Map map, List<GameObject> objects, List<Texture> textures) {  //Coloca el objeto en su posición asignada, si está libre
+    /**
+     * Coloca el objeto en su posición asignada, si ésta está libre
+     * @param map Mapa en el que colocar el objeto
+     * @param objects Lista de objetos a la que añadir el objeto colocado
+     */
+    public void setObjectInGrid(Map map, List<GameObject> objects) {
         Vector3 touchPos = getRelativeMousePos();
         if (touchPos.x < 255) {
             Vector2 tempPos = this.mapGridCollisionMouse(map);
@@ -221,12 +186,15 @@ public abstract class GameObject extends Entity {
                 copy.setY(tempPos.y);
                 map.getOccGrid()[(int) tempPos.x / 16][(int) tempPos.y / 18] = true;
                 objects.add(copy);
-                textures.add(new Texture(Gdx.files.internal(copy.getSprite())));
                 GameScreen.setGold(GameScreen.getGold() - this.price);
             }
         }
     }
 
+    /**
+     * Copia el objeto introducido, dependiendo de su tipo.
+     * @return Copia del objeto
+     */
     public GameObject copyObject() {
         if (this instanceof Attacker) { //TODO: Es posible que haya que crear constructores copia nuevos
             return new Attacker((Attacker) this);
