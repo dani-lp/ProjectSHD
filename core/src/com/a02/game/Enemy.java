@@ -1,11 +1,11 @@
 package com.a02.game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.a02.utils.Utils.*;
@@ -16,6 +16,7 @@ public class Enemy extends Entity{
     private int hp;
     private int attackDamage;
     private float speed;
+    private int value;
 
     protected Animation<TextureRegion> walkAnimation;
     protected Animation<TextureRegion> deathAnimation;
@@ -36,6 +37,8 @@ public class Enemy extends Entity{
         this.state = State.WALKING;
         this.walkAnimation = createAnimation("larry-walk.png", 3, 1, 0.2f);
         this.deathAnimation = createAnimation("larry-death.png", 2, 2, 0.25f);
+
+        this.value = 50;
     }
 
     public Enemy() {        //Constructor vacio de enemigos
@@ -45,6 +48,8 @@ public class Enemy extends Entity{
         this.hp = 0;
         this.attackDamage = 0;
         this.speed = 0;
+
+        this.value = 50;
     }
 
     public int getId() {
@@ -137,6 +142,7 @@ public class Enemy extends Entity{
                     e.printStackTrace();
                 }
                 this.state = State.DEAD;
+                GameScreen.setGold(GameScreen.getGold() + this.value);
                 break;
 
             case DEAD:  //Igual hay que eliminar manualmente el objeto, si es que es posible
@@ -173,7 +179,7 @@ public class Enemy extends Entity{
         for (GameObject object: objects) {
             if ((this.getY() + this.getHeight() < object.getY()) || (this.getY() > object.getY() + object.getHeight()-1)) {
             } else if (((this.getX() + this.getWidth() < object.getX()) || (this.getX() > object.getX() + object.getWidth()))) {
-            } else if(Gdx.input.isTouched() && !object.isBuyable()){
+
             } else if (object.getType().equals("Trap")) {
             } else if (object.isGrabbed()) {
             } else {

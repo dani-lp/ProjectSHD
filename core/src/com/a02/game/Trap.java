@@ -1,5 +1,7 @@
 package com.a02.game;
 
+import java.util.List;
+
 public class Trap extends GameObject{
     private String effect;
     private float attackDamage;
@@ -37,4 +39,6 @@ public class Trap extends GameObject{
     public void setAttackDamage(float attackDamage) {
         this.attackDamage = attackDamage;
     }
+
+    public void update(List<GameObject> objects, List<Enemy> enemies, float secTimer) { };
 }

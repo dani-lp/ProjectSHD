@@ -184,14 +184,16 @@ public abstract class GameObject extends Entity {
         }
     }
     */
-    
+
+    public abstract void update(List<GameObject> objects, List<Enemy> enemies, float secTimer);
+
     public void grabObject(Map map, List<GameObject> objects, List<Texture> textures) {  //Agarra el objeto y lo suelta
         //4.- Volver a colocar en lugar original
         Vector3 touchPos = getRelativeMousePos();
 
-        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !GameScreen.buying) {
+        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !GameScreen.isBuying()) {
             this.grabbed = true;
-            GameScreen.buying = true;
+            GameScreen.setBuying(true);
         }
         if (this.grabbed) {
             this.setX((int) touchPos.x - 8);
@@ -199,13 +201,12 @@ public abstract class GameObject extends Entity {
 
             if (!Gdx.input.isTouched()) {
                 this.grabbed = false;
-
-                this.setObjectInGrid(map, objects, textures);
-
                 this.setX(x);
                 this.setY(y);
 
-                GameScreen.buying = false;
+                GameScreen.setBuying(false);
+
+                if (GameScreen.getGold() >= this.price) this.setObjectInGrid(map, objects, textures);
             }
         }
     }
@@ -221,6 +222,7 @@ public abstract class GameObject extends Entity {
                 map.getOccGrid()[(int) tempPos.x / 16][(int) tempPos.y / 18] = true;
                 objects.add(copy);
                 textures.add(new Texture(Gdx.files.internal(copy.getSprite())));
+                GameScreen.setGold(GameScreen.getGold() - this.price);
             }
         }
     }

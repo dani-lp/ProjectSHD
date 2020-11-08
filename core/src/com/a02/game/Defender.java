@@ -1,5 +1,7 @@
 package com.a02.game;
 
+import java.util.List;
+
 public class Defender extends GameObject {
     public Defender(float x, float y, int width, int height, String sprite, int id, String name, String type, int price,
                     boolean unlocked, int hp, boolean buyable, boolean selected) {
@@ -14,4 +16,6 @@ public class Defender extends GameObject {
         super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite(), other.getId(),
                 other.getName(), other.getType(), other.getPrice(), other.isUnlocked(), other.getHp(), other.isBuyable(), other.isSelected());
     }
+
+    public void update(List<GameObject> objects, List<Enemy> enemies, float secTimer) { };
 }

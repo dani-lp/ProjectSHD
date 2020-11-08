@@ -1,6 +1,7 @@
 package com.a02.game;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Attacker extends GameObject {
     private float attackDamage;
@@ -51,7 +52,7 @@ public class Attacker extends GameObject {
         this.attackType = attackType;
     }
 
-    protected void update(ArrayList<GameObject> objects, ArrayList<Enemy> enemies, float secTimer) {
+    public void update(List<GameObject> objects, List<Enemy> enemies, float secTimer) {
         switch (this.state) {
             case IDLE:
                 if (this.getHp() <= 0) {
@@ -85,7 +86,7 @@ public class Attacker extends GameObject {
         }
     }
 
-    protected boolean overlapsArrayEnemies(ArrayList<Enemy> enemies) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
+    protected boolean overlapsArrayEnemies(List<Enemy> enemies) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
         for (Enemy enemy : enemies) {
             if ((this.getY() + this.getHeight() < enemy.getY()) || (this.getY() > enemy.getY() + enemy.getHeight())) {
                 continue;
@@ -98,7 +99,7 @@ public class Attacker extends GameObject {
         return false;
     }
 
-    protected Enemy overlappedEnemy(ArrayList<Enemy> enemies) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
+    protected Enemy overlappedEnemy(List<Enemy> enemies) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
         for (Enemy enemy : enemies) {
             if ((this.getY() + this.getHeight() < enemy.getY()) || (this.getY() > enemy.getY() + enemy.getHeight())) {
                 continue;

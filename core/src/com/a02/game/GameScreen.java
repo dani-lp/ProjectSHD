@@ -3,9 +3,11 @@ package com.a02.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -15,7 +17,8 @@ import java.util.List;
 public class GameScreen implements Screen {
     final MainGame game;
 
-    public static boolean buying;
+    private static boolean buying;
+    private static int gold;
 
     List<GameObject> objects = new ArrayList<GameObject>(); //Objetos en el juego
     List<Texture> textures = new ArrayList<Texture>();  //Texturas de los objetos del juego
@@ -43,12 +46,17 @@ public class GameScreen implements Screen {
     Map map;
     OrthographicCamera camera;
 
+    BitmapFont font;
+
     int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones
 
     public GameScreen(MainGame game) {
         this.game = game;
         buying = false;
+        gold = 10000;
+
+        font = new BitmapFont(Gdx.files.internal("Fonts/test.fnt"));
 
         secTimer = 0;
         animationTimer = 0;
@@ -60,7 +68,7 @@ public class GameScreen implements Screen {
 
         beacon = new Defender(145,90,16,16,"beacon.png",0,"Beacon","Beacon", 1000, true,1000,false,true);
         wall = new Defender(260,135,16,18,"Muro.png",0,"Wall","Defense", 1000, true,1000,true,true);
-        elec = new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity","Attack",100,true,1000,true,true,"Spark",1);
+        elec = new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity","Attack",100,true,1000,true,true,"Spark",50);
         fire = new Trap(260,115,16,18,"Fuego.png",3,"Fire","Trap",1000,true,1000,true,true,"Burn",15);
 
         enemies.add(larry);
@@ -114,6 +122,8 @@ public class GameScreen implements Screen {
         secTimer += 1;
         animationTimer += Gdx.graphics.getDeltaTime();
 
+        if (secTimer % 20 == 0) gold++;
+
         //Actualiza cámara
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
@@ -123,7 +133,7 @@ public class GameScreen implements Screen {
         fire.grabObject(map,objects,textures);
 
         larry.update(beacon.getX(), beacon.getY(), objects, enemies, secTimer);
-        //elec.update(objects, enemies, secTimer);
+        elec.update(objects, enemies, secTimer);
 
         if (secTimer > 500){
             larry2.update(beacon.getX(), beacon.getY(), objects, enemies, secTimer);
@@ -139,6 +149,7 @@ public class GameScreen implements Screen {
         ArrayList<Texture> copyt = new ArrayList<Texture>();
 
         for (GameObject object:objects) {
+            object.update(objects, enemies, secTimer);
             if (object.getHp() > 0) {
                 copy.add(object);
                 copyt.add(textures.get(objects.indexOf(object)));
@@ -181,12 +192,41 @@ public class GameScreen implements Screen {
             game.entityBatch.draw(textures.get(objects.indexOf(object)), object.getX(), object.getY());
         }
 
+        font.draw(game.entityBatch, "ORO  " + Integer.toString(gold), 5, 175);
+
         game.entityBatch.end();
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             Gdx.app.exit();
             System.exit(0);
         }
+    }
+
+    @Override
+    public void dispose() {
+        game.entityBatch.dispose();
+        imgL.dispose();
+        imgB.dispose();
+    }
+
+    public OrthographicCamera getCamera() {
+        return camera;
+    }
+
+    public static int getGold() {
+        return gold;
+    }
+
+    public static void setGold(int gold) {
+        GameScreen.gold = gold;
+    }
+
+    public static boolean isBuying() {
+        return buying;
+    }
+
+    public static void setBuying(boolean buying) {
+        GameScreen.buying = buying;
     }
 
     @Override
@@ -207,16 +247,5 @@ public class GameScreen implements Screen {
     @Override
     public void hide() {
 
-    }
-
-    @Override
-    public void dispose() {
-        game.entityBatch.dispose();
-        imgL.dispose();
-        imgB.dispose();
-    }
-
-    public OrthographicCamera getCamera() {
-        return camera;
     }
 }
