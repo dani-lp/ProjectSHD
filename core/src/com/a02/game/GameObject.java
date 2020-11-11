@@ -15,23 +15,19 @@ public abstract class GameObject extends Entity {
     private String type;
     private int price;
     private boolean unlocked;
-    private boolean buyable = true;
-    private boolean selected = true;
     private int hp;
     private boolean grabbed;
     private Texture texture;
 
     public GameObject(float x, float y, int width, int height, String sprite, int id, String name,String type,
-                      int price, boolean unlocked, int hp, boolean buyable, boolean selected) {
+                      int price, boolean unlocked, int hp) {
         super(x, y, width, height, sprite);
         this.id = id;
         this.name = name;
         this.type = type;
         this.price = price;
         this.unlocked = unlocked;
-        this.buyable = buyable;
         this.hp = hp;
-        this.selected = selected;
         this.texture = new Texture(Gdx.files.internal(sprite));
     }
 
@@ -42,9 +38,7 @@ public abstract class GameObject extends Entity {
         this.type = other.type;
         this.price = other.price;
         this.unlocked = other.unlocked;
-        this.buyable = other.buyable;
         this.hp = other.hp;
-        this.selected = other.selected;
         this.texture = new Texture(Gdx.files.internal(other.getSprite()));
     }
 
@@ -55,8 +49,6 @@ public abstract class GameObject extends Entity {
         this.type = "";
         this.price = 0;
         this.unlocked = false;
-        this.buyable = true;
-        this.selected = true;
         this.hp = 0;
     }
 
@@ -100,28 +92,12 @@ public abstract class GameObject extends Entity {
         this.unlocked = unlocked;
     }
 
-    public boolean isBuyable() {
-        return buyable;
-    }
-
-    public void setBuyable(boolean buyable) {
-        this.buyable = buyable;
-    }
-
     public int getHp() {
         return hp;
     }
 
     public void setHp(int hp) {
         this.hp = hp;
-    }
-
-    public boolean isSelected() {
-        return selected;
-    }
-
-    public void setSelected(boolean selected) {
-        this.selected = selected;
     }
 
     public boolean isGrabbed() {
@@ -132,10 +108,24 @@ public abstract class GameObject extends Entity {
         return texture;
     }
 
+    public void setTexture(Texture texture) {
+        this.texture = texture;
+    }
+
     @Override
     public String toString() {
-        return "ASD [id=" + id + ", name=" + name + ", type=" + type + ", x=" + this.getX() + ", y=" + this.getY() + ", sprite=" + getSprite() + ", price=" + price
-                + ", unlock=" + unlocked + ", buyable=" + buyable + ", hp=" + hp+"]";
+        return "GameObject{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", price=" + price +
+                ", unlocked=" + unlocked +
+                ", hp=" + hp +
+                ", grabbed=" + grabbed +
+                ", texture=" + texture +
+                ", x=" + x +
+                ", y=" + y +
+                '}';
     }
 
     float x = this.getX();
@@ -250,4 +240,24 @@ public abstract class GameObject extends Entity {
         return null;
     }
 
+    protected boolean overlapsArrayEnemies(List<Enemy> enemies) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
+        for (Enemy enemy : enemies) {
+            if (this.getX() < enemy.getX() + enemy.getWidth() && this.getX() + this.getWidth() > enemy.getX() &&
+                    this.getY() < enemy.getY() + enemy.getHeight() && this.getY() + this.getHeight() > enemy.getY()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected Enemy overlappedEnemy(List<Enemy> enemies) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
+        if (this.isGrabbed()) return null;
+        for (Enemy enemy : enemies) {
+            if (this.getX() < enemy.getX() + enemy.getWidth() && this.getX() + this.getWidth() > enemy.getX() &&
+                    this.getY() < enemy.getY() + enemy.getHeight() && this.getY() + this.getHeight() > enemy.getY()) {
+                return enemy;
+            }
+        }
+        return null;
+    }
 }

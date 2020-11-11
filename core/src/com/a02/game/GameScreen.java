@@ -3,10 +3,8 @@ package com.a02.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -52,15 +50,15 @@ public class GameScreen implements Screen {
         secTimer = 0;
         animationTimer = 0;
 
-        larry = new Enemy(12, 90, 16, 16, "Test2.png", 1, "Larry", 200, 100, 10);
-        larry2 = new Enemy(45, -25, 16, 16, "Test2.png", 2, "Jeremy", 200, 100, 10);
-        larry3 = new Enemy(100, 200, 16, 16, "Test2.png", 1, "Larry", 200, 100, 10);
-        larry4 = new Enemy(450, 20, 16, 16, "Test2.png", 2, "Jeremy", 200, 100, 10);
+        larry = new Enemy(12, 63, 16, 16, "Test2.png", 1, "Larry", 200, 100, 30);
+        larry2 = new Enemy(45, 25, 16, 16, "Test2.png", 2, "Jeremy", 200, 100, 30);
+        larry3 = new Enemy(100, 59, 16, 16, "Test2.png", 1, "Larry", 200, 100, 30);
+        larry4 = new Enemy(350, 20, 16, 16, "Test2.png", 2, "Jeremy", 200, 100, 30);
 
-        beacon = new Defender(145,90,16,16,"beacon.png",0,"Beacon","Beacon", 1000, true,10000000,false,true);
-        wall = new Defender(260,135,16,18,"Muro.png",0,"Wall","Defense", 1000, true,1000,true,true);
-        elec = new Attacker(280,135,16,18,"Electricidad.png",2,"Electricity","Attack",100,true,1000,true,true,"Spark",50);
-        fire = new Trap(260,115,16,18,"Fuego.png",3,"Fire","Trap",1000,true,1000,true,true,"Burn",15);
+        beacon = new Defender(145,90,16,16,"beacon.png",0,"Beacon","Beacon", 1000, true,10000000);
+        wall = new Defender(260,135,16,18,"Muro.png",0,"Wall","Defense", 1000, true,1000);
+        elec = new Attacker(280,135,16,18,"electricity.png",2,"Electricity","Attack",100,true,1000,"Spark",50);
+        fire = new Trap(260,115,16,18,"Traps/fire.png",3,"Fire","Trap",10,true,1000,"CONFUSE",1000);
 
         enemies.add(larry);
         enemies.add(larry2);
@@ -105,7 +103,6 @@ public class GameScreen implements Screen {
         elec.grabObject(map,objects);
         fire.grabObject(map,objects);
 
-        larry.update(beacon.getX(), beacon.getY(), objects, enemies, secTimer);
         elec.update(objects, enemies, secTimer);
 
         //Actualiza "presencia" de enemigos y objetos
@@ -132,9 +129,11 @@ public class GameScreen implements Screen {
 
         //Dibujado
         game.entityBatch.begin();
-
         game.entityBatch.draw(map.getTexture(), 0, 0);
-        game.entityBatch.draw(inventory.getTexture(), inventory.getX(), inventory.getY());
+
+        for (GameObject object:objects) {
+            game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
+        }
 
         for (Enemy enemy: enemies) {
             if (enemy.state != Enemy.State.DEAD) {
@@ -142,8 +141,9 @@ public class GameScreen implements Screen {
             }
         }
 
-        //TODO: las trampas deberían dibujarse antes de los enemigos y después del inventario
-        for (GameObject object:objects) {
+        game.entityBatch.draw(inventory.getTexture(), inventory.getX(), inventory.getY());
+
+        for (GameObject object:inventory.getObjects()) {    //Objetos del inventario
             game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
         }
 

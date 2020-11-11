@@ -102,19 +102,19 @@ public class Enemy extends Entity{
     protected void update(float beaconX, float beaconY, List<GameObject> objects, List<Enemy> enemies, float secTimer) {
         switch (this.state) {
             case WALKING:
-                this.move(beaconX, beaconY);    //Movimiento a beacon
+                this.move2(beaconX, beaconY);    //Movimiento a beacon
 
                 if (this.getHp() <= 0) {
                     this.state = State.DYING;
                 }
 
-                else if (this.overlapsArray(objects)) { //TODO: es posible que se pueda resumir en un sólo método
-                    this.state = State.ATTACKING;
+                else if (this.overlappedObject(objects) != null || this.overlappedObject(objects) instanceof Trap) {
+                    if (!this.overlappedObject(objects).isGrabbed()) this.state = State.ATTACKING;
                 }
                 break;
 
             case ATTACKING:
-                if (this.overlapsArray(objects)) {
+                if (this.overlappedObject(objects) != null) {
                     GameObject tempObj = this.overlappedObject(objects);    //Objeto siendo colisionado
 
                     if (tempObj.getHp() > 0 && secTimer % 60 == 0) {    //Pegar 1 vez por segundo
@@ -173,6 +173,13 @@ public class Enemy extends Entity{
         } else if (this.getX() == beaconX && this.getY() > beaconY) {           //El beacon esta por arriba y en la misma posicion
             this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
         }
+    }
+
+    protected void move2(float beaconX, float beaconY) {
+        double angle = Math.toDegrees(-Math.atan((this.getY() - beaconY) / (this.getX() - beaconX)));
+
+        this.setX((float) (this.getX() + Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed));
+        this.setY((float) (this.getY() + Math.cos(angle) * Gdx.graphics.getDeltaTime() * this.speed));
     }
 
     /**

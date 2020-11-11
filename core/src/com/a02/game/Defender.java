@@ -4,8 +4,8 @@ import java.util.List;
 
 public class Defender extends GameObject {
     public Defender(float x, float y, int width, int height, String sprite, int id, String name, String type, int price,
-                    boolean unlocked, int hp, boolean buyable, boolean selected) {
-        super(x, y, width, height, sprite, id, name, type, price, unlocked, hp, buyable, selected);
+                    boolean unlocked, int hp) {
+        super(x, y, width, height, sprite, id, name, type, price, unlocked, hp);
     }
 
     public Defender() {
@@ -14,8 +14,10 @@ public class Defender extends GameObject {
 
     public Defender(Defender other) {
         super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite(), other.getId(),
-                other.getName(), other.getType(), other.getPrice(), other.isUnlocked(), other.getHp(), other.isBuyable(), other.isSelected());
+                other.getName(), other.getType(), other.getPrice(), other.isUnlocked(), other.getHp());
     }
 
-    public void update(List<GameObject> objects, List<Enemy> enemies, float secTimer) { };
+    public void update(List<GameObject> objects, List<Enemy> enemies, float secTimer) {
+
+    };
 }

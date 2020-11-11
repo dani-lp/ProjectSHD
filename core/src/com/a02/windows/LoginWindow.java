@@ -1,10 +1,18 @@
 package com.a02.windows;
 
+import com.formdev.flatlaf.FlatLightLaf;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class LoginWindow {
     public static void main(String[] args) {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());   //UI Look&Feel más moderno y limpio
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         JFrame frame = new JFrame("Login");
         frame.setSize(640,360);
         frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -38,7 +46,5 @@ public class LoginWindow {
 
         frame.add(panel);
         frame.setVisible(true);
-
-
     }
 }
