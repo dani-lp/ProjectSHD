@@ -29,6 +29,7 @@ public abstract class GameObject extends Entity {
         this.unlocked = unlocked;
         this.hp = hp;
         this.texture = new Texture(Gdx.files.internal(sprite));
+        this.hpBar = new HealthBar(this, hp);
     }
 
     public GameObject(GameObject other) {

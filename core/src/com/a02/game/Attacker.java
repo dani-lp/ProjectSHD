@@ -71,6 +71,7 @@ public class Attacker extends GameObject {
                 }
                 break;
         }
+        this.hpBar.update(this, this.getHp());
     }
 
 }

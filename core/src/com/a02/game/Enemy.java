@@ -16,9 +16,10 @@ public class Enemy extends Entity{
     private int hp;
     private int attackDamage;
     private float speed;
-    private int value;
+    private int goldValue;
 
     protected Animation<TextureRegion> walkAnimation;
+    protected Animation<TextureRegion> attackAnimation;
     protected Animation<TextureRegion> deathAnimation;
 
     enum State {
@@ -36,9 +37,11 @@ public class Enemy extends Entity{
         this.speed = speed;
         this.state = State.WALKING;
         this.walkAnimation = createAnimation("larry-walk.png", 3, 1, 0.2f);
+        this.attackAnimation = createAnimation("larry-attack.png", 2, 2, 0.2f);
         this.deathAnimation = createAnimation("larry-death.png", 2, 2, 0.25f);
 
-        this.value = 50;
+        this.goldValue = 50;
+        this.hpBar = new HealthBar(this, hp);
     }
 
     public Enemy() {        //Constructor vacio de enemigos
@@ -49,7 +52,7 @@ public class Enemy extends Entity{
         this.attackDamage = 0;
         this.speed = 0;
 
-        this.value = 50;
+        this.goldValue = 50;
     }
 
     public int getId() {
@@ -142,13 +145,14 @@ public class Enemy extends Entity{
                     e.printStackTrace();
                 }
                 this.state = State.DEAD;
-                GameScreen.setGold(GameScreen.getGold() + this.value);
+                GameScreen.setGold(GameScreen.getGold() + this.goldValue);
                 break;
 
-            case DEAD:  //Igual hay que eliminar manualmente el objeto, si es que es posible
+            case DEAD:
                 break;
 
         }
+        this.hpBar.update(this, this.getHp());
     }
 
     protected void move(float beaconX, float beaconY) {             //Dependiendo de donde se encuentre el beacon respecto al objeto se aumenta o decrementan la X y la Y hasta que sean iguales
@@ -211,6 +215,23 @@ public class Enemy extends Entity{
                     this.getY() < object.getY() + object.getHeight() && this.getY() + this.getHeight() > object.getY()) {
                 return object;
             }
+        }
+        return null;
+    }
+
+    /**
+     * Devuelve un TextureRegion con la animación correspondiente al estado
+     * @param animationTimer Reloj de la animación
+     * @return El TextureRegion de animación
+     */
+    public TextureRegion getCurrentAnimation(float animationTimer) {
+        switch (this.state) {
+            case WALKING:
+                return this.walkAnimation.getKeyFrame(animationTimer, true);
+            case ATTACKING:
+                return this.attackAnimation.getKeyFrame(animationTimer, true);
+            case DYING:
+                return this.deathAnimation.getKeyFrame(animationTimer, false);
         }
         return null;
     }

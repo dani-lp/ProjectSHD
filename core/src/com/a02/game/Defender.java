@@ -18,6 +18,6 @@ public class Defender extends GameObject {
     }
 
     public void update(List<GameObject> objects, List<Enemy> enemies, float secTimer) {
-
+        this.hpBar.update(this, this.getHp());
     };
 }

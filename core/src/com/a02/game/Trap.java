@@ -132,5 +132,6 @@ public class Trap extends GameObject{
                 this.setHp(0);
                 break;
         }
-    };
+        this.hpBar.update(this, this.getHp());
+    }
 }

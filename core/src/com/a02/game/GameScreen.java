@@ -125,19 +125,21 @@ public class GameScreen implements Screen {
             }
         }
 
-        TextureRegion currentLarryWalk = larry.walkAnimation.getKeyFrame(animationTimer, true); //Animación
-
         //Dibujado
         game.entityBatch.begin();
         game.entityBatch.draw(map.getTexture(), 0, 0);
 
         for (GameObject object:objects) {
             game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
+            game.entityBatch.draw(object.hpBar.getBackground(), object.hpBar.getX(), object.hpBar.getY(), 14,2);
+            game.entityBatch.draw(object.hpBar.getForeground(), object.hpBar.getX(), object.hpBar.getY(), object.hpBar.getCurrentWidth(),2);
         }
 
         for (Enemy enemy: enemies) {
             if (enemy.state != Enemy.State.DEAD) {
-                game.entityBatch.draw(currentLarryWalk, enemy.getX(), enemy.getY());
+                game.entityBatch.draw(enemy.getCurrentAnimation(animationTimer), enemy.getX(), enemy.getY());
+                game.entityBatch.draw(enemy.hpBar.getBackground(), enemy.hpBar.getX(), enemy.hpBar.getY(), 14,2);
+                game.entityBatch.draw(enemy.hpBar.getForeground(), enemy.hpBar.getX(), enemy.hpBar.getY(), enemy.hpBar.getCurrentWidth(),2);
             }
         }
 

@@ -8,6 +8,7 @@ public abstract class Entity {
     private int width;
     private int height;
     private String sprite;
+    public HealthBar hpBar;
 
     public Entity(float x, float y, int width, int height, String sprite) {
         this.x = x;
