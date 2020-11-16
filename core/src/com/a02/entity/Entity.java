@@ -1,5 +1,6 @@
-package com.a02.game;
+package com.a02.entity;
 
+import com.a02.component.HealthBar;
 import com.badlogic.gdx.math.Vector2;
 
 public abstract class Entity {

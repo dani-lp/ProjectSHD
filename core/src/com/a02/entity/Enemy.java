@@ -1,6 +1,7 @@
-package com.a02.game;
+package com.a02.entity;
 
-import com.badlogic.gdx.Game;
+import com.a02.screens.GameScreen;
+import com.a02.component.HealthBar;
 import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -8,31 +9,28 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.List;
 
-import static com.a02.utils.Utils.*;
+import static com.a02.game.Utils.*;
 
-public class Enemy extends Entity{
+public class Enemy extends Entity {
     private int id;
-    private String name;
     private int hp;
     private int attackDamage;
     private float speed;
     private int goldValue;
-    private int startTime;
 
     protected Animation<TextureRegion> walkAnimation;
     protected Animation<TextureRegion> attackAnimation;
     protected Animation<TextureRegion> deathAnimation;
 
-    enum State {
-            WALKING, ATTACKING, DYING, DEAD
+    public enum State {
+        WALKING, ATTACKING, DYING, DEAD
     }
 
-    State state;
+    public State state;
 
-    public Enemy(float x, float y, int width, int height, int id, int hp, int attackDamage, float speed,int startTime) {  //Constructor de enemigos
+    public Enemy(float x, float y, int width, int height, int id, int hp, int attackDamage, float speed) {  //Constructor de enemigos
         super(x, y, width, height);
         this.id = id;
-        this.name = name;
         this.hp = hp;
         this.attackDamage = attackDamage;
         this.speed = speed;
@@ -43,19 +41,16 @@ public class Enemy extends Entity{
 
         this.goldValue = 50;
         this.hpBar = new HealthBar(this, hp);
-        this.startTime=startTime;
     }
 
     public Enemy() {        //Constructor vacio de enemigos
         super();
         this.id = -1;
-        this.name = "";
         this.hp = 0;
         this.attackDamage = 0;
         this.speed = 0;
 
         this.goldValue = 50;
-        startTime=0;
     }
 
     public int getId() {
@@ -97,7 +92,7 @@ public class Enemy extends Entity{
      * @param objects Arraylist de objetos defensivos
      * @param secTimer Reloj de juego
      */
-    protected void update(float beaconX, float beaconY, List<GameObject> objects, List<Enemy> enemies, float secTimer) {
+    public void update(float beaconX, float beaconY, List<GameObject> objects, List<Enemy> enemies, float secTimer) {
         switch (this.state) {
             case WALKING:
                 if (secTimer>=this.startTime){

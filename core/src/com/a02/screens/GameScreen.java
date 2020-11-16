@@ -1,13 +1,19 @@
-package com.a02.game;
+package com.a02.screens;
 
+import com.a02.entity.Attacker;
+import com.a02.entity.Defender;
+import com.a02.entity.Enemy;
+import com.a02.entity.Trap;
+import com.a02.entity.GameObject;
+import com.a02.component.Inventory;
+import com.a02.game.MainGame;
+import com.a02.component.Map;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.awt.*;
 import java.util.ArrayList;

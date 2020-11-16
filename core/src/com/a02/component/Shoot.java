@@ -1,4 +1,4 @@
-package com.a02.game;
+package com.a02.component;
 
 public class Shoot {
     private int x;
