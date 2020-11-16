@@ -9,9 +9,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+
+import static com.a02.game.MainGame.mainGameScreen;
 
 public class GameScreen implements Screen {
     final MainGame game;
@@ -26,6 +29,14 @@ public class GameScreen implements Screen {
     Enemy larry2;
     Enemy larry3;
     Enemy larry4;
+    Enemy larry5;
+    Enemy larry6;
+    Enemy larry7;
+    Enemy larry8;
+    Enemy larry9;
+    Enemy larry10;
+    Enemy larry11;
+
     Defender beacon;
     Defender wall;        //Enemigos y objetos
     Attacker elec;
@@ -40,6 +51,32 @@ public class GameScreen implements Screen {
     int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones
 
+    public void ronda1(){
+        larry = new Enemy(12, 63, 16, 16, 1,200, 100, 10,0);
+        larry2 = new Enemy(275, 25, 16, 16,2, 200, 100, 10,300);
+        larry3 = new Enemy(100, 359, 16, 16,1,200, 100, 10,470);
+        larry4 = new Enemy(350, 220, 16, 16,2,200, 100, 10,500);
+        larry5 = new Enemy(-12, 363, 16, 16,1,200, 100, 10,680);
+        larry6 = new Enemy(445, 25, 16, 16,2,200, 100, 10,742);
+        larry7 = new Enemy(100, 459, 16, 16, 1,200, 100, 10,790);
+        larry8 = new Enemy(350, 320, 16, 16,2,200, 100, 10,825);
+        larry9 = new Enemy(512, 63, 16, 16,1,200, 100, 10,875);
+        larry10 = new Enemy(-45, 25, 16, 16,2,200, 100, 10,905);
+        larry11 = new Enemy(100, -59, 16, 16,1,200, 100, 10,925);
+
+        enemies.add(larry);
+        enemies.add(larry2);
+        enemies.add(larry3);
+        enemies.add(larry4);
+        enemies.add(larry5);
+        enemies.add(larry6);
+        enemies.add(larry7);
+        enemies.add(larry8);
+        enemies.add(larry9);
+        enemies.add(larry10);
+        enemies.add(larry11);
+    }
+
     public GameScreen(MainGame game) {
         this.game = game;
         buying = false;
@@ -50,20 +87,12 @@ public class GameScreen implements Screen {
         secTimer = 0;
         animationTimer = 0;
 
-        larry = new Enemy(12, 63, 16, 16, 1, 200, 100, 30);
-        larry2 = new Enemy(45, 25, 16, 16, 2, 200, 100, 30);
-        larry3 = new Enemy(100, 59, 16, 16, 1, 200, 100, 30);
-        larry4 = new Enemy(350, 20, 16, 16, 2, 200, 100, 30);
 
-        beacon = new Defender(145,90,16,16,0,"Beacon", 1000, true,10000000);
-        wall = new Defender(260,135,16,18,1,"Defense", 1000, true,1000);
-        elec = new Attacker(280,135,16,18,2,"Electricity",100,true,1000,"Spark",50);
+
+        beacon = new Defender(145,90,16,16,0,"Beacon", 1000, true,1000);
+        wall = new Defender(260,135,16,18,1,"Defense", 1000, true,900);
+        elec = new Attacker(280,135,16,18,2,"Electricity",100,true,500,"Spark",50);
         fire = new Trap(260,115,16,18,3,"Fire",10,true,1000,"FREEZE",1000);
-
-        enemies.add(larry);
-        enemies.add(larry2);
-        enemies.add(larry3);
-        enemies.add(larry4);
 
         objects.add(wall);
         objects.add(elec);
@@ -74,6 +103,8 @@ public class GameScreen implements Screen {
         inventory.insert(wall);
         inventory.insert(elec);
         inventory.insert(fire);
+
+        ronda1();
 
         map = new Map("map1.png");
 
@@ -157,6 +188,11 @@ public class GameScreen implements Screen {
         font.draw(game.entityBatch, "ORO  " + Integer.toString(gold), 5, 175);
 
         game.entityBatch.end();
+
+
+        if (beacon.getHp()<=0) {
+            game.setScreen(new MenuScreen(game));
+        }
     }
 
     @Override

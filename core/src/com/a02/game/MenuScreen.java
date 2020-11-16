@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 
+import java.awt.*;
+
 import static com.a02.game.MainGame.mainGameScreen;
 
 public class MenuScreen implements Screen {
@@ -40,7 +42,7 @@ public class MenuScreen implements Screen {
         game.entityBatch.end();
 
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-            game.setScreen(mainGameScreen);
+            game.setScreen(new GameScreen(game));
         }
     }
 
