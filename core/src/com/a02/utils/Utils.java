@@ -2,10 +2,14 @@ package com.a02.utils;
 
 import com.a02.game.MainGame;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.ScreenUtils;
 
 public class Utils {
     /**
@@ -47,5 +51,17 @@ public class Utils {
 
         //Crea y devuelve la animación
         return new Animation<TextureRegion>(frameDuration, animationFrames);
+    }
+
+    public static void takeScreenshot() {   //NO FUNCIONA CORRECTAMENTE
+        byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
+        for (int i = 4; i < pixels.length; i += 4) {
+            pixels[i - 1] = (byte) 255;
+        }
+        FileHandle fh = new FileHandle(Gdx.files.getLocalStoragePath() + "screenshot" + "1" + ".png");
+        Pixmap pixmap = ScreenUtils.getFrameBufferPixmap(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        System.out.println(fh);
+        PixmapIO.writePNG(fh, pixmap);
+        pixmap.dispose();
     }
 }

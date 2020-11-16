@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 320;
 		config.height = 180;
-		config.fullscreen = !true;
+		config.fullscreen = true;
 		config.foregroundFPS = 60;
 		config.addIcon("boredlion.png", Files.FileType.Internal);
 		new LwjglApplication(new MainGame(), config);

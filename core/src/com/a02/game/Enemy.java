@@ -120,7 +120,7 @@ public class Enemy extends Entity{
                 if (this.overlappedObject(objects) != null) {
                     GameObject tempObj = this.overlappedObject(objects);    //Objeto siendo colisionado
 
-                    if (tempObj.getHp() > 0 && secTimer % 60 == 0) {    //Pegar 1 vez por segundo
+                    if (tempObj.getHp() > 0 && !tempObj.isGrabbed() && secTimer % 60 == 0) { //Pegar 1 vez por segundo
                         tempObj.setHp(tempObj.getHp() - this.attackDamage);
                     } else if (tempObj.getHp() <= 0) {
                         //target.delete()?
