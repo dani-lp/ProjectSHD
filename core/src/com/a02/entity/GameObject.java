@@ -1,5 +1,8 @@
-package com.a02.game;
+package com.a02.entity;
 
+import com.a02.component.HealthBar;
+import com.a02.component.Map;
+import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -7,7 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import java.util.List;
 
-import static com.a02.utils.Utils.*;
+import static com.a02.game.Utils.*;
 
 public abstract class GameObject extends Entity {
     private int id;

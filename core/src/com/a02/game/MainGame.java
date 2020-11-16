@@ -5,12 +5,13 @@
 
 package com.a02.game;
 
-import com.a02.utils.Utils;
+import com.a02.screens.GameScreen;
+import com.a02.screens.MenuScreen;
+import com.a02.screens.PauseScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Game;
-import static com.a02.utils.Utils.*;
 
 public class MainGame extends Game {
 	public SpriteBatch entityBatch;

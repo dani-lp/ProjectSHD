@@ -1,4 +1,4 @@
-package com.a02.windows;
+package com.a02.game.windows;
 
 import com.formdev.flatlaf.FlatLightLaf;
 

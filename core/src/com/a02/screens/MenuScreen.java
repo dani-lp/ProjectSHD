@@ -1,19 +1,22 @@
-package com.a02.game;
+package com.a02.screens;
 
+import com.a02.game.MainGame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.*;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 
 import static com.a02.game.MainGame.mainGameScreen;
 
-public class PauseScreen implements Screen {
+public class MenuScreen implements Screen {
 
     final MainGame game;
 
     private OrthographicCamera camera;
 
-    public PauseScreen(final MainGame game) {
+    public MenuScreen(MainGame game) {
         this.game = game;
 
         camera = new OrthographicCamera();
@@ -34,10 +37,10 @@ public class PauseScreen implements Screen {
         game.entityBatch.setProjectionMatrix(camera.combined);
 
         game.entityBatch.begin();
-
+        game.entityBatch.draw(new Texture(Gdx.files.internal("wallpaper.png")),0,0);
         game.entityBatch.end();
 
-        if (Gdx.input.isKeyPressed(Input.Keys.B)) { //TODO: no funciona con la P?
+        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
             game.setScreen(mainGameScreen);
         }
     }

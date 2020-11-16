@@ -1,4 +1,4 @@
-package com.a02.utils;
+package com.a02.game;
 
 import com.a02.game.MainGame;
 import com.badlogic.gdx.Gdx;

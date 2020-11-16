@@ -1,6 +1,8 @@
 package com.a02.game;
 
-import java.lang.reflect.Array;
+import com.a02.entity.Enemy;
+import com.a02.entity.GameObject;
+
 import java.util.ArrayList;
 
 /**

@@ -1,10 +1,5 @@
 package tests;
 
-import com.a02.game.GameObject;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
 public class GameObjectTest {
     /*
     GameObject testObject = new GameObject(1,2,3,4,"test.png",5,"test","e",6,true,7,true,true);

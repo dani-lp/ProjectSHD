@@ -1,5 +1,6 @@
-package com.a02.game;
+package com.a02.component;
 
+import com.a02.entity.GameObject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -14,7 +15,7 @@ public class Map {
     protected final int GRID_WIDTH = 16;
     protected final int GRID_HEIGHT = 18;
 
-    protected Map(String sprite) {
+    public Map(String sprite) {
         occGrid = new boolean[16][10];
         entityGrid = new GameObject[16][10];
         this.sprite = sprite;
@@ -41,7 +42,7 @@ public class Map {
         return sprite;
     }
 
-    protected Vector2[][] getCoordGrid() {
+    public Vector2[][] getCoordGrid() {
         return coordGrid;
     }
 

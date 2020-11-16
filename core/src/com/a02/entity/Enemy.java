@@ -1,6 +1,7 @@
-package com.a02.game;
+package com.a02.entity;
 
-import com.badlogic.gdx.Game;
+import com.a02.screens.GameScreen;
+import com.a02.component.HealthBar;
 import com.badlogic.gdx.Gdx;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -8,9 +9,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.util.List;
 
-import static com.a02.utils.Utils.*;
+import static com.a02.game.Utils.*;
 
-public class Enemy extends Entity{
+public class Enemy extends Entity {
     private int id;
     private int hp;
     private int attackDamage;
@@ -21,11 +22,11 @@ public class Enemy extends Entity{
     protected Animation<TextureRegion> attackAnimation;
     protected Animation<TextureRegion> deathAnimation;
 
-    enum State {
+    public enum State {
         WALKING, ATTACKING, DYING, DEAD
     }
 
-    State state;
+    public State state;
 
     public Enemy(float x, float y, int width, int height, int id, int hp, int attackDamage, float speed) {  //Constructor de enemigos
         super(x, y, width, height);
@@ -91,7 +92,7 @@ public class Enemy extends Entity{
      * @param objects Arraylist de objetos defensivos
      * @param secTimer Reloj de juego
      */
-    protected void update(float beaconX, float beaconY, List<GameObject> objects, List<Enemy> enemies, float secTimer) {
+    public void update(float beaconX, float beaconY, List<GameObject> objects, List<Enemy> enemies, float secTimer) {
         switch (this.state) {
             case WALKING:
                 this.move2(beaconX, beaconY);    //Movimiento a beacon

@@ -6,14 +6,14 @@
  *  5.- CONFUSE: cambia la posición a la que se dirige el enemigo temporalmente
  */
 
-package com.a02.game;
+package com.a02.entity;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.List;
 
-public class Trap extends GameObject{
+public class Trap extends GameObject {
     private int attackDamage;
     private enum Effect {
         BURN, FREEZE, TELEPORT, DAMAGE, CONFUSE
