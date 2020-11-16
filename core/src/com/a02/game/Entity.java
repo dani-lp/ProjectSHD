@@ -7,15 +7,13 @@ public abstract class Entity {
     private float y;
     private int width;
     private int height;
-    private String sprite;
     public HealthBar hpBar;
 
-    public Entity(float x, float y, int width, int height, String sprite) {
+    public Entity(float x, float y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.sprite = sprite;
     }
 
     public Entity() {
@@ -23,7 +21,6 @@ public abstract class Entity {
         this.y = 0;
         this.width = 0;
         this.height = 0;
-        this.sprite = "";
     }
 
     public float getX() {
@@ -42,10 +39,6 @@ public abstract class Entity {
         return height;
     }
 
-    public String getSprite() {
-        return sprite;
-    }
-
     public void setX(float x) {
         this.x = x;
     }
@@ -62,10 +55,6 @@ public abstract class Entity {
         this.height = height;
     }
 
-    public void setSprite(String sprite) {
-        this.sprite = sprite;
-    }
-
     @Override
     public String toString() {
         return "Entity{" +
@@ -73,7 +62,7 @@ public abstract class Entity {
                 ", y=" + y +
                 ", width=" + width +
                 ", height=" + height +
-                ", Sprite='" + sprite + '\'' +
+                ", hpBar=" + hpBar +
                 '}';
     }
 

@@ -25,9 +25,9 @@ public class Trap extends GameObject{
     private State state;
     private Enemy focusedEnemy;
 
-    public Trap(float x, float y, int width, int height, String sprite, int id, String name, String type, int price,
+    public Trap(float x, float y, int width, int height, int id, String type, int price,
                 boolean unlocked, int hp, String effect, int attackDamage) {
-        super(x, y, width, height, sprite, id, name, type, price, unlocked, hp);
+        super(x, y, width, height, id, type, price, unlocked, hp);
         this.attackDamage = attackDamage;
 
         switch (effect) {   //Ajuste de textura y efecto
@@ -61,8 +61,8 @@ public class Trap extends GameObject{
     }
 
     public Trap(Trap other) {
-        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite(), other.getId(),
-                other.getName(), other.getType(), other.getPrice(), other.isUnlocked(), other.getHp());
+        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getId(),
+               other.getType(), other.getPrice(), other.isUnlocked(), other.getHp());
         this.effect = other.getEffect();
         this.attackDamage = other.getAttackDamage();
         this.state = other.state;

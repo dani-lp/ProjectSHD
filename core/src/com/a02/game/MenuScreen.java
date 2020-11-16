@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 
 import static com.a02.game.MainGame.mainGameScreen;
 
@@ -35,7 +36,7 @@ public class MenuScreen implements Screen {
         game.entityBatch.setProjectionMatrix(camera.combined);
 
         game.entityBatch.begin();
-
+        game.entityBatch.draw(new Texture(Gdx.files.internal("wallpaper.png")),0,0);
         game.entityBatch.end();
 
         if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {

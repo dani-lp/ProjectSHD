@@ -1,11 +1,22 @@
 package com.a02.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+
 import java.util.List;
 
 public class Defender extends GameObject {
-    public Defender(float x, float y, int width, int height, String sprite, int id, String name, String type, int price,
+    public Defender(float x, float y, int width, int height, int id, String type, int price,
                     boolean unlocked, int hp) {
-        super(x, y, width, height, sprite, id, name, type, price, unlocked, hp);
+        super(x, y, width, height, id, type, price, unlocked, hp);
+
+        switch (this.getId()){
+            case 0: //Beacon
+                this.setTexture(new Texture(Gdx.files.internal("beacon.png")));
+                break;
+            case 1: //Wall
+                this.setTexture(new Texture(Gdx.files.internal("wall.png")));
+        }
     }
 
     public Defender() {
@@ -13,8 +24,9 @@ public class Defender extends GameObject {
     }
 
     public Defender(Defender other) {
-        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite(), other.getId(),
-                other.getName(), other.getType(), other.getPrice(), other.isUnlocked(), other.getHp());
+        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getId(), other.getType(),
+                other.getPrice(), other.isUnlocked(), other.getHp());
+        this.setTexture(other.getTexture());
     }
 
     public void update(List<GameObject> objects, List<Enemy> enemies, float secTimer) {

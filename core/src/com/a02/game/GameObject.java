@@ -11,7 +11,6 @@ import static com.a02.utils.Utils.*;
 
 public abstract class GameObject extends Entity {
     private int id;
-    private String name;
     private String type;
     private int price;
     private boolean unlocked;
@@ -19,34 +18,29 @@ public abstract class GameObject extends Entity {
     private boolean grabbed;
     private Texture texture;
 
-    public GameObject(float x, float y, int width, int height, String sprite, int id, String name,String type,
+    public GameObject(float x, float y, int width, int height, int id,String type,
                       int price, boolean unlocked, int hp) {
-        super(x, y, width, height, sprite);
+        super(x, y, width, height);
         this.id = id;
-        this.name = name;
         this.type = type;
         this.price = price;
         this.unlocked = unlocked;
         this.hp = hp;
-        this.texture = new Texture(Gdx.files.internal(sprite));
         this.hpBar = new HealthBar(this, hp);
     }
 
     public GameObject(GameObject other) {
-        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite());
+        super(other.getX(), other.getY(), other.getWidth(), other.getHeight());
         this.id = other.id;
-        this.name = other.name;
         this.type = other.type;
         this.price = other.price;
         this.unlocked = other.unlocked;
         this.hp = other.hp;
-        this.texture = new Texture(Gdx.files.internal(other.getSprite()));
     }
 
     public GameObject() {
         super();
         this.id = -1;
-        this.name = "";
         this.type = "";
         this.price = 0;
         this.unlocked = false;
@@ -59,14 +53,6 @@ public abstract class GameObject extends Entity {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getType() {
@@ -117,7 +103,6 @@ public abstract class GameObject extends Entity {
     public String toString() {
         return "GameObject{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", price=" + price +
                 ", unlocked=" + unlocked +

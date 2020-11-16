@@ -50,15 +50,15 @@ public class GameScreen implements Screen {
         secTimer = 0;
         animationTimer = 0;
 
-        larry = new Enemy(12, 63, 16, 16, "Test2.png", 1, "Larry", 200, 100, 30);
-        larry2 = new Enemy(45, 25, 16, 16, "Test2.png", 2, "Jeremy", 200, 100, 30);
-        larry3 = new Enemy(100, 59, 16, 16, "Test2.png", 1, "Larry", 200, 100, 30);
-        larry4 = new Enemy(350, 20, 16, 16, "Test2.png", 2, "Jeremy", 200, 100, 30);
+        larry = new Enemy(12, 63, 16, 16, 1, 200, 100, 30);
+        larry2 = new Enemy(45, 25, 16, 16, 2, 200, 100, 30);
+        larry3 = new Enemy(100, 59, 16, 16, 1, 200, 100, 30);
+        larry4 = new Enemy(350, 20, 16, 16, 2, 200, 100, 30);
 
-        beacon = new Defender(145,90,16,16,"beacon.png",0,"Beacon","Beacon", 1000, true,10000000);
-        wall = new Defender(260,135,16,18,"Muro.png",0,"Wall","Defense", 1000, true,1000);
-        elec = new Attacker(280,135,16,18,"electricity.png",2,"Electricity","Attack",100,true,1000,"Spark",50);
-        fire = new Trap(260,115,16,18,"Traps/fire.png",3,"Fire","Trap",10,true,1000,"CONFUSE",1000);
+        beacon = new Defender(145,90,16,16,0,"Beacon", 1000, true,10000000);
+        wall = new Defender(260,135,16,18,1,"Defense", 1000, true,1000);
+        elec = new Attacker(280,135,16,18,2,"Electricity",100,true,1000,"Spark",50);
+        fire = new Trap(260,115,16,18,3,"Fire",10,true,1000,"FREEZE",1000);
 
         enemies.add(larry);
         enemies.add(larry2);

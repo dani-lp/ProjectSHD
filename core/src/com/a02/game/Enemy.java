@@ -12,7 +12,6 @@ import static com.a02.utils.Utils.*;
 
 public class Enemy extends Entity{
     private int id;
-    private String name;
     private int hp;
     private int attackDamage;
     private float speed;
@@ -28,10 +27,9 @@ public class Enemy extends Entity{
 
     State state;
 
-    public Enemy(float x, float y, int width, int height, String sprite, int id, String name, int hp, int attackDamage, float speed) {  //Constructor de enemigos
-        super(x, y, width, height, sprite);
+    public Enemy(float x, float y, int width, int height, int id, int hp, int attackDamage, float speed) {  //Constructor de enemigos
+        super(x, y, width, height);
         this.id = id;
-        this.name = name;
         this.hp = hp;
         this.attackDamage = attackDamage;
         this.speed = speed;
@@ -47,7 +45,6 @@ public class Enemy extends Entity{
     public Enemy() {        //Constructor vacio de enemigos
         super();
         this.id = -1;
-        this.name = "";
         this.hp = 0;
         this.attackDamage = 0;
         this.speed = 0;
@@ -61,14 +58,6 @@ public class Enemy extends Entity{
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public int getHp() {

@@ -1,5 +1,8 @@
 package com.a02.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +16,18 @@ public class Attacker extends GameObject {
 
     State state;
 
-    public Attacker(float x, float y, int width, int height, String sprite, int id, String name, String type, int price,
+    public Attacker(float x, float y, int width, int height, int id, String type, int price,
                     boolean unlocked, int hp, String attackType, float attackDamage) {
-        super(x, y, width, height, sprite, id, name, type, price, unlocked, hp);
+        super(x, y, width, height, id, type, price, unlocked, hp);
         this.attackType = attackType;
         this.attackDamage = attackDamage;
         this.state = State.IDLE;
+
+        switch (this.getId()){
+            case 2: //Electricidad
+                this.setTexture(new Texture(Gdx.files.internal("electricity.png")));
+                break;
+        }
     }
 
     public Attacker() {
@@ -28,11 +37,11 @@ public class Attacker extends GameObject {
     }
 
     public Attacker(Attacker other) {
-        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getSprite(), other.getId(),
-                other.getName(), other.getType(), other.getPrice(), other.isUnlocked(), other.getHp());
+        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getId(), other.getType(), other.getPrice(), other.isUnlocked(), other.getHp());
         this.attackType = other.getAttackType();
         this.attackDamage = other.getAttackDamage();
         this.state = other.state;
+        this.setTexture(other.getTexture());
     }
 
     public float getAttackDamage() {
