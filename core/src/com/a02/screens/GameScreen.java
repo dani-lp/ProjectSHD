@@ -86,7 +86,7 @@ public class GameScreen implements Screen {
     public GameScreen(MainGame game) {
         this.game = game;
         buying = false;
-        gold = 10000;
+        gold = 6000;
 
         font = new BitmapFont(Gdx.files.internal("Fonts/test.fnt"));
 

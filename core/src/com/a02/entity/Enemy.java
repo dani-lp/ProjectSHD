@@ -17,6 +17,8 @@ public class Enemy extends Entity {
     private int attackDamage;
     private float speed;
     private int goldValue;
+    private int startTime;
+
 
     protected Animation<TextureRegion> walkAnimation;
     protected Animation<TextureRegion> attackAnimation;
@@ -28,7 +30,7 @@ public class Enemy extends Entity {
 
     public State state;
 
-    public Enemy(float x, float y, int width, int height, int id, int hp, int attackDamage, float speed) {  //Constructor de enemigos
+    public Enemy(float x, float y, int width, int height, int id, int hp, int attackDamage, float speed, int startTime) {  //Constructor de enemigos
         super(x, y, width, height);
         this.id = id;
         this.hp = hp;
@@ -38,7 +40,7 @@ public class Enemy extends Entity {
         this.walkAnimation = createAnimation("larry-walk.png", 3, 1, 0.2f);
         this.attackAnimation = createAnimation("larry-attack.png", 2, 2, 0.2f);
         this.deathAnimation = createAnimation("larry-death.png", 2, 2, 0.25f);
-
+        this.startTime=startTime;
         this.goldValue = 50;
         this.hpBar = new HealthBar(this, hp);
     }
