@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.awt.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.a02.game.MainGame.mainGameScreen;
 
@@ -18,11 +20,17 @@ public class MenuScreen implements Screen {
 
     private OrthographicCamera camera;
 
+    private static Logger logger = Logger.getLogger(MenuScreen.class.getName());
+
     public MenuScreen(MainGame game) {
         this.game = game;
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
+
+        Logger.getLogger("").setLevel(Level.INFO);
+        Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
+        logger.info("Inicio del MenuScreen");
     }
 
     @Override

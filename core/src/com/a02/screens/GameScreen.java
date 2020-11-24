@@ -16,14 +16,21 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.awt.*;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 import static com.a02.game.MainGame.mainGameScreen;
 
 public class GameScreen implements Screen {
     final MainGame game;
+
+    private static Logger logger = Logger.getLogger(GameScreen.class.getName());
 
     private static boolean buying;
     private static int gold;
@@ -56,6 +63,8 @@ public class GameScreen implements Screen {
 
     int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones
+
+
 
     public void ronda1(){
         larry = new Enemy(12, 63, 16, 16, 1,200, 100, 10,0);
@@ -93,6 +102,9 @@ public class GameScreen implements Screen {
         secTimer = 0;
         animationTimer = 0;
 
+        Logger.getLogger("").setLevel(Level.INFO);
+        Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
+        logger.info("Inicio del GameScreen");
 
 
         beacon = new Defender(145,90,16,16,0,"Beacon", 1000, true,1000);

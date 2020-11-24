@@ -3,12 +3,15 @@ package com.a02.entity;
 import com.a02.component.HealthBar;
 import com.a02.component.Map;
 import com.a02.screens.GameScreen;
+import com.a02.screens.PauseScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.a02.game.Utils.*;
 
@@ -20,6 +23,8 @@ public abstract class GameObject extends Entity {
     private int hp;
     private boolean grabbed;
     private Texture texture;
+
+    private static Logger logger = Logger.getLogger(GameObject.class.getName());
 
     public GameObject(float x, float y, int width, int height, int id,String type,
                       int price, boolean unlocked, int hp) {
@@ -133,6 +138,9 @@ public abstract class GameObject extends Entity {
         if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !GameScreen.isBuying()) {
             this.grabbed = true;
             GameScreen.setBuying(true);
+            Logger.getLogger("").setLevel(Level.INFO);
+            Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
+            logger.info("Objeto comprado");
         }
         if (this.grabbed) {
             this.setX((int) touchPos.x - 8);

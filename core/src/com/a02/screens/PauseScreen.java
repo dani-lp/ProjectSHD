@@ -6,9 +6,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.*;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import static com.a02.game.MainGame.mainGameScreen;
 
 public class PauseScreen implements Screen {
+
+    private static Logger logger = Logger.getLogger(PauseScreen.class.getName());
 
     final MainGame game;
 
@@ -19,6 +24,10 @@ public class PauseScreen implements Screen {
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
+
+        Logger.getLogger("").setLevel(Level.INFO);
+        Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
+        logger.info("Pausa");
     }
 
     @Override
