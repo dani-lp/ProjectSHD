@@ -19,7 +19,6 @@ public class Enemy extends Entity {
     private int goldValue;
     private int startTime;
 
-
     protected Animation<TextureRegion> walkAnimation;
     protected Animation<TextureRegion> attackAnimation;
     protected Animation<TextureRegion> deathAnimation;
@@ -37,9 +36,9 @@ public class Enemy extends Entity {
         this.attackDamage = attackDamage;
         this.speed = speed;
         this.state = State.WALKING;
-        this.walkAnimation = createAnimation("larry-walk.png", 3, 1, 0.2f);
-        this.attackAnimation = createAnimation("larry-attack.png", 2, 2, 0.2f);
-        this.deathAnimation = createAnimation("larry-death.png", 2, 2, 0.25f);
+        this.walkAnimation = createAnimation("e1-walk.png", 3, 1, 0.2f);
+        this.attackAnimation = createAnimation("e1-attack.png", 2, 2, 0.2f);
+        this.deathAnimation = createAnimation("e1-death.png", 2, 2, 0.25f);
         this.startTime=startTime;
         this.goldValue = 50;
         this.hpBar = new HealthBar(this, hp);
@@ -97,7 +96,7 @@ public class Enemy extends Entity {
     public void update(float beaconX, float beaconY, List<GameObject> objects, List<Enemy> enemies, float secTimer) {
         switch (this.state) {
             case WALKING:
-                if (secTimer>=this.startTime){
+                if (secTimer >= this.startTime){
                     this.move2(beaconX, beaconY);
                 }           //Movimiento a beacon
 

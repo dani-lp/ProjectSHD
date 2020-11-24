@@ -1,11 +1,8 @@
 package com.a02.game;
 
-import com.a02.game.MainGame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
@@ -14,6 +11,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class Utils {
     /**
      * Devuelve la posición del mouse en un Vector3.
+     * @return Vector3 posición
      */
     public static Vector3 getMousePos() {
         return new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);

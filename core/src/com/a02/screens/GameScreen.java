@@ -59,15 +59,15 @@ public class GameScreen implements Screen {
 
     public void ronda1(){
         larry = new Enemy(12, 63, 16, 16, 1,200, 100, 10,0);
-        larry2 = new Enemy(275, 25, 16, 16,2, 200, 100, 10,300);
+        larry2 = new Enemy(275, 25, 16, 16,1, 200, 100, 10,300);
         larry3 = new Enemy(100, 359, 16, 16,1,200, 100, 10,470);
-        larry4 = new Enemy(350, 220, 16, 16,2,200, 100, 10,500);
+        larry4 = new Enemy(350, 220, 16, 16,1,200, 100, 10,500);
         larry5 = new Enemy(-12, 363, 16, 16,1,200, 100, 10,680);
-        larry6 = new Enemy(445, 25, 16, 16,2,200, 100, 10,742);
+        larry6 = new Enemy(445, 25, 16, 16,1,200, 100, 10,742);
         larry7 = new Enemy(100, 459, 16, 16, 1,200, 100, 10,790);
-        larry8 = new Enemy(350, 320, 16, 16,2,200, 100, 10,825);
+        larry8 = new Enemy(350, 320, 16, 16,1,200, 100, 10,825);
         larry9 = new Enemy(512, 63, 16, 16,1,200, 100, 10,875);
-        larry10 = new Enemy(-45, 25, 16, 16,2,200, 100, 10,905);
+        larry10 = new Enemy(-45, 25, 16, 16,1,200, 100, 10,905);
         larry11 = new Enemy(100, -59, 16, 16,1,200, 100, 10,925);
 
         enemies.add(larry);
