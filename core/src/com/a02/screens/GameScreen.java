@@ -50,6 +50,12 @@ public class GameScreen implements Screen {
     Enemy larry10;
     Enemy larry11;
 
+    Trap tConfuse;
+    Trap tDamage;
+    Trap tFire;
+    Trap tFreeze;
+    Trap tTeleport;
+
     Defender beacon;
     Defender wall;        //Enemigos y objetos
     Attacker elec;
@@ -64,35 +70,11 @@ public class GameScreen implements Screen {
     int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones
 
-
-
-    public void ronda1(){
-        larry = new Enemy(12, 63, 16, 16, 1,200, 100, 10,0);
-        larry2 = new Enemy(275, 25, 16, 16,1, 200, 100, 10,300);
-        larry3 = new Enemy(100, 359, 16, 16,1,200, 100, 10,470);
-        larry4 = new Enemy(350, 220, 16, 16,1,200, 100, 10,500);
-        larry5 = new Enemy(-12, 363, 16, 16,1,200, 100, 10,680);
-        larry6 = new Enemy(445, 25, 16, 16,1,200, 100, 10,742);
-        larry7 = new Enemy(100, 459, 16, 16, 1,200, 100, 10,790);
-        larry8 = new Enemy(350, 320, 16, 16,1,200, 100, 10,825);
-        larry9 = new Enemy(512, 63, 16, 16,1,200, 100, 10,875);
-        larry10 = new Enemy(-45, 25, 16, 16,1,200, 100, 10,905);
-        larry11 = new Enemy(100, -59, 16, 16,1,200, 100, 10,925);
-
-        enemies.add(larry);
-        enemies.add(larry2);
-        enemies.add(larry3);
-        enemies.add(larry4);
-        enemies.add(larry5);
-        enemies.add(larry6);
-        enemies.add(larry7);
-        enemies.add(larry8);
-        enemies.add(larry9);
-        enemies.add(larry10);
-        enemies.add(larry11);
-    }
-
     public GameScreen(MainGame game) {
+        Logger.getLogger("").setLevel(Level.INFO);
+        Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
+        logger.info("Inicio del GameScreen");
+
         this.game = game;
         buying = false;
         gold = 6000;
@@ -102,25 +84,36 @@ public class GameScreen implements Screen {
         secTimer = 0;
         animationTimer = 0;
 
-        Logger.getLogger("").setLevel(Level.INFO);
-        Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
-        logger.info("Inicio del GameScreen");
+        beacon = new Defender(0,"Beacon", 1000, true,1000, 145, 90);
+        wall = new Defender(1,"Defense", 1000, true,900);
+        elec = new Attacker(2,"Electricity",100,true,500,"Spark",50);
 
+        tConfuse = new Trap(3,"Confuse",10,true,1000,"CONFUSE",1000);
+        tDamage = new Trap(3,"Damage",10,true,1000,"DAMAGE",1000);
+        tFire = new Trap(3,"Fire",10,true,1000,"BURN",1000);
+        tFreeze = new Trap(3,"Freeze",10,true,1000,"FREEZE",1000);
+        tTeleport = new Trap(3,"Teleport",10,true,1000,"TELEPORT",1000);
 
-        beacon = new Defender(145,90,16,16,0,"Beacon", 1000, true,1000);
-        wall = new Defender(260,135,16,18,1,"Defense", 1000, true,900);
-        elec = new Attacker(280,135,16,18,2,"Electricity",100,true,500,"Spark",50);
-        fire = new Trap(260,115,16,18,3,"Fire",10,true,1000,"FREEZE",1000);
+        inventory = new Inventory();
+
+        inventory.insert(elec);
+        inventory.insert(wall);
+
+        inventory.insert(tConfuse);
+        inventory.insert(tDamage);
+        inventory.insert(tFire);
+        inventory.insert(tFreeze);
+        inventory.insert(tTeleport);
 
         objects.add(wall);
         objects.add(elec);
-        objects.add(fire);
         objects.add(beacon);
 
-        inventory = new Inventory();
-        inventory.insert(wall);
-        inventory.insert(elec);
-        inventory.insert(fire);
+        objects.add(tConfuse);
+        objects.add(tDamage);
+        objects.add(tFire);
+        objects.add(tFreeze);
+        objects.add(tTeleport);
 
         ronda1();
 
@@ -150,7 +143,11 @@ public class GameScreen implements Screen {
         //Actualiza estados de enemigos y objetos
         wall.grabObject(map,objects);
         elec.grabObject(map,objects);
-        fire.grabObject(map,objects);
+        tConfuse.grabObject(map,objects);
+        tDamage.grabObject(map,objects);
+        tFire.grabObject(map,objects);
+        tFreeze.grabObject(map,objects);
+        tTeleport.grabObject(map,objects);
 
         elec.update(objects, enemies, secTimer);
 
@@ -200,7 +197,7 @@ public class GameScreen implements Screen {
         game.entityBatch.draw(inventory.getTexture(), inventory.getX(), inventory.getY());
 
         for (GameObject object:inventory.getObjects()) {    //Objetos del inventario
-            game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
+            if (object != null) game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
         }
 
         font.draw(game.entityBatch, "ORO  " + Integer.toString(gold), 5, 175);
@@ -221,6 +218,32 @@ public class GameScreen implements Screen {
             object.getTexture().dispose();
         }
     }
+    public void ronda1(){
+        larry = new Enemy(12, 63, 16, 16, 1,200, 100, 10,0);
+        larry2 = new Enemy(275, 25, 16, 16,1, 200, 100, 10,300);
+        larry3 = new Enemy(100, 359, 16, 16,1,200, 100, 10,470);
+        larry4 = new Enemy(350, 220, 16, 16,1,200, 100, 10,500);
+        larry5 = new Enemy(-12, 363, 16, 16,1,200, 100, 10,680);
+        larry6 = new Enemy(445, 25, 16, 16,1,200, 100, 10,742);
+        larry7 = new Enemy(100, 459, 16, 16, 1,200, 100, 10,790);
+        larry8 = new Enemy(350, 320, 16, 16,1,200, 100, 10,825);
+        larry9 = new Enemy(512, 63, 16, 16,1,200, 100, 10,875);
+        larry10 = new Enemy(-45, 25, 16, 16,1,200, 100, 10,905);
+        larry11 = new Enemy(100, -59, 16, 16,1,200, 100, 10,925);
+
+        enemies.add(larry);
+        enemies.add(larry2);
+        enemies.add(larry3);
+        enemies.add(larry4);
+        enemies.add(larry5);
+        enemies.add(larry6);
+        enemies.add(larry7);
+        enemies.add(larry8);
+        enemies.add(larry9);
+        enemies.add(larry10);
+        enemies.add(larry11);
+    }
+
 
     public OrthographicCamera getCamera() {
         return camera;

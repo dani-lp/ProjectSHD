@@ -10,13 +10,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class Utils {
     /**
-     * Devuelve la posición del mouse en un Vector3.
+     * Devuelve la posición relativa a la pantalla del mouse.
      * @return Vector3 posición
      */
-    public static Vector3 getMousePos() {
-        return new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-    }
-
     public static Vector3 getRelativeMousePos() {
         return MainGame.mainGameScreen.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(),0));
     }
