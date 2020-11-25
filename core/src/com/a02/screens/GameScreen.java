@@ -85,7 +85,7 @@ public class GameScreen implements Screen {
         animationTimer = 0;
 
         beacon = new Defender(0,"Beacon", 1000, true,1000, 145, 90);
-        wall = new Defender(1,"Defense", 1000, true,900);
+        wall = new Defender(1,"Defense", 200, true,900);
         elec = new Attacker(2,"Electricity",100,true,500,"Spark",50);
 
         tConfuse = new Trap(3,"Confuse",10,true,1000,"CONFUSE",1000);
@@ -157,7 +157,11 @@ public class GameScreen implements Screen {
             GameObject tempObj = objectIterator.next();
             tempObj.update(objects, enemies, secTimer);
             if(tempObj.getHp() <= 0) {
-                map.getOccGrid()[(int) tempObj.getX()/16][(int) tempObj.getY()/18] = false;
+                try {
+                    map.getOccGrid()[(int) tempObj.getX() / 16][(int) tempObj.getY() / 18] = false;
+                } catch (IndexOutOfBoundsException e) {
+                    //TODO: arreglar fallos ocasionales
+                }
                 objectIterator.remove();
             }
         }

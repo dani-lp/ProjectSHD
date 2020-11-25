@@ -25,8 +25,7 @@ public class Trap extends GameObject {
     private State state;
     private Enemy focusedEnemy;
 
-    public Trap(int id, String type, int price,
-                boolean unlocked, int hp, String effect, int attackDamage) {
+    public Trap(int id, String type, int price, boolean unlocked, int hp, String effect, int attackDamage) {
         super(id, type, price, unlocked, hp);
         this.attackDamage = attackDamage;
 
@@ -60,8 +59,7 @@ public class Trap extends GameObject {
         this.state = State.IDLE;
     }
 
-    public Trap(int id, String type, int price,
-                boolean unlocked, int hp, String effect, int attackDamage, float x, float y) {
+    public Trap(int id, String type, int price, boolean unlocked, int hp, String effect, int attackDamage, float x, float y) {
         super(id, type, price, unlocked, hp, x, y);
         this.attackDamage = attackDamage;
 

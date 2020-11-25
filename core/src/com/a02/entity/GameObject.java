@@ -3,7 +3,6 @@ package com.a02.entity;
 import com.a02.component.HealthBar;
 import com.a02.component.Map;
 import com.a02.screens.GameScreen;
-import com.a02.screens.PauseScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -12,7 +11,6 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.a02.game.Utils.*;
 
@@ -137,13 +135,10 @@ public abstract class GameObject extends Entity {
                 ", hp=" + hp +
                 ", grabbed=" + grabbed +
                 ", texture=" + texture +
-                ", x=" + x +
-                ", y=" + y +
+                ", x=" + getX() +
+                ", y=" + getY() +
                 '}';
     }
-
-    float x = this.getX();
-    float y = this.getY();
 
     public abstract void update(List<GameObject> objects, List<Enemy> enemies, float secTimer);
 
