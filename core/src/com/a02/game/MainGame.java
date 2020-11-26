@@ -1,3 +1,8 @@
+/*
+ * Esta clase es llamada desde el método main. Gestiona la creación de
+ * distintas Screens, y posee el SpriteBatch que se encarga del dibujado.
+ */
+
 package com.a02.game;
 
 import com.a02.screens.GameScreen;
@@ -8,10 +13,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Game;
 
-/*
- * Esta clase es llamada desde el método main. Gestiona la creación de
- * distintas Screens, y posee el SpriteBatch que se encarga del dibujado.
- */
 public class MainGame extends Game {
 	public SpriteBatch entityBatch;
 	public static GameScreen mainGameScreen;

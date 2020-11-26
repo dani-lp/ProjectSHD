@@ -15,28 +15,15 @@ public class Attacker extends GameObject {
 
     State state;
 
-    public Attacker(int id, String type, int price, boolean unlocked, int hp, String attackType, float attackDamage) {
-        super(id, type, price, unlocked, hp);
+    public Attacker(float x, float y, int width, int height, int id, String type, int price,
+                    boolean unlocked, int hp, String attackType, float attackDamage) {
+        super(x, y, width, height, id, type, price, unlocked, hp);
         this.attackType = attackType;
         this.attackDamage = attackDamage;
         this.state = State.IDLE;
 
         switch (this.getId()){
-            case 2: //Electricidad
-                this.setTexture(new Texture(Gdx.files.internal("electricity.png")));
-                break;
-        }
-    }
-
-    public Attacker(int id, String type, int price, boolean unlocked, int hp, String attackType, float attackDamage,
-                    float x, float y) {
-        super(id, type, price, unlocked, hp, x, y);
-        this.attackType = attackType;
-        this.attackDamage = attackDamage;
-        this.state = State.IDLE;
-
-        switch (this.getId()){
-            case 2: //Electricidad
+            case 0: //Electricidad
                 this.setTexture(new Texture(Gdx.files.internal("electricity.png")));
                 break;
         }
@@ -49,11 +36,7 @@ public class Attacker extends GameObject {
     }
 
     public Attacker(Attacker other) {
-        super(other.getId(), other.getType(), other.getPrice(), other.isUnlocked(), other.getHp());
-        this.setX(other.getX());
-        this.setY(other.getY());
-        this.setWidth(16);
-        this.setHeight(18);
+        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getId(), other.getType(), other.getPrice(), other.isUnlocked(), other.getHp());
         this.attackType = other.getAttackType();
         this.attackDamage = other.getAttackDamage();
         this.state = other.state;

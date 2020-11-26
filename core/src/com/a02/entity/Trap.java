@@ -25,42 +25,9 @@ public class Trap extends GameObject {
     private State state;
     private Enemy focusedEnemy;
 
-    public Trap(int id, String type, int price, boolean unlocked, int hp, String effect, int attackDamage) {
-        super(id, type, price, unlocked, hp);
-        this.attackDamage = attackDamage;
-
-        switch (effect) {   //Ajuste de textura y efecto
-            case "BURN" :
-                this.setTexture(new Texture(Gdx.files.internal("Traps/fire.png")));
-                this.effect = Effect.BURN;
-                break;
-            case "FREEZE" :
-                this.setTexture(new Texture(Gdx.files.internal("Traps/freeze.png")));
-                this.effect = Effect.FREEZE;
-                break;
-            case "TELEPORT" :
-                this.setTexture(new Texture(Gdx.files.internal("Traps/teleport.png")));
-                this.effect = Effect.TELEPORT;
-                break;
-            case "DAMAGE" :
-                this.setTexture(new Texture(Gdx.files.internal("Traps/damage.png")));
-                this.effect = Effect.DAMAGE;
-                break;
-            case "CONFUSE" :
-                this.setTexture(new Texture(Gdx.files.internal("Traps/confuse.png")));
-                this.effect = Effect.CONFUSE;
-                break;
-            default:
-                this.setTexture(new Texture(Gdx.files.internal("Traps/freeze.png")));
-                this.effect = Effect.FREEZE;
-                break;
-        }
-
-        this.state = State.IDLE;
-    }
-
-    public Trap(int id, String type, int price, boolean unlocked, int hp, String effect, int attackDamage, float x, float y) {
-        super(id, type, price, unlocked, hp, x, y);
+    public Trap(float x, float y, int width, int height, int id, String type, int price,
+                boolean unlocked, int hp, String effect, int attackDamage) {
+        super(x, y, width, height, id, type, price, unlocked, hp);
         this.attackDamage = attackDamage;
 
         switch (effect) {   //Ajuste de textura y efecto
@@ -94,11 +61,8 @@ public class Trap extends GameObject {
     }
 
     public Trap(Trap other) {
-        super(other.getId(), other.getType(), other.getPrice(), other.isUnlocked(), other.getHp());
-        this.setX(other.getX());
-        this.setY(other.getY());
-        this.setWidth(16);
-        this.setHeight(18);
+        super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getId(),
+               other.getType(), other.getPrice(), other.isUnlocked(), other.getHp());
         this.effect = other.getEffect();
         this.attackDamage = other.getAttackDamage();
         this.state = other.state;

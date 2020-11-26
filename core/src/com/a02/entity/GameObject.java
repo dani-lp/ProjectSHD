@@ -3,19 +3,19 @@ package com.a02.entity;
 import com.a02.component.HealthBar;
 import com.a02.component.Map;
 import com.a02.screens.GameScreen;
+import com.a02.screens.PauseScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.a02.game.Utils.*;
 
 public abstract class GameObject extends Entity {
-    private static Logger logger = Logger.getLogger(GameObject.class.getName());
     private int id;
     private String type;
     private int price;
@@ -23,27 +23,12 @@ public abstract class GameObject extends Entity {
     private int hp;
     private boolean grabbed;
     private Texture texture;
-    private Vector2 ogPos = new Vector2();
 
-    public GameObject(int id,String type, int price, boolean unlocked, int hp) {
-        this.setWidth(16);
-        this.setHeight(18);
-        this.id = id;
-        this.type = type;
-        this.price = price;
-        this.unlocked = unlocked;
-        this.hp = hp;
-        this.hpBar = new HealthBar(this, hp);
-    }
+    private static Logger logger = Logger.getLogger(GameObject.class.getName());
 
-    /**
-     * Constructor con posición
-     */
-    public GameObject(int id,String type, int price, boolean unlocked, int hp, float x, float y) {
-        this.setX(x);
-        this.setY(y);
-        this.setWidth(16);
-        this.setHeight(18);
+    public GameObject(float x, float y, int width, int height, int id,String type,
+                      int price, boolean unlocked, int hp) {
+        super(x, y, width, height);
         this.id = id;
         this.type = type;
         this.price = price;
@@ -53,10 +38,7 @@ public abstract class GameObject extends Entity {
     }
 
     public GameObject(GameObject other) {
-        this.setX(other.getX());
-        this.setY(other.getY());
-        this.setWidth(16);
-        this.setHeight(18);
+        super(other.getX(), other.getY(), other.getWidth(), other.getHeight());
         this.id = other.id;
         this.type = other.type;
         this.price = other.price;
@@ -135,10 +117,13 @@ public abstract class GameObject extends Entity {
                 ", hp=" + hp +
                 ", grabbed=" + grabbed +
                 ", texture=" + texture +
-                ", x=" + getX() +
-                ", y=" + getY() +
+                ", x=" + x +
+                ", y=" + y +
                 '}';
     }
+
+    float x = this.getX();
+    float y = this.getY();
 
     public abstract void update(List<GameObject> objects, List<Enemy> enemies, float secTimer);
 
@@ -153,8 +138,6 @@ public abstract class GameObject extends Entity {
         if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !GameScreen.isBuying()) {
             this.grabbed = true;
             GameScreen.setBuying(true);
-            this.ogPos.x = this.getX();
-            this.ogPos.y = this.getY();
             Logger.getLogger("").setLevel(Level.INFO);
             Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
             logger.info("Objeto comprado");
@@ -165,8 +148,8 @@ public abstract class GameObject extends Entity {
 
             if (!Gdx.input.isTouched()) {
                 this.grabbed = false;
-                this.setX(ogPos.x);
-                this.setY(ogPos.y);
+                this.setX(x);
+                this.setY(y);
 
                 GameScreen.setBuying(false);
 

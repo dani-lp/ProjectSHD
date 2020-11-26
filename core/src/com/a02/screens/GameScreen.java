@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.awt.*;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -50,16 +51,15 @@ public class GameScreen implements Screen {
     Enemy larry10;
     Enemy larry11;
 
+    Defender beacon;
+    Defender wall;        //Enemigos y objetos
+    Attacker elec;
     Trap tConfuse;
     Trap tDamage;
     Trap tFire;
     Trap tFreeze;
     Trap tTeleport;
 
-    Defender beacon;
-    Defender wall;        //Enemigos y objetos
-    Attacker elec;
-    Trap fire;
     Inventory inventory;
 
     Map map;
@@ -70,10 +70,8 @@ public class GameScreen implements Screen {
     int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones
 
+
     public GameScreen(MainGame game) {
-        Logger.getLogger("").setLevel(Level.INFO);
-        Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
-        logger.info("Inicio del GameScreen");
 
         this.game = game;
         buying = false;
@@ -84,36 +82,32 @@ public class GameScreen implements Screen {
         secTimer = 0;
         animationTimer = 0;
 
-        beacon = new Defender(0,"Beacon", 1000, true,1000, 145, 90);
-        wall = new Defender(1,"Defense", 200, true,900);
-        elec = new Attacker(2,"Electricity",100,true,500,"Spark",50);
+        Logger.getLogger("").setLevel(Level.INFO);
+        Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
+        logger.info("Inicio del GameScreen");
 
-        tConfuse = new Trap(3,"Confuse",10,true,1000,"CONFUSE",1000);
-        tDamage = new Trap(3,"Damage",10,true,1000,"DAMAGE",1000);
-        tFire = new Trap(3,"Fire",10,true,1000,"BURN",1000);
-        tFreeze = new Trap(3,"Freeze",10,true,1000,"FREEZE",1000);
-        tTeleport = new Trap(3,"Teleport",10,true,1000,"TELEPORT",1000);
+        crearObjetos();
+
+
+        objects.add(wall);
+        objects.add(elec);
+        objects.add(beacon);
+        objects.add(tConfuse);
+        objects.add(tDamage);
+        objects.add(tFire);
+        objects.add(tFreeze);
+        objects.add(tTeleport);
 
         inventory = new Inventory();
 
         inventory.insert(elec);
         inventory.insert(wall);
-
         inventory.insert(tConfuse);
         inventory.insert(tDamage);
         inventory.insert(tFire);
         inventory.insert(tFreeze);
         inventory.insert(tTeleport);
 
-        objects.add(wall);
-        objects.add(elec);
-        objects.add(beacon);
-
-        objects.add(tConfuse);
-        objects.add(tDamage);
-        objects.add(tFire);
-        objects.add(tFreeze);
-        objects.add(tTeleport);
 
         ronda1();
 
@@ -201,7 +195,7 @@ public class GameScreen implements Screen {
         game.entityBatch.draw(inventory.getTexture(), inventory.getX(), inventory.getY());
 
         for (GameObject object:inventory.getObjects()) {    //Objetos del inventario
-            if (object != null) game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
+           if (object != null) game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
         }
 
         font.draw(game.entityBatch, "ORO  " + Integer.toString(gold), 5, 175);
@@ -223,17 +217,67 @@ public class GameScreen implements Screen {
         }
     }
     public void ronda1(){
-        larry = new Enemy(12, 63, 16, 16, 1,200, 100, 10,0);
-        larry2 = new Enemy(275, 25, 16, 16,1, 200, 100, 10,300);
-        larry3 = new Enemy(100, 359, 16, 16,1,200, 100, 10,470);
-        larry4 = new Enemy(350, 220, 16, 16,1,200, 100, 10,500);
-        larry5 = new Enemy(-12, 363, 16, 16,1,200, 100, 10,680);
-        larry6 = new Enemy(445, 25, 16, 16,1,200, 100, 10,742);
-        larry7 = new Enemy(100, 459, 16, 16, 1,200, 100, 10,790);
-        larry8 = new Enemy(350, 320, 16, 16,1,200, 100, 10,825);
-        larry9 = new Enemy(512, 63, 16, 16,1,200, 100, 10,875);
-        larry10 = new Enemy(-45, 25, 16, 16,1,200, 100, 10,905);
-        larry11 = new Enemy(100, -59, 16, 16,1,200, 100, 10,925);
+        int idE=0;
+        int hpE=0;
+        int attackE=0;
+        float speed=0;
+        int goldValue=0;
+        String walkpath="";
+        String attackpath="";
+        String deathpath="";
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            System.out.println("No se ha podido cargar el driver de la base de datos");
+        }
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:Databases/Database.db")) {
+
+            // A partir de una conexiÃ³n activa obtenemos el objeto para ejecutar
+            // sentencias SQL en la base de datos.
+            try (Statement stmt = conn.createStatement()) {
+
+                try (ResultSet rs = stmt.executeQuery("SELECT * FROM enemy")) {
+
+                    while (rs.next()) {
+                        // Mientras tenga filas
+                        // Cogemos cada columna contenida en la fila
+                        idE=rs.getInt("ID_E");
+                        hpE=rs.getInt("HP_E");
+                        attackE=rs.getInt("ATTACKDAMAGE_E");
+                        speed=rs.getFloat("SPEED_E");
+                        goldValue=rs.getInt("GOLD_VALUE_E");
+                        walkpath=rs.getString("WALKPATH");
+                        attackpath=rs.getString("ATTACKPATH");
+                        deathpath=rs.getString("DEATHPATH");
+
+                        // y hacemos algo con esos datos: imprimir, crear un objeto, etc
+                    }
+                } catch (SQLException e) {
+                    System.out.println("No se ha podido ejecutar la sentencia SQL." + e.getMessage());
+                }
+
+            } catch (SQLException e) {
+                // No se ha podido obtener la conexiÃ³n a la base de datos
+                System.out.println("Error. No se ha podido crear el statement " + e.getMessage());
+            }
+
+        } catch (SQLException e) {
+            // No se ha podido obtener la conexiÃ³n a la base de datos
+            System.out.println("Error. No se ha podido conectar a la base de datos. " + e.getMessage());
+        }
+        larry = new Enemy(12, 63, 16, 16, idE,hpE, attackE, speed,0,goldValue,walkpath,attackpath,deathpath);
+        larry2 = new Enemy(275, 25, 16, 16,idE, hpE, attackE, speed,300,goldValue,walkpath,attackpath,deathpath);
+        larry3 = new Enemy(100, 359, 16, 16,idE,hpE, attackE, speed,470,goldValue,walkpath,attackpath,deathpath);
+        larry4 = new Enemy(350, 220, 16, 16,idE,hpE, attackE, speed,500,goldValue,walkpath,attackpath,deathpath);
+        larry5 = new Enemy(-12, 363, 16, 16,idE,hpE, attackE, speed,680,goldValue,walkpath,attackpath,deathpath);
+        larry6 = new Enemy(445, 25, 16, 16,idE,hpE, attackE, speed,742,goldValue,walkpath,attackpath,deathpath);
+        larry7 = new Enemy(100, 459, 16, 16,idE,hpE, attackE, speed,790,goldValue,walkpath,attackpath,deathpath);
+        larry8 = new Enemy(350, 320, 16, 16,idE,hpE, attackE, speed,825,goldValue,walkpath,attackpath,deathpath);
+        larry9 = new Enemy(512, 63, 16, 16,idE,hpE, attackE, speed,875,goldValue,walkpath,attackpath,deathpath);
+        larry10 = new Enemy(-45, 25, 16, 16,idE,hpE, attackE, speed,905,goldValue,walkpath,attackpath,deathpath);
+        larry11 = new Enemy(100, -59, 16, 16,idE,hpE, attackE, speed,925,goldValue,walkpath,attackpath,deathpath);
 
         enemies.add(larry);
         enemies.add(larry2);
@@ -248,6 +292,154 @@ public class GameScreen implements Screen {
         enemies.add(larry11);
     }
 
+    public void crearObjetos(){
+        int idD=0;
+        int priceD=0;
+        boolean unlockedD=false;
+        String typeD="";
+        int hpD=0;
+
+        int idT=0;
+        int priceT=0;
+        boolean unlockedT=false;
+        String typeT="";
+        int hpT=0;
+        String effectT="";
+        int attackdamageT=0;
+
+        int idA=0;
+        int priceA=0;
+        boolean unlockedA=false;
+        String typeA="";
+        int hpA=0;
+        String attackTypeA="";
+        int attackdamageA=0;
+
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            System.out.println("No se ha podido cargar el driver de la base de datos");
+        }
+
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:Databases/base.db")) {
+
+            // A partir de una conexiÃ³n activa obtenemos el objeto para ejecutar
+            // sentencias SQL en la base de datos.
+            try (Statement stmt = conn.createStatement()) {
+
+                try (ResultSet rs = stmt.executeQuery("SELECT * FROM defender")) {
+                    int runs=0;
+                    while (rs.next()) {
+                        // Mientras tenga filas
+                        // Cogemos cada columna contenida en la fila
+                        idD=rs.getInt("ID_D");
+                        priceD=rs.getInt("PRICE_D");
+                        int num=rs.getInt("UNLOCKED_D");
+                        if (num==1){
+                            unlockedD=true;
+                        }
+                        typeD=rs.getString("TYPE_D");
+                        hpD=rs.getInt("HP_A");
+                        switch (runs){
+                            case 0:
+                                beacon = new Defender(145,90,16,16,idD,typeD, priceD, unlockedD,hpD);
+                                break;
+                            case 1:
+                                wall = new Defender(260,135,16,18,idD,typeD, priceD, unlockedD,hpD);
+                                break;
+                        }
+                        runs++;
+                        // y hacemos algo con esos datos: imprimir, crear un objeto, etc
+                    }
+                } catch (SQLException e) {
+                    System.out.println("No se ha podido ejecutar la sentencia SQL." + e.getMessage());
+                }
+
+                try (ResultSet rs = stmt.executeQuery("SELECT * FROM trap")){
+                    while (rs.next()) {
+                        // Mientras tenga filas
+                        // Cogemos cada columna contenida en la fila
+                        idT=rs.getInt("ID_T");
+
+                        priceT=rs.getInt("PRICE_T");
+                        int num=rs.getInt("UNLOCKED_T");
+                        if (num==1){
+                            unlockedT=true;
+                        }
+                        typeT=rs.getString("TYPE");
+                        hpT=rs.getInt("HP_T");
+                        effectT=rs.getString("EFFECT");
+                        attackdamageT=rs.getInt("ATTACKDAMAGE_T");
+
+                        switch (idT){
+
+                            case 0:
+                                tFreeze = new Trap(260,115,16,18,idT,typeT,priceT,unlockedT,hpT,effectT,attackdamageT);
+                                break;
+                            case 1:
+                                tFire = new Trap(260,115,16,18,idT,typeT,priceT,unlockedT,hpT,effectT,attackdamageT);
+                                break;
+                            case 2:
+                                tDamage = new Trap(260,115,16,18,idT,typeT,priceT,unlockedT,hpT,effectT,attackdamageT);
+                                break;
+                            case 3:
+                                tConfuse = new Trap(260,115,16,18,idT,typeT,priceT,unlockedT,hpT,effectT,attackdamageT);
+                                break;
+                            case 4:
+                                tTeleport = new Trap(260,115,16,18,idT,typeT,priceT,unlockedT,hpT,effectT,attackdamageT);
+                                break;
+                        }
+
+                        // y hacemos algo con esos datos: imprimir, crear un objeto, etc
+                    }
+
+
+                } catch (SQLException e) {
+                    System.out.println("No se ha podido ejecutar la sentencia SQL." + e.getMessage());
+                }
+
+                try (ResultSet rs = stmt.executeQuery("SELECT * FROM attacker")) {
+                    int runs=0;
+                    while (rs.next()) {
+                        // Mientras tenga filas
+                        // Cogemos cada columna contenida en la fila
+                        idA=rs.getInt("ID_A");
+                        priceA=rs.getInt("PRICE_A");
+                        int num=rs.getInt("UNLOCKED_A");
+                        if (num==1){
+                            unlockedA=true;
+                        }
+                        typeA=rs.getString("TYPE_A");
+                        hpA=rs.getInt("HP_A");
+                        attackTypeA=rs.getString("ATTACK_TYPE");
+                        attackdamageA=rs.getInt("ATTACKDAMAGE_A");
+                        switch (runs){
+                            case 0:
+                                elec = new Attacker(280,135,16,18,idA,typeA,priceA,unlockedA,hpA,attackTypeA,attackdamageA);
+                                break;
+                            //case 1:
+                            //wall = new Defender(260,135,16,18,idD,typeD, prizeD, unlockedD,hpD);
+                        }
+                        runs++;
+                        // y hacemos algo con esos datos: imprimir, crear un objeto, etc
+                    }
+
+                } catch (SQLException e) {
+                    System.out.println("No se ha podido ejecutar la sentencia SQL." + e.getMessage());
+                }
+
+            } catch (SQLException e) {
+                // No se ha podido obtener la conexiÃ³n a la base de datos
+                System.out.println("Error. No se ha podido crear el statement " + e.getMessage());
+            }
+
+
+
+        } catch (SQLException e) {
+            // No se ha podido obtener la conexiÃ³n a la base de datos
+            System.out.println("Error. No se ha podido conectar a la base de datos. " + e.getMessage());
+        }
+    }
 
     public OrthographicCamera getCamera() {
         return camera;

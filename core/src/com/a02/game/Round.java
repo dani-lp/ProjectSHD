@@ -1,17 +1,18 @@
-/*En esta clase organizaremos las rondas
- *
- */
-
 package com.a02.game;
 
 import com.a02.entity.Enemy;
 import com.a02.entity.GameObject;
+
 import java.util.ArrayList;
 
+/**
+ *En esta clase organizaremos las rondas
+ *
+ */
 public class Round {
     protected int n;
     protected ArrayList<Enemy> enemies;
-    protected ArrayList<GameObject> objects;    //TODO: objetos para qué?
+    protected ArrayList<GameObject> objects;
 
     public Round(int n, ArrayList<Enemy> enemies, ArrayList<GameObject> objects){
         this.n = n;

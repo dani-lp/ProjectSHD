@@ -40,6 +40,9 @@ public class Inventory {
             }
             currY += 29;
         }
+        for (int i = 0; i < positions.length; i++) {
+            System.out.println(positions[i]);
+        }
     }
 
     public ArrayList<GameObject> getObjects() {
@@ -51,10 +54,13 @@ public class Inventory {
 
     public void insert(GameObject gameObject){
         this.objects.add(gameObject);
-        gameObject.setX(positions[objects.size()-1].x);
-        gameObject.setY(positions[objects.size()-1].y);
+        gameObject.setX(positions[objects.size()].x);
+        gameObject.setY(positions[objects.size()].y);
     }
+    /*
     public void takeOut(GameObject gameObject ){
         this.objects.remove(gameObject);
     }
+
+    */
 }
