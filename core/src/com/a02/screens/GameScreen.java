@@ -70,8 +70,10 @@ public class GameScreen implements Screen {
     int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones
 
-
     public GameScreen(MainGame game) {
+        Logger.getLogger("").setLevel(Level.INFO);
+        Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
+        logger.info("Inicio del GameScreen");
 
         this.game = game;
         buying = false;
@@ -82,32 +84,28 @@ public class GameScreen implements Screen {
         secTimer = 0;
         animationTimer = 0;
 
-        Logger.getLogger("").setLevel(Level.INFO);
-        Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
-        logger.info("Inicio del GameScreen");
-
         crearObjetos();
-
-
-        objects.add(wall);
-        objects.add(elec);
-        objects.add(beacon);
-        objects.add(tConfuse);
-        objects.add(tDamage);
-        objects.add(tFire);
-        objects.add(tFreeze);
-        objects.add(tTeleport);
 
         inventory = new Inventory();
 
         inventory.insert(elec);
         inventory.insert(wall);
+
         inventory.insert(tConfuse);
         inventory.insert(tDamage);
         inventory.insert(tFire);
         inventory.insert(tFreeze);
         inventory.insert(tTeleport);
 
+        objects.add(wall);
+        objects.add(elec);
+        objects.add(beacon);
+
+        objects.add(tConfuse);
+        objects.add(tDamage);
+        objects.add(tFire);
+        objects.add(tFreeze);
+        objects.add(tTeleport);
 
         ronda1();
 

@@ -23,6 +23,7 @@ public abstract class GameObject extends Entity {
     private int hp;
     private boolean grabbed;
     private Texture texture;
+    private Vector2 ogPos;
 
     private static Logger logger = Logger.getLogger(GameObject.class.getName());
 
@@ -35,6 +36,7 @@ public abstract class GameObject extends Entity {
         this.unlocked = unlocked;
         this.hp = hp;
         this.hpBar = new HealthBar(this, hp);
+        this.ogPos = new Vector2();
     }
 
     public GameObject(GameObject other) {
@@ -44,6 +46,7 @@ public abstract class GameObject extends Entity {
         this.price = other.price;
         this.unlocked = other.unlocked;
         this.hp = other.hp;
+        this.ogPos = other.ogPos;
     }
 
     public GameObject() {
@@ -53,6 +56,7 @@ public abstract class GameObject extends Entity {
         this.price = 0;
         this.unlocked = false;
         this.hp = 0;
+        this.ogPos = new Vector2();
     }
 
     public int getId() {
@@ -117,13 +121,8 @@ public abstract class GameObject extends Entity {
                 ", hp=" + hp +
                 ", grabbed=" + grabbed +
                 ", texture=" + texture +
-                ", x=" + x +
-                ", y=" + y +
                 '}';
     }
-
-    float x = this.getX();
-    float y = this.getY();
 
     public abstract void update(List<GameObject> objects, List<Enemy> enemies, float secTimer);
 
@@ -138,6 +137,8 @@ public abstract class GameObject extends Entity {
         if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !GameScreen.isBuying()) {
             this.grabbed = true;
             GameScreen.setBuying(true);
+            this.ogPos.x = this.getX();
+            this.ogPos.y = this.getY();
             Logger.getLogger("").setLevel(Level.INFO);
             Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
             logger.info("Objeto comprado");
@@ -148,8 +149,8 @@ public abstract class GameObject extends Entity {
 
             if (!Gdx.input.isTouched()) {
                 this.grabbed = false;
-                this.setX(x);
-                this.setY(y);
+                this.setX(ogPos.x);
+                this.setY(ogPos.y);
 
                 GameScreen.setBuying(false);
 

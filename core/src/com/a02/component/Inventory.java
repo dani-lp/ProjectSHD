@@ -54,8 +54,8 @@ public class Inventory {
 
     public void insert(GameObject gameObject){
         this.objects.add(gameObject);
-        gameObject.setX(positions[objects.size()].x);
-        gameObject.setY(positions[objects.size()].y);
+        gameObject.setX(positions[objects.size() - 1].x);
+        gameObject.setY(positions[objects.size() - 1].y);
     }
     /*
     public void takeOut(GameObject gameObject ){
