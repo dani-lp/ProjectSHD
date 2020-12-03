@@ -51,10 +51,6 @@ public class Trap extends GameObject {
                 this.setTexture(new Texture(Gdx.files.internal("Traps/confuse.png")));
                 this.effect = Effect.CONFUSE;
                 break;
-            default:
-                this.setTexture(new Texture(Gdx.files.internal("Traps/freeze.png")));
-                this.effect = Effect.FREEZE;
-                break;
         }
 
         this.state = State.IDLE;
@@ -93,7 +89,7 @@ public class Trap extends GameObject {
     }
 
     //TODO: trampas restantes
-    public void update(List<GameObject> objects, List<Enemy> enemies, float secTimer) {
+    public void update(List<GameObject> objects, List<Enemy> enemies, int secTimer) {
         switch (this.state) {
             case IDLE:
                 if (this.overlappedEnemy(enemies) != null) {
@@ -103,13 +99,16 @@ public class Trap extends GameObject {
                 break;
 
             case ATTACKING: //Aplica su efecto y se autodestruye
+                Enemy tempEnemy = this.overlappedEnemy(enemies);    //Referencia temporal del enemigo
                 switch (this.effect) {
                     case BURN :
-
+                        tempEnemy.trapEffect = Enemy.TrapEffect.BURNING;
+                        tempEnemy.setEffectTimer(secTimer);
                         this.state = State.DYING;
                         break;
                     case FREEZE :
-
+                        tempEnemy.trapEffect = Enemy.TrapEffect.FREEZE;
+                        tempEnemy.setEffectTimer(secTimer);
                         this.state = State.DYING;
                         break;
                     case TELEPORT :
@@ -122,7 +121,8 @@ public class Trap extends GameObject {
                         this.state = State.DYING;
                         break;
                     case CONFUSE :
-
+                        tempEnemy.trapEffect = Enemy.TrapEffect.CONFUSED;
+                        tempEnemy.setEffectTimer(secTimer);
                         this.state = State.DYING;
                         break;
                 }

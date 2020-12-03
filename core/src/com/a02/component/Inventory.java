@@ -40,9 +40,6 @@ public class Inventory {
             }
             currY += 29;
         }
-        for (int i = 0; i < positions.length; i++) {
-            System.out.println(positions[i]);
-        }
     }
 
     public ArrayList<GameObject> getObjects() {

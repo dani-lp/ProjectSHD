@@ -4,6 +4,7 @@ import com.a02.screens.GameScreen;
 import com.a02.component.HealthBar;
 import com.badlogic.gdx.Gdx;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -17,7 +18,8 @@ public class Enemy extends Entity {
     private int attackDamage;
     private float speed;
     private int goldValue;
-    private int startTime;
+    private int startTime;  //Tiempo de inicio de movimiento
+    private int effectTimer;    //Timer de efectos de las trampas
     private String wakpath;
     private String attackpath;
     private String deathpath;
@@ -26,18 +28,23 @@ public class Enemy extends Entity {
     protected Animation<TextureRegion> deathAnimation;
 
     public enum State {
-        WALKING, ATTACKING, DYING, DEAD
+        IDLE, WALKING, ATTACKING, DYING, DEAD
+    }
+    public enum TrapEffect {
+        BURNING, FREEZE, CONFUSED, NEUTRAL
     }
 
     public State state;
+    public TrapEffect trapEffect;
 
-    public Enemy(float x, float y, int width, int height, int id, int hp, int attackDamage, float speed, int startTime, int goldValue,String walkpath,String attackpath,String deathpath) {  //Constructor de enemigos
+    public Enemy(float x, float y, int width, int height, int id, int hp, int attackDamage, float speed, int startTime, int goldValue, String walkpath, String attackpath, String deathpath) {  //Constructor de enemigos
         super(x, y, width, height);
         this.id = id;
         this.hp = hp;
         this.attackDamage = attackDamage;
         this.speed = speed;
-        this.state = State.WALKING;
+        this.state = State.IDLE;
+        this.trapEffect = TrapEffect.NEUTRAL;
 
         //*
         this.walkAnimation = createAnimation("e1-walk.png", 3, 1, 0.2f);
@@ -49,7 +56,7 @@ public class Enemy extends Entity {
 
         this.deathAnimation = createAnimation("e1-death.png", 2, 2, 0.25f);
         this.deathAnimation = createAnimation(deathpath, 2, 2, 0.25f);
-        this.startTime=startTime;
+        this.startTime = startTime;
         this.goldValue = goldValue;
         this.hpBar = new HealthBar(this, hp);
     }
@@ -80,6 +87,14 @@ public class Enemy extends Entity {
         this.hp = hp;
     }
 
+    public int getEffectTimer() {
+        return effectTimer;
+    }
+
+    public void setEffectTimer(int effectTimer) {
+        this.effectTimer = effectTimer;
+    }
+
     public int getAttackDamage() {
         return attackDamage;
     }
@@ -105,20 +120,29 @@ public class Enemy extends Entity {
      */
     public void update(float beaconX, float beaconY, List<GameObject> objects, List<Enemy> enemies, float secTimer) {
         switch (this.state) {
-            case WALKING:
+            case IDLE:
                 if (secTimer >= this.startTime){
-                    this.move2(beaconX, beaconY);
-                }           //Movimiento a beacon
+                    if (this.trapEffect != TrapEffect.FREEZE) {
+                        this.state = State.WALKING;
+                    }
+                }
+                break;
+
+            case WALKING: //Movimiento a beacon
+                if (this.trapEffect == TrapEffect.CONFUSED) {
+                    this.move(2,2); //TODO: posición random
+                }
+                else {
+                    this.move(beaconX, beaconY);
+                }
 
                 if (this.getHp() <= 0) {
                     this.state = State.DYING;
                 }
-
                 else if (this.overlappedObject(objects) != null || this.overlappedObject(objects) instanceof Trap) {
                     if (!this.overlappedObject(objects).isGrabbed()) this.state = State.ATTACKING;
                 }
                 break;
-
             case ATTACKING:
                 if (this.overlappedObject(objects) != null) {
                     GameObject tempObj = this.overlappedObject(objects);    //Objeto siendo colisionado
@@ -139,7 +163,6 @@ public class Enemy extends Entity {
                 }
 
                 break;
-
             case DYING:
                 //playAnimation();
                 try {
@@ -153,36 +176,25 @@ public class Enemy extends Entity {
 
             case DEAD:
                 break;
+        }
 
+        switch (this.trapEffect) {
+            case BURNING:
+                if ((secTimer % 30 == 0) && (secTimer < this.effectTimer + 180)) this.hp -= 30;
+                break;
+            case FREEZE:
+                this.state = State.IDLE;
+                if (secTimer > this.effectTimer + 300) this.state = State.WALKING;
+                break;
+            case CONFUSED:
+                if (secTimer > this.effectTimer + 280) this.trapEffect = TrapEffect.NEUTRAL;
+            case NEUTRAL:
+                break;
         }
         this.hpBar.update(this, this.getHp());
     }
 
-    protected void move(float beaconX, float beaconY) {             //Dependiendo de donde se encuentre el beacon respecto al objeto se aumenta o decrementan la X y la Y hasta que sean iguales
-        if (this.getX() < beaconX && this.getY() < beaconY) {                  //El beacon esta por encima y a la derecha
-            this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
-            this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
-        } else if (this.getX() < beaconX && this.getY() > beaconY) {            //El beacon esta por debajo y a la derecha
-            this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
-            this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
-        } else if (this.getX() < beaconX && this.getY() == beaconY) {           //El beacon esta a la misma altura y a la derecha
-            this.setX(this.getX() + this.speed * Gdx.graphics.getDeltaTime());
-        } else if (this.getX() > beaconX && this.getY() == beaconY) {           //El beacon esta a la misma altura y a la izquierda
-            this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
-        } else if (this.getX() > beaconX && this.getY() > beaconY) {            //El beacon esta por debajo y a la izquierda
-            this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
-            this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
-        } else if (this.getX() > beaconX && this.getY() < beaconY) {            //El beacon esta por encima y a la izquierda
-            this.setX(this.getX() - this.speed * Gdx.graphics.getDeltaTime());
-            this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
-        } else if (this.getX() == beaconX && this.getY() < beaconY) {           //El beacon esta por debajo y en la misma posicion
-            this.setY(this.getY() + this.speed * Gdx.graphics.getDeltaTime());
-        } else if (this.getX() == beaconX && this.getY() > beaconY) {           //El beacon esta por arriba y en la misma posicion
-            this.setY(this.getY() - this.speed * Gdx.graphics.getDeltaTime());
-        }
-    }
-
-    protected void move2(float beaconX, float beaconY) {
+    protected void move(float beaconX, float beaconY) {
         double angle = Math.toDegrees(-Math.atan((this.getY() - beaconY) / (this.getX() - beaconX)));
 
         this.setX((float) (this.getX() + Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed));
@@ -229,6 +241,8 @@ public class Enemy extends Entity {
      */
     public TextureRegion getCurrentAnimation(float animationTimer) {
         switch (this.state) {
+            case IDLE:
+                return new TextureRegion(new Texture(Gdx.files.internal("e1-idle.png")));
             case WALKING:
                 return this.walkAnimation.getKeyFrame(animationTimer, true);
             case ATTACKING:

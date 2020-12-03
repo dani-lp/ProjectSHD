@@ -29,7 +29,7 @@ public class Defender extends GameObject {
         this.setTexture(other.getTexture());
     }
 
-    public void update(List<GameObject> objects, List<Enemy> enemies, float secTimer) {
+    public void update(List<GameObject> objects, List<Enemy> enemies, int secTimer) {
         this.hpBar.update(this, this.getHp());
     };
 }

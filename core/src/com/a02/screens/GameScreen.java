@@ -241,14 +241,14 @@ public class GameScreen implements Screen {
                     while (rs.next()) {
                         // Mientras tenga filas
                         // Cogemos cada columna contenida en la fila
-                        idE=rs.getInt("ID_E");
-                        hpE=rs.getInt("HP_E");
-                        attackE=rs.getInt("ATTACKDAMAGE_E");
-                        speed=rs.getFloat("SPEED_E");
-                        goldValue=rs.getInt("GOLD_VALUE_E");
-                        walkpath=rs.getString("WALKPATH");
-                        attackpath=rs.getString("ATTACKPATH");
-                        deathpath=rs.getString("DEATHPATH");
+                        idE = rs.getInt("ID_E");
+                        hpE = rs.getInt("HP_E");
+                        attackE = rs.getInt("ATTACKDAMAGE_E");
+                        speed = rs.getFloat("SPEED_E");
+                        goldValue = rs.getInt("GOLD_VALUE_E");
+                        walkpath = rs.getString("WALKPATH");
+                        attackpath = rs.getString("ATTACKPATH");
+                        deathpath = rs.getString("DEATHPATH");
 
                         // y hacemos algo con esos datos: imprimir, crear un objeto, etc
                     }
@@ -340,7 +340,7 @@ public class GameScreen implements Screen {
                         hpD=rs.getInt("HP_A");
                         switch (runs){
                             case 0:
-                                beacon = new Defender(145,90,16,16,idD,typeD, priceD, unlockedD,hpD);
+                                beacon = new Defender(145,90,16,16,idD,typeD, priceD, unlockedD,50000); //TODO: volver a poner con BD
                                 break;
                             case 1:
                                 wall = new Defender(260,135,16,18,idD,typeD, priceD, unlockedD,hpD);

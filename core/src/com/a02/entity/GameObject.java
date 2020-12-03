@@ -124,7 +124,7 @@ public abstract class GameObject extends Entity {
                 '}';
     }
 
-    public abstract void update(List<GameObject> objects, List<Enemy> enemies, float secTimer);
+    public abstract void update(List<GameObject> objects, List<Enemy> enemies, int secTimer);
 
     /**
      * Comprueba y gestiona el agarre y colocación de los objetos.

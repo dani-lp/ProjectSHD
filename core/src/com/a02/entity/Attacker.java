@@ -59,7 +59,7 @@ public class Attacker extends GameObject {
         this.attackType = attackType;
     }
 
-    public void update(List<GameObject> objects, List<Enemy> enemies, float secTimer) {
+    public void update(List<GameObject> objects, List<Enemy> enemies, int secTimer) {
         switch (this.state) {
             case IDLE:
                 if (this.overlappedEnemy(enemies) != null) {
