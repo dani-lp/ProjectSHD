@@ -36,8 +36,8 @@ public class GameScreen implements Screen {
     private static boolean buying;
     private static int gold;
 
-    List<GameObject> objects = new ArrayList<GameObject>(); //Objetos en el juego
-    List<Enemy> enemies = new ArrayList<Enemy>(); // Enemigos del juego
+    public List<GameObject> objects = new ArrayList<GameObject>(); //Objetos en el juego
+    public List<Enemy> enemies = new ArrayList<Enemy>(); // Enemigos del juego
 
     Enemy larry;
     Enemy larry2;
@@ -51,7 +51,7 @@ public class GameScreen implements Screen {
     Enemy larry10;
     Enemy larry11;
 
-    Defender beacon;
+    public Defender beacon;
     Defender wall;        //Enemigos y objetos
     Attacker elec;
     Trap tConfuse;
@@ -67,7 +67,7 @@ public class GameScreen implements Screen {
 
     BitmapFont font;
 
-    int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
+    public int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones
 
     public GameScreen(MainGame game) {
@@ -141,13 +141,13 @@ public class GameScreen implements Screen {
         tFreeze.grabObject(map,objects);
         tTeleport.grabObject(map,objects);
 
-        elec.update(objects, enemies, secTimer);
+        elec.update(this);
 
         //Actualiza "presencia" de enemigos y objetos
         ListIterator<GameObject> objectIterator = objects.listIterator();
         while(objectIterator.hasNext()){
             GameObject tempObj = objectIterator.next();
-            tempObj.update(objects, enemies, secTimer);
+            tempObj.update(this);
             if(tempObj.getHp() <= 0) {
                 try {
                     map.getOccGrid()[(int) tempObj.getX() / 16][(int) tempObj.getY() / 18] = false;
@@ -161,7 +161,7 @@ public class GameScreen implements Screen {
         ListIterator<Enemy> enemyIterator = enemies.listIterator();
         while(enemyIterator.hasNext()){
             Enemy tempEnemy = enemyIterator.next();
-            tempEnemy.update(beacon.getX(), beacon.getY(), objects, enemies, secTimer);
+            tempEnemy.update(this);
             if(tempEnemy.getHp() <= 0) {
                 enemyIterator.remove();
             }

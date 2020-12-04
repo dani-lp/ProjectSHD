@@ -1,5 +1,6 @@
 package com.a02.entity;
 
+import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -29,7 +30,7 @@ public class Defender extends GameObject {
         this.setTexture(other.getTexture());
     }
 
-    public void update(List<GameObject> objects, List<Enemy> enemies, int secTimer) {
+    public void update(GameScreen gs) {
         this.hpBar.update(this, this.getHp());
     };
 }

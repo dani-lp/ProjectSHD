@@ -8,6 +8,7 @@
 
 package com.a02.entity;
 
+import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -89,26 +90,26 @@ public class Trap extends GameObject {
     }
 
     //TODO: trampas restantes
-    public void update(List<GameObject> objects, List<Enemy> enemies, int secTimer) {
+    public void update(GameScreen gs) {
         switch (this.state) {
             case IDLE:
-                if (this.overlappedEnemy(enemies) != null) {
-                    this.focusedEnemy = this.overlappedEnemy(enemies);
+                if (this.overlappedEnemy(gs.enemies) != null) {
+                    this.focusedEnemy = this.overlappedEnemy(gs.enemies);
                     this.state = State.ATTACKING;
                 }
                 break;
 
             case ATTACKING: //Aplica su efecto y se autodestruye
-                Enemy tempEnemy = this.overlappedEnemy(enemies);    //Referencia temporal del enemigo
+                Enemy tempEnemy = this.overlappedEnemy(gs.enemies);    //Referencia temporal del enemigo
                 switch (this.effect) {
                     case BURN :
                         tempEnemy.trapEffect = Enemy.TrapEffect.BURNING;
-                        tempEnemy.setEffectTimer(secTimer);
+                        tempEnemy.setEffectTimer(gs.secTimer);
                         this.state = State.DYING;
                         break;
                     case FREEZE :
                         tempEnemy.trapEffect = Enemy.TrapEffect.FREEZE;
-                        tempEnemy.setEffectTimer(secTimer);
+                        tempEnemy.setEffectTimer(gs.secTimer);
                         this.state = State.DYING;
                         break;
                     case TELEPORT :
@@ -122,7 +123,7 @@ public class Trap extends GameObject {
                         break;
                     case CONFUSE :
                         tempEnemy.trapEffect = Enemy.TrapEffect.CONFUSED;
-                        tempEnemy.setEffectTimer(secTimer);
+                        tempEnemy.setEffectTimer(gs.secTimer);
                         this.state = State.DYING;
                         break;
                 }

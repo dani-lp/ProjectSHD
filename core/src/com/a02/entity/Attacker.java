@@ -1,5 +1,6 @@
 package com.a02.entity;
 
+import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -59,19 +60,23 @@ public class Attacker extends GameObject {
         this.attackType = attackType;
     }
 
-    public void update(List<GameObject> objects, List<Enemy> enemies, int secTimer) {
+    /**
+     * Actualiza el estado de los objetos de ataque.
+     * @param gs GameScreen utilizada
+     */
+    public void update(GameScreen gs) {
         switch (this.state) {
             case IDLE:
-                if (this.overlappedEnemy(enemies) != null) {
+                if (this.overlappedEnemy(gs.enemies) != null) {
                     this.state = State.ATTACKING;
                 }
                 break;
 
             case ATTACKING:
-                if (this.overlappedEnemy(enemies) != null) {
-                    Enemy tempEnemy = this.overlappedEnemy(enemies);
+                if (this.overlappedEnemy(gs.enemies) != null) {
+                    Enemy tempEnemy = this.overlappedEnemy(gs.enemies);
 
-                    if (tempEnemy.getHp() > 0 && secTimer % 60 == 0) {
+                    if (tempEnemy.getHp() > 0 && gs.secTimer % 60 == 0) {
                         tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackDamage));
                     } else if (tempEnemy.getHp() <= 0) {
                         this.state = State.IDLE;

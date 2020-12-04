@@ -112,16 +112,13 @@ public class Enemy extends Entity {
     }
 
     /**
-     * Actualiza la posición y estado de un enemigo.
-     * @param beaconX Coordenada X del beacon
-     * @param beaconY Coordenada Y del beacon
-     * @param objects Arraylist de objetos defensivos
-     * @param secTimer Reloj de juego
+     * Actualiza la posición, estado y efectos de un enemigo.
+     * @param gs GameScreen utilizada
      */
-    public void update(float beaconX, float beaconY, List<GameObject> objects, List<Enemy> enemies, float secTimer) {
+    public void update(GameScreen gs) {
         switch (this.state) {
             case IDLE:
-                if (secTimer >= this.startTime){
+                if (gs.secTimer >= this.startTime){
                     if (this.trapEffect != TrapEffect.FREEZE) {
                         this.state = State.WALKING;
                     }
@@ -133,21 +130,21 @@ public class Enemy extends Entity {
                     this.move(2,2); //TODO: posición random
                 }
                 else {
-                    this.move(beaconX, beaconY);
+                    this.move(gs.beacon.getX(), gs.beacon.getY());
                 }
 
                 if (this.getHp() <= 0) {
                     this.state = State.DYING;
                 }
-                else if (this.overlappedObject(objects) != null || this.overlappedObject(objects) instanceof Trap) {
-                    if (!this.overlappedObject(objects).isGrabbed()) this.state = State.ATTACKING;
+                else if (this.overlappedObject(gs.objects) != null || this.overlappedObject(gs.objects) instanceof Trap) {
+                    if (!this.overlappedObject(gs.objects).isGrabbed()) this.state = State.ATTACKING;
                 }
                 break;
             case ATTACKING:
-                if (this.overlappedObject(objects) != null) {
-                    GameObject tempObj = this.overlappedObject(objects);    //Objeto siendo colisionado
+                if (this.overlappedObject(gs.objects) != null) {
+                    GameObject tempObj = this.overlappedObject(gs.objects);    //Objeto siendo colisionado
 
-                    if (tempObj.getHp() > 0 && !tempObj.isGrabbed() && secTimer % 60 == 0) { //Pegar 1 vez por segundo
+                    if (tempObj.getHp() > 0 && !tempObj.isGrabbed() && gs.secTimer % 60 == 0) { //Pegar 1 vez por segundo
                         tempObj.setHp(tempObj.getHp() - this.attackDamage);
                     } else if (tempObj.getHp() <= 0) {
                         //target.delete()?
@@ -166,7 +163,7 @@ public class Enemy extends Entity {
             case DYING:
                 //playAnimation();
                 try {
-                    enemies.remove(this);
+                    gs.enemies.remove(this);
                 } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
@@ -180,22 +177,22 @@ public class Enemy extends Entity {
 
         switch (this.trapEffect) {
             case BURNING:
-                if ((secTimer % 30 == 0) && (secTimer < this.effectTimer + 180)) this.hp -= 30;
+                if ((gs.secTimer % 30 == 0) && (gs.secTimer < this.effectTimer + 180)) this.hp -= 30;
                 break;
             case FREEZE:
                 this.state = State.IDLE;
-                if (secTimer > this.effectTimer + 300) this.state = State.WALKING;
+                if (gs.secTimer > this.effectTimer + 300) this.state = State.WALKING;
                 break;
             case CONFUSED:
-                if (secTimer > this.effectTimer + 280) this.trapEffect = TrapEffect.NEUTRAL;
+                if (gs.secTimer > this.effectTimer + 280) this.trapEffect = TrapEffect.NEUTRAL;
             case NEUTRAL:
                 break;
         }
         this.hpBar.update(this, this.getHp());
     }
 
-    protected void move(float beaconX, float beaconY) {
-        double angle = Math.toDegrees(-Math.atan((this.getY() - beaconY) / (this.getX() - beaconX)));
+    protected void move(float x, float y) {
+        double angle = Math.toDegrees(-Math.atan((this.getY() - y) / (this.getX() - x)));
 
         this.setX((float) (this.getX() + Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed));
         this.setY((float) (this.getY() + Math.cos(angle) * Gdx.graphics.getDeltaTime() * this.speed));
