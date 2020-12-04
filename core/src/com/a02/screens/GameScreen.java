@@ -143,6 +143,7 @@ public class GameScreen implements Screen {
 
         elec.update(this);
 
+
         //Actualiza "presencia" de enemigos y objetos
         ListIterator<GameObject> objectIterator = objects.listIterator();
         while(objectIterator.hasNext()){

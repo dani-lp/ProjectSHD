@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Trap extends GameObject {
     private int attackDamage;
-    private enum Effect {
+    public enum Effect {
         BURN, FREEZE, TELEPORT, DAMAGE, CONFUSE
     }
     private enum State {

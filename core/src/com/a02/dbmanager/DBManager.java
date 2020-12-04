@@ -1,6 +1,13 @@
 package com.a02.dbmanager;
 
+import com.a02.entity.Attacker;
+import com.a02.entity.Defender;
+import com.a02.entity.Enemy;
+import com.a02.entity.Trap;
+import org.graalvm.compiler.virtual.phases.ea.EffectList;
+
 import java.sql.*;
+import java.time.format.DateTimeParseException;
 
 public class DBManager {
 
@@ -39,4 +46,107 @@ public class DBManager {
         }
     }
 
+    public Enemy getEnemy(int id) throws DBException {
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM enemy WHERE ID_E=?")) {
+            stmt.setInt(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Enemy enemy = new Enemy();
+                enemy.setId(rs.getInt("ID_E"));
+                enemy.setHp(rs.getInt("HP_E"));
+                enemy.setAttackDamage(rs.getInt("ATTACKDAMAGE_E"));
+                enemy.setSpeed(rs.getFloat("SPEED_E"));
+                enemy.setGoldValue(rs.getInt("GOLD_VALUE_E"));
+                enemy.setWakpath(rs.getString("WALKPATH"));
+                enemy.setAttackpath(rs.getString("ATTACKPATH"));
+                enemy.setDeathpath(rs.getString("DEATHPATH"));
+                return enemy;
+            } else {
+                return new Enemy();
+            }
+        } catch (SQLException | DateTimeParseException e) {
+            throw new DBException("Error obteniendo el enemigo con id " + id, e);
+        }
+    }
+
+    public Trap getTrap(int id) throws DBException {
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM trap WHERE ID_T=?")) {
+            stmt.setInt(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Trap trap = new Trap();
+                trap.setId(rs.getInt("ID_T"));
+                trap.setHp(rs.getInt("HP_T"));
+                trap.setAttackDamage(rs.getInt("ATTACKDAMAGE_T"));
+                int bool=rs.getInt("UNLOCKED_T");
+                if (bool==1){
+                    trap.setUnlocked(true);
+                }
+                trap.setPrice(rs.getInt("PRICE_T"));
+                trap.setType(rs.getString("TYPE"));
+                trap.setEffect(Trap.Effect.valueOf(rs.getString("EFFECT")));
+                return trap;
+            } else {
+                return new Trap();
+            }
+        } catch (SQLException | DateTimeParseException e) {
+            throw new DBException("Error obteniendo la trampa con id " + id, e);
+        }
+    }
+
+    public Defender getDefender(int id) throws DBException {
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM defender WHERE ID_D=?")) {
+            stmt.setInt(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Defender defender = new Defender();
+                defender.setId(rs.getInt("ID_D"));
+                defender.setHp(rs.getInt("HP_D"));
+                int bool=rs.getInt("UNLOCKED_D");
+                if (bool==1){
+                    defender.setUnlocked(true);
+                }
+                defender.setPrice(rs.getInt("PRICE_D"));
+                defender.setType(rs.getString("TYPE_D"));
+                return defender;
+            } else {
+                return new Defender();
+            }
+        } catch (SQLException | DateTimeParseException e) {
+            throw new DBException("Error obteniendo la trampa con id " + id, e);
+        }
+    }
+
+    public Attacker getAttacker(int id) throws DBException {
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM trap WHERE ID_T=?")) {
+            stmt.setInt(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Attacker attacker = new Attacker();
+                attacker.setId(rs.getInt("ID_A"));
+                attacker.setHp(rs.getInt("HP_A"));
+                attacker.setAttackDamage(rs.getInt("ATTACKDAMAGE_A"));
+                int bool=rs.getInt("UNLOCKED_A");
+                if (bool==1){
+                    attacker.setUnlocked(true);
+                }
+                attacker.setPrice(rs.getInt("PRICE_A"));
+                attacker.setType(rs.getString("TYPE_A"));
+                attacker.setAttackType(rs.getString("ATTACK_TYPE"));
+                return attacker;
+            } else {
+                return new Attacker();
+            }
+        } catch (SQLException | DateTimeParseException e) {
+            throw new DBException("Error obteniendo la trampa con id " + id, e);
+        }
+    }
 }

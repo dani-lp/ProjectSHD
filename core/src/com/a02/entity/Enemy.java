@@ -111,6 +111,38 @@ public class Enemy extends Entity {
         this.speed = speed;
     }
 
+    public int getGoldValue() {
+        return goldValue;
+    }
+
+    public void setGoldValue(int goldValue) {
+        this.goldValue = goldValue;
+    }
+
+    public String getWakpath() {
+        return wakpath;
+    }
+
+    public void setWakpath(String wakpath) {
+        this.wakpath = wakpath;
+    }
+
+    public String getAttackpath() {
+        return attackpath;
+    }
+
+    public void setAttackpath(String attackpath) {
+        this.attackpath = attackpath;
+    }
+
+    public String getDeathpath() {
+        return deathpath;
+    }
+
+    public void setDeathpath(String deathpath) {
+        this.deathpath = deathpath;
+    }
+
     /**
      * Actualiza la posición, estado y efectos de un enemigo.
      * @param gs GameScreen utilizada
@@ -140,6 +172,7 @@ public class Enemy extends Entity {
                     if (!this.overlappedObject(gs.objects).isGrabbed()) this.state = State.ATTACKING;
                 }
                 break;
+
             case ATTACKING:
                 if (this.overlappedObject(gs.objects) != null) {
                     GameObject tempObj = this.overlappedObject(gs.objects);    //Objeto siendo colisionado
@@ -160,6 +193,7 @@ public class Enemy extends Entity {
                 }
 
                 break;
+
             case DYING:
                 //playAnimation();
                 try {
