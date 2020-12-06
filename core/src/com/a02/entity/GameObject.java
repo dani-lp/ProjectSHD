@@ -154,7 +154,10 @@ public abstract class GameObject extends Entity {
 
                 GameScreen.setBuying(false);
 
-                if (GameScreen.getGold() >= this.price) this.setObjectInGrid(map, objects);
+                if (GameScreen.getGold() >= this.price)
+                    this.setObjectInGrid(map, objects);
+                else
+                    logger.warning("No hay suficiente oro");
             }
         }
     }
@@ -175,6 +178,7 @@ public abstract class GameObject extends Entity {
                 map.getOccGrid()[(int) tempPos.x / 16][(int) tempPos.y / 18] = true;
                 objects.add(copy);
                 GameScreen.setGold(GameScreen.getGold() - this.price);
+                logger.info("Objeto colocado");
             }
         }
     }
