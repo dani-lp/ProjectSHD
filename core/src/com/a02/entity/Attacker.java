@@ -5,10 +5,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Attacker extends GameObject {
     private float attackDamage;
     private String attackType;
+    private static Logger logger = Logger.getLogger(GameObject.class.getName());
 
     private enum State {
         IDLE, ATTACKING
@@ -69,6 +71,7 @@ public class Attacker extends GameObject {
             case IDLE:
                 if (this.overlappedEnemy(gs.enemies) != null) {
                     this.state = State.ATTACKING;
+                    logger.info("Enemigo atacando");
                 }
                 break;
 
