@@ -54,6 +54,11 @@ public class Inventory {
         gameObject.setX(positions[objects.size() - 1].x);
         gameObject.setY(positions[objects.size() - 1].y);
     }
+
+    public boolean contains(GameObject obj) {
+        return objects.contains(obj);
+    }
+
     /*
     public void takeOut(GameObject gameObject ){
         this.objects.remove(gameObject);

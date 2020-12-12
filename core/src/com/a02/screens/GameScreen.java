@@ -60,7 +60,7 @@ public class GameScreen implements Screen {
     Trap tFreeze;
     Trap tTeleport;
 
-    Inventory inventory;
+    public Inventory inventory;
 
     Map map;
     OrthographicCamera camera;
@@ -132,19 +132,12 @@ public class GameScreen implements Screen {
 
         if (secTimer % 20 == 0) gold++;
 
-        //Actualiza estados de enemigos y objetos
-        wall.grabObject(map,objects);
-        elec.grabObject(map,objects);
-        tConfuse.grabObject(map,objects);
-        tDamage.grabObject(map,objects);
-        tFire.grabObject(map,objects);
-        tFreeze.grabObject(map,objects);
-        tTeleport.grabObject(map,objects);
+        //Actualiza estado de objetos del inventario
+        for (GameObject object : inventory.getObjects()) {
+            object.grabObject(map, objects);
+        }
 
-        elec.update(this);
-
-
-        //Actualiza "presencia" de enemigos y objetos
+        //Actualiza "presencia" y estado de enemigos y objetos
         ListIterator<GameObject> objectIterator = objects.listIterator();
         while(objectIterator.hasNext()){
             GameObject tempObj = objectIterator.next();
@@ -169,6 +162,23 @@ public class GameScreen implements Screen {
         }
 
         //Dibujado
+        draw();
+
+        if (beacon.getHp()<=0) {
+            game.setScreen(new MenuScreen(game));
+        }
+    }
+
+    @Override
+    public void dispose() {
+        game.entityBatch.dispose();
+
+        for (GameObject object: objects) {
+            object.getTexture().dispose();
+        }
+    }
+
+    private void draw() {
         game.entityBatch.begin();
         game.entityBatch.draw(map.getTexture(), 0, 0);
 
@@ -194,27 +204,14 @@ public class GameScreen implements Screen {
         game.entityBatch.draw(inventory.getTexture(), inventory.getX(), inventory.getY());
 
         for (GameObject object:inventory.getObjects()) {    //Objetos del inventario
-           if (object != null) game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
+            if (object != null) game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
         }
 
         font.draw(game.entityBatch, "ORO  " + Integer.toString(gold), 5, 175);
 
         game.entityBatch.end();
-
-
-        if (beacon.getHp()<=0) {
-            game.setScreen(new MenuScreen(game));
-        }
     }
 
-    @Override
-    public void dispose() {
-        game.entityBatch.dispose();
-
-        for (GameObject object: objects) {
-            object.getTexture().dispose();
-        }
-    }
     public void ronda1(){
         int idE=0;
         int hpE=0;

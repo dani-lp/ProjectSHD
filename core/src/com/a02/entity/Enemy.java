@@ -1,5 +1,6 @@
 package com.a02.entity;
 
+import com.a02.component.Inventory;
 import com.a02.screens.GameScreen;
 import com.a02.component.HealthBar;
 import com.badlogic.gdx.Gdx;
@@ -168,14 +169,14 @@ public class Enemy extends Entity {
                 if (this.getHp() <= 0) {
                     this.state = State.DYING;
                 }
-                else if (this.overlappedObject(gs.objects) != null || this.overlappedObject(gs.objects) instanceof Trap) {
-                    if (!this.overlappedObject(gs.objects).isGrabbed()) this.state = State.ATTACKING;
+                else if (this.overlappedObject(gs.objects, gs.inventory) != null || this.overlappedObject(gs.objects, gs.inventory) instanceof Trap) {
+                    if (!this.overlappedObject(gs.objects, gs.inventory).isGrabbed()) this.state = State.ATTACKING;
                 }
                 break;
 
             case ATTACKING:
-                if (this.overlappedObject(gs.objects) != null) {
-                    GameObject tempObj = this.overlappedObject(gs.objects);    //Objeto siendo colisionado
+                if (this.overlappedObject(gs.objects, gs.inventory) != null) {
+                    GameObject tempObj = this.overlappedObject(gs.objects, gs.inventory);    //Objeto siendo colisionado
 
                     if (tempObj.getHp() > 0 && !tempObj.isGrabbed() && gs.secTimer % 60 == 0) { //Pegar 1 vez por segundo
                         tempObj.setHp(tempObj.getHp() - this.attackDamage);
@@ -251,14 +252,15 @@ public class Enemy extends Entity {
     }
 
     /**
-     * Halla que objeto está colisionando con el enemigo.
+     * Halla qué objeto está colisionando con el enemigo, excluyendo los objetos del inventario.
      * @param objects List de objetos con los que es posible hallar colisión.
      * @return Objecto colisionado.
      */
-    protected GameObject overlappedObject(List<GameObject> objects) {
+    protected GameObject overlappedObject(List<GameObject> objects, Inventory inv) {
         for (GameObject object: objects) {
             if (this.getX() < object.getX() + object.getWidth() && this.getX() + this.getWidth() > object.getX() &&
-                    this.getY() < object.getY() + object.getHeight() && this.getY() + this.getHeight() > object.getY()) {
+                    this.getY() < object.getY() + object.getHeight() && this.getY() + this.getHeight() > object.getY() &&
+                    !inv.contains(object)) {
                 return object;
             }
         }

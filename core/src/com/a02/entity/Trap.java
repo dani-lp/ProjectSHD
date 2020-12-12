@@ -89,7 +89,6 @@ public class Trap extends GameObject {
         this.attackDamage = attackDamage;
     }
 
-    //TODO: trampas restantes
     public void update(GameScreen gs) {
         switch (this.state) {
             case IDLE:

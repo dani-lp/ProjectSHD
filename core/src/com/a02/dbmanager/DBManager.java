@@ -4,10 +4,8 @@ import com.a02.entity.Attacker;
 import com.a02.entity.Defender;
 import com.a02.entity.Enemy;
 import com.a02.entity.Trap;
-import org.graalvm.compiler.virtual.phases.ea.EffectList;
 
 import java.sql.*;
-import java.time.format.DateTimeParseException;
 
 public class DBManager {
 
@@ -66,7 +64,7 @@ public class DBManager {
             } else {
                 return new Enemy();
             }
-        } catch (SQLException | DateTimeParseException e) {
+        } catch (SQLException e) {
             throw new DBException("Error obteniendo el enemigo con id " + id, e);
         }
     }
@@ -93,7 +91,7 @@ public class DBManager {
             } else {
                 return new Trap();
             }
-        } catch (SQLException | DateTimeParseException e) {
+        } catch (SQLException e) {
             throw new DBException("Error obteniendo la trampa con id " + id, e);
         }
     }
@@ -108,17 +106,15 @@ public class DBManager {
                 Defender defender = new Defender();
                 defender.setId(rs.getInt("ID_D"));
                 defender.setHp(rs.getInt("HP_D"));
-                int bool=rs.getInt("UNLOCKED_D");
-                if (bool==1){
-                    defender.setUnlocked(true);
-                }
+                int bool = rs.getInt("UNLOCKED_D");
+                if (bool == 1) defender.setUnlocked(true);
                 defender.setPrice(rs.getInt("PRICE_D"));
                 defender.setType(rs.getString("TYPE_D"));
                 return defender;
             } else {
                 return new Defender();
             }
-        } catch (SQLException | DateTimeParseException e) {
+        } catch (SQLException e) {
             throw new DBException("Error obteniendo la trampa con id " + id, e);
         }
     }
@@ -145,7 +141,7 @@ public class DBManager {
             } else {
                 return new Attacker();
             }
-        } catch (SQLException | DateTimeParseException e) {
+        } catch (SQLException e) {
             throw new DBException("Error obteniendo la trampa con id " + id, e);
         }
     }
