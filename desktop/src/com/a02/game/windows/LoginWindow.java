@@ -1,50 +1,74 @@
 package com.a02.game.windows;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import com.sun.tools.javac.comp.Flow;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import java.awt.*;
 
-public class LoginWindow {
-    public static void main(String[] args) {
+public class LoginWindow extends JFrame{
+    public LoginWindow() {
+        //1.- Ajustes de ventana
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());   //UI Look&Feel más moderno y limpio
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        JFrame frame = new JFrame("Login");
-        frame.setSize(640,360);
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Login");
+        setSize(340,210);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setVisible(true);
+        setResizable(false);
+        //Colocación en el centro
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        this.setLocation((screenSize.width - this.getSize().width) / 2,
+                (screenSize.height - this.getSize().height)/2);
 
+        setLayout(new GridLayout(5,1));
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3,2));
+        //2.- Creación de elementos
+        JPanel userLabelPanel = new JPanel(); //Panel para label de usuario
+        JPanel userTFPanel = new JPanel(); //Panel para TextField de usuario
+        JPanel pwdLabelPanel = new JPanel();
+        JPanel pwdTFPanel = new JPanel(); //Panel para TextField de password
+        JPanel buttonsPanel = new JPanel(); //Panel para los botones
 
-        //Usuario
-        JLabel userLabel = new JLabel("User");
-        panel.add(userLabel);
+        userLabelPanel.setLayout(new FlowLayout());
+        userTFPanel.setLayout(new BorderLayout());
+        userTFPanel.setBorder(BorderFactory.createEmptyBorder(1,20,1,20));
+        pwdLabelPanel.setLayout(new FlowLayout());
+        pwdTFPanel.setLayout(new BorderLayout());
+        pwdTFPanel.setBorder(BorderFactory.createEmptyBorder(1,20,1,20));
+        buttonsPanel.setLayout(new FlowLayout());
 
-        JTextField userText = new JTextField(20);
-        panel.add(userText);
-
-        //PW
-        JLabel passwordLabel = new JLabel("Password");
-        panel.add(passwordLabel);
-
-        JPasswordField passwordText = new JPasswordField(20);
-        panel.add(passwordText);
-
-        //Buttons
-
+        JLabel userLabel = new JLabel("User:");
+        JLabel pwdLabel = new JLabel("Password:");
+        JTextField userJTF = new JTextField();
+        JPasswordField pwdJTF = new JPasswordField();
         JButton loginButton = new JButton("Login");
-        panel.add(loginButton);
-
         JButton registerButton = new JButton("Register");
-        panel.add(registerButton);
 
+        //3.- Introducción de elementos
+        userLabelPanel.add(userLabel);
+        userTFPanel.add(userJTF);
+        pwdLabelPanel.add(pwdLabel);
+        pwdTFPanel.add(pwdJTF);
+        buttonsPanel.add(loginButton);
+        buttonsPanel.add(registerButton);
 
-        frame.add(panel);
-        frame.setVisible(true);
+        add(userLabelPanel);
+        add(userTFPanel);
+        add(pwdLabelPanel);
+        add(pwdTFPanel);
+        add(buttonsPanel);
+    }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                new LoginWindow();
+            }
+        });
     }
 }
