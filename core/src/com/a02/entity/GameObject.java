@@ -56,6 +56,7 @@ public abstract class GameObject extends Entity {
         this.price = 0;
         this.unlocked = false;
         this.hp = 0;
+        this.hpBar = new HealthBar(this, hp);
         this.ogPos = new Vector2();
     }
 

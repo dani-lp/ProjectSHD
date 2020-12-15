@@ -1,5 +1,6 @@
 package com.a02.entity;
 
+import com.a02.component.Map;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,7 +25,10 @@ public class Attacker extends GameObject {
         this.attackType = attackType;
         this.attackDamage = attackDamage;
         this.state = State.IDLE;
+        textures();
+    }
 
+    public void textures(){
         switch (this.getId()){
             case 0: //Electricidad
                 this.setTexture(new Texture(Gdx.files.internal("electricity.png")));
@@ -36,6 +40,8 @@ public class Attacker extends GameObject {
         super();
         this.attackType = "";
         this.attackDamage = 0;
+        this.state = State.IDLE;
+        textures();
     }
 
     public Attacker(Attacker other) {

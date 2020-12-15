@@ -9,7 +9,7 @@ import java.sql.*;
 
 public class DBManager {
 
-    public final DBManager dbManager = new DBManager();
+    public static final DBManager dbManager = new DBManager();
     private Connection conn = null;
 
     private DBManager() {
@@ -87,6 +87,8 @@ public class DBManager {
                 trap.setPrice(rs.getInt("PRICE_T"));
                 trap.setType(rs.getString("TYPE"));
                 trap.setEffect(Trap.Effect.valueOf(rs.getString("EFFECT")));
+                trap.setWidth(rs.getInt("WIDTH_T"));
+                trap.setHeight(rs.getInt("HEIGHT_T"));
                 return trap;
             } else {
                 return new Trap();
@@ -105,11 +107,13 @@ public class DBManager {
             if (rs.next()) {
                 Defender defender = new Defender();
                 defender.setId(rs.getInt("ID_D"));
-                defender.setHp(rs.getInt("HP_D"));
+                defender.setHp(rs.getInt("HP_A"));
                 int bool = rs.getInt("UNLOCKED_D");
                 if (bool == 1) defender.setUnlocked(true);
                 defender.setPrice(rs.getInt("PRICE_D"));
                 defender.setType(rs.getString("TYPE_D"));
+                defender.setWidth(rs.getInt("WIDTH_D"));
+                defender.setHeight(rs.getInt("HEIGHT_D"));
                 return defender;
             } else {
                 return new Defender();
@@ -120,7 +124,7 @@ public class DBManager {
     }
 
     public Attacker getAttacker(int id) throws DBException {
-        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM trap WHERE ID_T=?")) {
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM attacker WHERE ID_A=?")) {
             stmt.setInt(1, id);
 
             ResultSet rs = stmt.executeQuery();
@@ -137,6 +141,8 @@ public class DBManager {
                 attacker.setPrice(rs.getInt("PRICE_A"));
                 attacker.setType(rs.getString("TYPE_A"));
                 attacker.setAttackType(rs.getString("ATTACK_TYPE"));
+                attacker.setWidth(rs.getInt("WIDTH_A"));
+                attacker.setHeight(rs.getInt("HEIGHT_A"));
                 return attacker;
             } else {
                 return new Attacker();

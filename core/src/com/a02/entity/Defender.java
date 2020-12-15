@@ -10,7 +10,10 @@ public class Defender extends GameObject {
     public Defender(float x, float y, int width, int height, int id, String type, int price,
                     boolean unlocked, int hp) {
         super(x, y, width, height, id, type, price, unlocked, hp);
+        textures();
+    }
 
+    public void textures(){
         switch (this.getId()){
             case 0: //Beacon
                 this.setTexture(new Texture(Gdx.files.internal("beacon.png")));
@@ -22,6 +25,7 @@ public class Defender extends GameObject {
 
     public Defender() {
         super();
+        textures();
     }
 
     public Defender(Defender other) {

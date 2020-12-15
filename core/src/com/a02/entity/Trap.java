@@ -16,13 +16,14 @@ import java.util.List;
 
 public class Trap extends GameObject {
     private int attackDamage;
+    private String effect;
     public enum Effect {
         BURN, FREEZE, TELEPORT, DAMAGE, CONFUSE
     }
     private enum State {
         IDLE, ATTACKING, DYING
     }
-    private Effect effect;
+    private Effect effects;
     private State state;
     private Enemy focusedEnemy;
 
@@ -30,37 +31,42 @@ public class Trap extends GameObject {
                 boolean unlocked, int hp, String effect, int attackDamage) {
         super(x, y, width, height, id, type, price, unlocked, hp);
         this.attackDamage = attackDamage;
+        this.effect=effect;
 
-        switch (effect) {   //Ajuste de textura y efecto
-            case "BURN" :
-                this.setTexture(new Texture(Gdx.files.internal("Traps/fire.png")));
-                this.effect = Effect.BURN;
-                break;
-            case "FREEZE" :
-                this.setTexture(new Texture(Gdx.files.internal("Traps/freeze.png")));
-                this.effect = Effect.FREEZE;
-                break;
-            case "TELEPORT" :
-                this.setTexture(new Texture(Gdx.files.internal("Traps/teleport.png")));
-                this.effect = Effect.TELEPORT;
-                break;
-            case "DAMAGE" :
-                this.setTexture(new Texture(Gdx.files.internal("Traps/damage.png")));
-                this.effect = Effect.DAMAGE;
-                break;
-            case "CONFUSE" :
-                this.setTexture(new Texture(Gdx.files.internal("Traps/confuse.png")));
-                this.effect = Effect.CONFUSE;
-                break;
-        }
+        textures();
 
         this.state = State.IDLE;
+    }
+
+    public void textures(){
+        switch (this.getId()) {   //Ajuste de textura y efecto
+            case 1 :
+                this.setTexture(new Texture(Gdx.files.internal("Traps/fire.png")));
+                this.effects = Effect.BURN;
+                break;
+            case 0 :
+                this.setTexture(new Texture(Gdx.files.internal("Traps/freeze.png")));
+                this.effects = Effect.FREEZE;
+                break;
+            case 4 :
+                this.setTexture(new Texture(Gdx.files.internal("Traps/teleport.png")));
+                this.effects = Effect.TELEPORT;
+                break;
+            case 2 :
+                this.setTexture(new Texture(Gdx.files.internal("Traps/damage.png")));
+                this.effects = Effect.DAMAGE;
+                break;
+            case 3 :
+                this.setTexture(new Texture(Gdx.files.internal("Traps/confuse.png")));
+                this.effects = Effect.CONFUSE;
+                break;
+        }
     }
 
     public Trap(Trap other) {
         super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getId(),
                other.getType(), other.getPrice(), other.isUnlocked(), other.getHp());
-        this.effect = other.getEffect();
+        this.effects = other.getEffect();
         this.attackDamage = other.getAttackDamage();
         this.state = other.state;
         this.setTexture(other.getTexture());
@@ -68,17 +74,18 @@ public class Trap extends GameObject {
 
     public Trap() {
         super();
-        this.effect = Effect.FREEZE;
+        this.effects = Effect.FREEZE;
         this.attackDamage = 0;
         this.state = State.IDLE;
+        textures();
     }
 
     public Effect getEffect() {
-        return effect;
+        return effects;
     }
 
     public void setEffect(Effect effect) {
-        this.effect = effect;
+        this.effects = effect;
     }
 
     public int getAttackDamage() {
@@ -100,7 +107,7 @@ public class Trap extends GameObject {
 
             case ATTACKING: //Aplica su efecto y se autodestruye
                 Enemy tempEnemy = this.overlappedEnemy(gs.enemies);    //Referencia temporal del enemigo
-                switch (this.effect) {
+                switch (this.effects) {
                     case BURN :
                         tempEnemy.trapEffect = Enemy.TrapEffect.BURNING;
                         tempEnemy.setEffectTimer(gs.secTimer);

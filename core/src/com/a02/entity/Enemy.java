@@ -48,14 +48,8 @@ public class Enemy extends Entity {
         this.trapEffect = TrapEffect.NEUTRAL;
 
         //*
-        this.walkAnimation = createAnimation("e1-walk.png", 3, 1, 0.2f);
-        this.attackAnimation = createAnimation("e1-attack.png", 2, 2, 0.2f);
-        /*/
-        this.walkAnimation = createAnimation(walkpath, 3, 1, 0.2f);
+        this.walkAnimation = createAnimation(wakpath, 3, 1, 0.2f);
         this.attackAnimation = createAnimation(attackpath, 2, 2, 0.2f);
-        //*/
-
-        this.deathAnimation = createAnimation("e1-death.png", 2, 2, 0.25f);
         this.deathAnimation = createAnimation(deathpath, 2, 2, 0.25f);
         this.startTime = startTime;
         this.goldValue = goldValue;
@@ -68,8 +62,16 @@ public class Enemy extends Entity {
         this.hp = 0;
         this.attackDamage = 0;
         this.speed = 0;
-
+        this.state = State.IDLE;
+        this.trapEffect = TrapEffect.NEUTRAL;
+        this.hpBar = new HealthBar(this, 0);
         this.goldValue = 50;
+    }
+
+    public void animations(){
+        this.walkAnimation = createAnimation(wakpath, 3, 1, 0.2f);
+        this.attackAnimation = createAnimation(attackpath, 2, 2, 0.2f);
+        this.deathAnimation = createAnimation(deathpath, 2, 2, 0.25f);
     }
 
     public int getId() {
@@ -144,6 +146,14 @@ public class Enemy extends Entity {
         this.deathpath = deathpath;
     }
 
+    public int getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
     /**
      * Actualiza la posición, estado y efectos de un enemigo.
      * @param gs GameScreen utilizada
@@ -163,7 +173,7 @@ public class Enemy extends Entity {
                     this.move(2,2); //TODO: posición random
                 }
                 else {
-                    this.move(gs.beacon.getX(), gs.beacon.getY());
+                    this.move(gs.objects.get(0).getX(), gs.objects.get(0).getY());
                 }
 
                 if (this.getHp() <= 0) {
