@@ -189,7 +189,6 @@ public class GameScreen implements Screen {
     }
 
     public void ronda1(){
-
         try {
             DBManager.dbManager.connect("Databases/base.db");
         } catch (DBException e) {
@@ -204,6 +203,48 @@ public class GameScreen implements Screen {
                     String[] campos = line.split(";");
 
                     larry = DBManager.dbManager.getEnemy(0);
+                    larry.setX(Integer.parseInt(campos[0]));
+                    larry.setY(Integer.parseInt(campos[1]));
+                    larry.setStartTime(Integer.parseInt(campos[2]));
+                    larry.setWidth(16);
+                    larry.setHeight(16);
+                    larry.hpBar.setMaxHP(larry.getHp());
+                    larry.animations();
+                    enemies.add(larry);
+                }
+                sc.close();
+
+
+            } catch (FileNotFoundException e) {
+                log( Level.INFO, "No se ha podido abrir el fichero", null );
+            }
+
+
+        } catch (DBException e) {
+            log( Level.INFO, "No se ha podido obtener el enemigo", null );
+        }
+    }
+
+    public void ronda2(){
+        try {
+            DBManager.dbManager.connect("Databases/base.db");
+        } catch (DBException e) {
+            log( Level.INFO, "Error en la conexion a la base de datos", null );
+        }
+        Enemy larry= new Enemy();
+        try {
+            try {
+                Scanner sc= new Scanner(new FileInputStream("core/assets/ronda1.csv"));
+                while (sc.hasNext()) {
+                    String line= sc.next();
+                    String[] campos = line.split(";");
+                    if (enemies.size()<6){
+                        larry = DBManager.dbManager.getEnemy(0);
+                    }else{
+                        larry = DBManager.dbManager.getEnemy(1);
+                        larry.setDeathpath("e1-death.png");
+                    }
+
                     larry.setX(Integer.parseInt(campos[0]));
                     larry.setY(Integer.parseInt(campos[1]));
                     larry.setStartTime(Integer.parseInt(campos[2]));
