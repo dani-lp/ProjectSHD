@@ -51,6 +51,19 @@ public class GameScreen implements Screen {
 
     public int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones
+    private static boolean LOGGING = true;
+
+    private void log(Level level, String msg, Throwable excepcion) {
+        if (!LOGGING) return;
+        if (logger==null) {  // Logger por defecto local:
+            logger = Logger.getLogger("GameScreen");  // Nombre del logger - el de la clase
+            logger.setLevel( Level.ALL );  // Loguea todos los niveles
+        }
+        if (excepcion==null)
+            logger.log( level, msg );
+        else
+            logger.log( level, msg, excepcion );
+    }
 
     public GameScreen(MainGame game) {
         Logger.getLogger("").setLevel(Level.INFO);
@@ -180,11 +193,10 @@ public class GameScreen implements Screen {
         try {
             DBManager.dbManager.connect("Databases/base.db");
         } catch (DBException e) {
-            e.printStackTrace();
+            log( Level.INFO, "Error en la conexion a la base de datos", null );
         }
         Enemy larry= new Enemy();
         try {
-
             try {
                 Scanner sc= new Scanner(new FileInputStream("core/assets/ronda1.csv"));
                 while (sc.hasNext()) {
@@ -205,47 +217,20 @@ public class GameScreen implements Screen {
 
 
             } catch (FileNotFoundException e) {
-                System.out.println("No se a podido abrir el fichero ");
+                log( Level.INFO, "No se ha podido abrir el fichero", null );
             }
 
 
         } catch (DBException e) {
-            e.printStackTrace();
+            log( Level.INFO, "No se ha podido obtener el enemigo", null );
         }
-
-        /**
-         * larry = new Enemy(12, 63, 16, 16, idE,hpE, attackE, speed,0,goldValue,walkpath,attackpath,deathpath);
-         *         larry2 = new Enemy(275, 25, 16, 16,idE, hpE, attackE, speed,300,goldValue,walkpath,attackpath,deathpath);
-         *         larry3 = new Enemy(100, 359, 16, 16,idE,hpE, attackE, speed,470,goldValue,walkpath,attackpath,deathpath);
-         *         larry4 = new Enemy(350, 220, 16, 16,idE,hpE, attackE, speed,500,goldValue,walkpath,attackpath,deathpath);
-         *         larry5 = new Enemy(-12, 363, 16, 16,idE,hpE, attackE, speed,680,goldValue,walkpath,attackpath,deathpath);
-         *         larry6 = new Enemy(445, 25, 16, 16,idE,hpE, attackE, speed,742,goldValue,walkpath,attackpath,deathpath);
-         *         larry7 = new Enemy(100, 459, 16, 16,idE,hpE, attackE, speed,790,goldValue,walkpath,attackpath,deathpath);
-         *         larry8 = new Enemy(350, 320, 16, 16,idE,hpE, attackE, speed,825,goldValue,walkpath,attackpath,deathpath);
-         *         larry9 = new Enemy(512, 63, 16, 16,idE,hpE, attackE, speed,875,goldValue,walkpath,attackpath,deathpath);
-         *         larry10 = new Enemy(-45, 25, 16, 16,idE,hpE, attackE, speed,905,goldValue,walkpath,attackpath,deathpath);
-         *         larry11 = new Enemy(100, -59, 16, 16,idE,hpE, attackE, speed,925,goldValue,walkpath,attackpath,deathpath);
-         enemies.add(larry2);
-         enemies.add(larry3);
-         enemies.add(larry4);
-         enemies.add(larry5);
-         enemies.add(larry6);
-         enemies.add(larry7);
-         enemies.add(larry8);
-         enemies.add(larry9);
-         enemies.add(larry10);
-         enemies.add(larry11);
-         */
-
-
-
     }
 
     public void crearObjetos(){
         try {
             DBManager.dbManager.connect("Databases/base.db");
         } catch (DBException e) {
-            e.printStackTrace();
+            log( Level.INFO, "Error en la conexion a la base de datos", null );
         }
 
             // A partir de una conexiÃ³n activa obtenemos el objeto para ejecutar
@@ -265,7 +250,7 @@ public class GameScreen implements Screen {
                 }
 
             } catch (DBException e) {
-                e.printStackTrace();
+                log( Level.INFO, "No se ha podido obtener el defender", null );
             }
         }
 
@@ -277,7 +262,7 @@ public class GameScreen implements Screen {
                 objects.add(trap);
                 inventory.insert(trap);
             } catch (DBException e) {
-                e.printStackTrace();
+                log( Level.INFO, "No se ha podido obtener la trampa", null );
             }
         }
 
@@ -289,7 +274,7 @@ public class GameScreen implements Screen {
                 objects.add(att);
                 inventory.insert(att);
             } catch (DBException e) {
-                e.printStackTrace();
+                log( Level.INFO, "No se ha podido obtener el objeto de ataque", null );
             }
         }
 
