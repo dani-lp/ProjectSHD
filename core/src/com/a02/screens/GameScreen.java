@@ -18,12 +18,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.awt.*;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -186,17 +184,30 @@ public class GameScreen implements Screen {
         }
         Enemy larry= new Enemy();
         try {
-            while (enemies.size()<11){
-                larry = DBManager.dbManager.getEnemy(0);
-                larry.setX(12);
-                larry.setY(63);
-                larry.setWidth(16);
-                larry.setHeight(16);
-                larry.setStartTime(0);
-                larry.hpBar.setMaxHP(larry.getHp());
-                larry.animations();
-                enemies.add(larry);
+
+            try {
+                Scanner sc= new Scanner(new FileInputStream("core/assets/ronda1.csv"));
+                while (sc.hasNext()) {
+                    String line= sc.next();
+                    String[] campos = line.split(";");
+
+                    larry = DBManager.dbManager.getEnemy(0);
+                    larry.setX(Integer.parseInt(campos[0]));
+                    larry.setY(Integer.parseInt(campos[1]));
+                    larry.setStartTime(Integer.parseInt(campos[2]));
+                    larry.setWidth(16);
+                    larry.setHeight(16);
+                    larry.hpBar.setMaxHP(larry.getHp());
+                    larry.animations();
+                    enemies.add(larry);
+                }
+                sc.close();
+
+
+            } catch (FileNotFoundException e) {
+                System.out.println("No se a podido abrir el fichero ");
             }
+
 
         } catch (DBException e) {
             e.printStackTrace();
