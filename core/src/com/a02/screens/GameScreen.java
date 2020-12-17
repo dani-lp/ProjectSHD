@@ -136,7 +136,6 @@ public class GameScreen implements Screen {
                 enemyIterator.remove();
             }
         }
-
         //Dibujado
         draw();
 
