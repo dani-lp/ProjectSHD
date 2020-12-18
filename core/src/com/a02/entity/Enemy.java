@@ -68,10 +68,10 @@ public class Enemy extends Entity {
         this.goldValue = 50;
     }
 
-    public void animations(){
-        this.walkAnimation = createAnimation(wakpath, 3, 1, 0.2f);
-        this.attackAnimation = createAnimation(attackpath, 2, 2, 0.2f);
-        this.deathAnimation = createAnimation(deathpath, 2, 2, 0.25f);
+    public void animations(int wcol, int wrow,int acol,int arow,int dcol,int drow){
+        this.walkAnimation = createAnimation(wakpath, wcol, wrow, 0.2f);
+        this.attackAnimation = createAnimation(attackpath, acol, arow, 0.2f);
+        this.deathAnimation = createAnimation(deathpath, dcol, drow, 0.25f);
     }
 
     public int getId() {

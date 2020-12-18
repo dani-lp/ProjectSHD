@@ -39,10 +39,11 @@ public class GameScreen implements Screen {
     public List<GameObject> objects = new ArrayList<GameObject>(); //Objetos en el juego
     public List<Enemy> enemies = new ArrayList<Enemy>(); // Enemigos del juego
 
-
-    public Defender beacon; //Enemigos y objetos
-
+    public Inventory drawing;
     public Inventory inventory;
+    public Inventory weapons;
+    public Inventory defensive;
+    public Inventory tramps;
 
     Map map;
     OrthographicCamera camera;
@@ -79,11 +80,16 @@ public class GameScreen implements Screen {
         secTimer = 0;
         animationTimer = 0;
 
+
         inventory = new Inventory();
+        weapons = new Inventory();
+        defensive = new Inventory();
+        tramps = new Inventory();
 
         crearObjetos();
 
-        ronda1();
+        drawing= inventory;
+        ronda2();
 
         map = new Map("map1.png");
 
@@ -115,6 +121,7 @@ public class GameScreen implements Screen {
 
         //Actualiza "presencia" y estado de enemigos y objetos
         ListIterator<GameObject> objectIterator = objects.listIterator();
+
         while(objectIterator.hasNext()){
             GameObject tempObj = objectIterator.next();
             tempObj.update(this);
@@ -136,13 +143,24 @@ public class GameScreen implements Screen {
                 enemyIterator.remove();
             }
         }
+        //Cambios de inventario
+
+        if (1576<Gdx.input.getX() && 1606>Gdx.input.getX() && 45<Gdx.input.getY() && 75>Gdx.input.getY() && Gdx.input.isTouched()){
+            drawing=weapons;
+        } else if (1668<Gdx.input.getX() && 1698>Gdx.input.getX() && 45<Gdx.input.getY() && 75>Gdx.input.getY() && Gdx.input.isTouched()){
+            drawing=defensive;
+        } else if (1751<Gdx.input.getX() && 1781>Gdx.input.getX() && 45<Gdx.input.getY() && 75>Gdx.input.getY() && Gdx.input.isTouched()){
+            drawing=tramps;
+        } else if (1840<Gdx.input.getX() && 1870>Gdx.input.getX() && 45<Gdx.input.getY() && 75>Gdx.input.getY() && Gdx.input.isTouched()){
+            drawing=inventory;
+        }
+        if (objects.get(0).getHp()<=0) {
+            game.setScreen(new MenuScreen(game));
+        }
 
         //Dibujado
         draw();
 
-        if (objects.get(0).getHp()<=0) {
-            game.setScreen(new MenuScreen(game));
-        }
     }
 
     @Override
@@ -177,9 +195,9 @@ public class GameScreen implements Screen {
             game.entityBatch.draw(enemy.hpBar.getForeground(), enemy.hpBar.getX(), enemy.hpBar.getY(), enemy.hpBar.getCurrentWidth(),2);
         }
 
-        game.entityBatch.draw(inventory.getTexture(), inventory.getX(), inventory.getY());
+        game.entityBatch.draw(drawing.getTexture(), drawing.getX(), drawing.getY());
 
-        for (GameObject object:inventory.getObjects()) {    //Objetos del inventario
+        for (GameObject object:drawing.getObjects()) {    //Objetos del inventario
             if (object != null) game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
         }
 
@@ -209,7 +227,7 @@ public class GameScreen implements Screen {
                     larry.setWidth(16);
                     larry.setHeight(16);
                     larry.hpBar.setMaxHP(larry.getHp());
-                    larry.animations();
+                    larry.animations(3,1,2,2,2,2);
                     enemies.add(larry);
                 }
                 sc.close();
@@ -240,9 +258,11 @@ public class GameScreen implements Screen {
                     String[] campos = line.split(";");
                     if (enemies.size()<6){
                         larry = DBManager.dbManager.getEnemy(0);
+                        larry.animations(3,1,2,2,2,2);
                     }else{
                         larry = DBManager.dbManager.getEnemy(1);
                         larry.setDeathpath("e1-death.png");
+                        larry.animations(2,2,5,1,2,2);
                     }
 
                     larry.setX(Integer.parseInt(campos[0]));
@@ -251,7 +271,6 @@ public class GameScreen implements Screen {
                     larry.setWidth(16);
                     larry.setHeight(16);
                     larry.hpBar.setMaxHP(larry.getHp());
-                    larry.animations();
                     enemies.add(larry);
                 }
                 sc.close();
@@ -288,6 +307,8 @@ public class GameScreen implements Screen {
                 objects.add(def);
                 if (def.getId()!=0) {
                     inventory.insert(def);
+                    defensive.insert(def);
+
                 }
 
             } catch (DBException e) {
@@ -302,6 +323,7 @@ public class GameScreen implements Screen {
                 trap.textures();
                 objects.add(trap);
                 inventory.insert(trap);
+                tramps.insert(trap);
             } catch (DBException e) {
                 log( Level.INFO, "No se ha podido obtener la trampa", null );
             }
@@ -314,6 +336,7 @@ public class GameScreen implements Screen {
                 att.textures();
                 objects.add(att);
                 inventory.insert(att);
+                weapons.insert(att);
             } catch (DBException e) {
                 log( Level.INFO, "No se ha podido obtener el objeto de ataque", null );
             }
