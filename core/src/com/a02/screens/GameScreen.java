@@ -194,9 +194,9 @@ public class GameScreen implements Screen {
             game.entityBatch.draw(enemy.hpBar.getForeground(), enemy.hpBar.getX(), enemy.hpBar.getY(), enemy.hpBar.getCurrentWidth(),2);
         }
 
-        game.entityBatch.draw(inventory.getTexture(), inventory.getX(), inventory.getY());
+        game.entityBatch.draw(drawing.getTexture(), drawing.getX(), drawing.getY());
 
-        for (GameObject object:inventory.getObjects()) {    //Objetos del inventario
+        for (GameObject object:drawing.getObjects()) {    //Objetos del inventario
             if (object != null) game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
         }
 
@@ -270,7 +270,6 @@ public class GameScreen implements Screen {
                     larry.setWidth(16);
                     larry.setHeight(16);
                     larry.hpBar.setMaxHP(larry.getHp());
-                    larry.animations();
                     enemies.add(larry);
                 }
                 sc.close();
