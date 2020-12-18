@@ -55,8 +55,8 @@ public class Inventory {
         gameObject.setY(positions[objects.size() - 1].y);
     }
 
-    public Inventory sort(){
-        Inventory order= new Inventory();
+    public Inventory sortInventory(){
+        Inventory order = new Inventory();
         for (GameObject object:this.getObjects()) {    //Objetos del inventario
             order.insert(object);
         }

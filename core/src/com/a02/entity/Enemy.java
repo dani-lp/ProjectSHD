@@ -186,14 +186,14 @@ public class Enemy extends Entity {
                 if (this.getHp() <= 0) {
                     this.state = State.DYING;
                 }
-                else if (this.overlappedObject(gs.objects, gs.inventory) != null || this.overlappedObject(gs.objects, gs.inventory) instanceof Trap) {
-                    if (!this.overlappedObject(gs.objects, gs.inventory).isGrabbed()) this.state = State.ATTACKING;
+                else if (this.overlappedObject(gs) != null || this.overlappedObject(gs) instanceof Trap) {
+                    if (!this.overlappedObject(gs).isGrabbed()) this.state = State.ATTACKING;
                 }
                 break;
 
             case ATTACKING:
-                if (this.overlappedObject(gs.objects, gs.inventory) != null) {
-                    GameObject tempObj = this.overlappedObject(gs.objects, gs.inventory);    //Objeto siendo colisionado
+                if (this.overlappedObject(gs) != null) {
+                    GameObject tempObj = this.overlappedObject(gs);    //Objeto siendo colisionado
 
                     if (tempObj.getHp() > 0 && !tempObj.isGrabbed() && gs.secTimer % 60 == 0) { //Pegar 1 vez por segundo
                         tempObj.setHp(tempObj.getHp() - this.attackDamage);
@@ -237,8 +237,8 @@ public class Enemy extends Entity {
                 break;
             case CONFUSED:
                 if (gs.secTimer == this.effectTimer) {
-                    this.focus.x = (float)(Math.random() * 320); //Posición X máxima
-                    this.focus.y = (float)(Math.random() * 180); //Posición Y máxima
+                    this.focus.x = (float)(Math.random() * 3200 - 1600); //Posición X máxima
+                    this.focus.y = (float)(Math.random() * 1800 - 900); //Posición Y máxima
                 }
                 if (gs.secTimer > this.effectTimer + 280) {
                     this.trapEffect = TrapEffect.NEUTRAL;
@@ -265,12 +265,11 @@ public class Enemy extends Entity {
      */
     protected boolean overlapsArray(List<GameObject> objects) {
         for (GameObject object: objects) {
-            if (object instanceof Trap || object.isGrabbed()) {
-                continue;
-            }
-            else if (this.getX() < object.getX() + object.getWidth() && this.getX() + this.getWidth() > object.getX() &&
-                    this.getY() < object.getY() + object.getHeight() && this.getY() + this.getHeight() > object.getY()) {
-                return true;
+            if (!(object instanceof Trap) && !object.isGrabbed()) {
+                if (this.getX() < object.getX() + object.getWidth() && this.getX() + this.getWidth() > object.getX() &&
+                        this.getY() < object.getY() + object.getHeight() && this.getY() + this.getHeight() > object.getY()) {
+                    return true;
+                }
             }
         }
         return false;
@@ -278,14 +277,14 @@ public class Enemy extends Entity {
 
     /**
      * Halla qué objeto está colisionando con el enemigo, excluyendo los objetos del inventario.
-     * @param objects List de objetos con los que es posible hallar colisión.
+     * @param gs GameScreen utilizada
      * @return Objecto colisionado.
      */
-    protected GameObject overlappedObject(List<GameObject> objects, Inventory inv) {
-        for (GameObject object: objects) {
+    protected GameObject overlappedObject(GameScreen gs) {
+        for (GameObject object: gs.objects) {
             if (this.getX() < object.getX() + object.getWidth() && this.getX() + this.getWidth() > object.getX() &&
                     this.getY() < object.getY() + object.getHeight() && this.getY() + this.getHeight() > object.getY() &&
-                    !inv.contains(object)) {
+                    !object.isInInventory(gs)) {
                 return object;
             }
         }

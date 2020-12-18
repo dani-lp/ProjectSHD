@@ -99,14 +99,14 @@ public class Trap extends GameObject {
     public void update(GameScreen gs) {
         switch (this.state) {
             case IDLE:
-                if (this.overlappedEnemy(gs.enemies) != null) {
-                    this.focusedEnemy = this.overlappedEnemy(gs.enemies);
+                if (this.overlappedEnemy(gs) != null) {
+                    this.focusedEnemy = this.overlappedEnemy(gs);
                     this.state = State.ATTACKING;
                 }
                 break;
 
             case ATTACKING: //Aplica su efecto y se autodestruye
-                Enemy tempEnemy = this.overlappedEnemy(gs.enemies);    //Referencia temporal del enemigo
+                Enemy tempEnemy = this.overlappedEnemy(gs);    //Referencia temporal del enemigo
                 switch (this.effects) {
                     case BURN :
                         tempEnemy.trapEffect = Enemy.TrapEffect.BURNING;

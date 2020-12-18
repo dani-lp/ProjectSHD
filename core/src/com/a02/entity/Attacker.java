@@ -75,16 +75,15 @@ public class Attacker extends GameObject {
     public void update(GameScreen gs) {
         switch (this.state) {
             case IDLE:
-                if (this.overlappedEnemy(gs.enemies) != null) {
+                if (this.overlappedEnemy(gs) != null) {
                     this.state = State.ATTACKING;
                     logger.info("Enemigo atacando");
                 }
                 break;
 
             case ATTACKING:
-                if (this.overlappedEnemy(gs.enemies) != null) {
-                    Enemy tempEnemy = this.overlappedEnemy(gs.enemies);
-
+                if (this.overlappedEnemy(gs) != null) {
+                    Enemy tempEnemy = this.overlappedEnemy(gs);
                     if (tempEnemy.getHp() > 0 && gs.secTimer % 60 == 0) {
                         tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackDamage));
                     } else if (tempEnemy.getHp() <= 0) {

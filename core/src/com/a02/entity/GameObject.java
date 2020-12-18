@@ -203,6 +203,14 @@ public abstract class GameObject extends Entity {
         }
     }
 
+    public boolean isInInventory(GameScreen gs){
+        return gs.defInv.contains(this) ||
+                gs.drawing.contains(this) ||
+                gs.trapInv.contains(this) ||
+                gs.attackInv.contains(this) ||
+                gs.fullInv.contains(this);
+    }
+
     /**
      * Devuelve las coordenadas de la casilla en la que está el objeto que realiza la llamada.
      * @param map Objeto Map
@@ -253,11 +261,12 @@ public abstract class GameObject extends Entity {
         return false;
     }
 
-    protected Enemy overlappedEnemy(List<Enemy> enemies) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
+    protected Enemy overlappedEnemy(GameScreen gs) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
         if (this.isGrabbed()) return null;
-        for (Enemy enemy : enemies) {
+        for (Enemy enemy : gs.enemies) {
             if (this.getX() < enemy.getX() + enemy.getWidth() && this.getX() + this.getWidth() > enemy.getX() &&
-                    this.getY() < enemy.getY() + enemy.getHeight() && this.getY() + this.getHeight() > enemy.getY()) {
+                    this.getY() < enemy.getY() + enemy.getHeight() && this.getY() + this.getHeight() > enemy.getY() &&
+                    !this.isInInventory(gs)) {
                 return enemy;
             }
         }

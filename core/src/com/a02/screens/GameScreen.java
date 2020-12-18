@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 
 import java.awt.*;
 import java.io.*;
@@ -27,6 +28,7 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import static com.a02.game.MainGame.mainGameScreen;
+import static com.a02.game.Utils.getRelativeMousePos;
 
 public class GameScreen implements Screen {
     final MainGame game;
@@ -40,10 +42,10 @@ public class GameScreen implements Screen {
     public List<Enemy> enemies = new ArrayList<Enemy>(); // Enemigos del juego
 
     public Inventory drawing;
-    public Inventory inventory;
-    public Inventory weapons;
-    public Inventory defensive;
-    public Inventory tramps;
+    public Inventory fullInv; //Inventario full
+    public Inventory attackInv; //Objetos de ataque
+    public Inventory defInv; //Objetos de defensa
+    public Inventory trapInv; //Objetos trampa
 
     Map map;
     OrthographicCamera camera;
@@ -54,16 +56,16 @@ public class GameScreen implements Screen {
     float animationTimer;   //Contador para animaciones
     private static boolean LOGGING = true;
 
-    private void log(Level level, String msg, Throwable excepcion) {
+    private void log(Level level, String msg, Throwable exception) {
         if (!LOGGING) return;
         if (logger==null) {  // Logger por defecto local:
             logger = Logger.getLogger("GameScreen");  // Nombre del logger - el de la clase
             logger.setLevel( Level.ALL );  // Loguea todos los niveles
         }
-        if (excepcion==null)
+        if (exception == null)
             logger.log( level, msg );
         else
-            logger.log( level, msg, excepcion );
+            logger.log( level, msg, exception );
     }
 
     public GameScreen(MainGame game) {
@@ -80,15 +82,14 @@ public class GameScreen implements Screen {
         secTimer = 0;
         animationTimer = 0;
 
+        fullInv = new Inventory();
+        attackInv = new Inventory();
+        defInv = new Inventory();
+        trapInv = new Inventory();
 
-        inventory = new Inventory();
-        weapons = new Inventory();
-        defensive = new Inventory();
-        tramps = new Inventory();
+        createObjects();
 
-        crearObjetos();
-
-        drawing = inventory.sort();
+        drawing = fullInv.sortInventory();
         ronda2();
 
         map = new Map("map1.png");
@@ -115,7 +116,7 @@ public class GameScreen implements Screen {
         if (secTimer % 20 == 0) gold++;
 
         //Actualiza estado de objetos del inventario
-        for (GameObject object : inventory.getObjects()) {
+        for (GameObject object : fullInv.getObjects()) {
             object.grabObject(map, objects);
         }
 
@@ -145,15 +146,7 @@ public class GameScreen implements Screen {
         }
         //Cambios de inventario
 
-        if (1576<Gdx.input.getX() && 1606>Gdx.input.getX() && 45<Gdx.input.getY() && 75>Gdx.input.getY() && Gdx.input.isTouched()){
-            drawing=weapons.sort();
-        } else if (1668<Gdx.input.getX() && 1698>Gdx.input.getX() && 45<Gdx.input.getY() && 75>Gdx.input.getY() && Gdx.input.isTouched()){
-            drawing=defensive.sort();
-        } else if (1751<Gdx.input.getX() && 1781>Gdx.input.getX() && 45<Gdx.input.getY() && 75>Gdx.input.getY() && Gdx.input.isTouched()){
-            drawing=tramps.sort();
-        } else if (1840<Gdx.input.getX() && 1870>Gdx.input.getX() && 45<Gdx.input.getY() && 75>Gdx.input.getY() && Gdx.input.isTouched()){
-            drawing=inventory.sort();
-        }
+        inventorySwap();
         //Dibujado
         draw();
 
@@ -205,6 +198,24 @@ public class GameScreen implements Screen {
         game.entityBatch.end();
     }
 
+    /**
+     * Cambia el inventario al actual
+     */
+    private void inventorySwap() {
+        Vector3 mousePos = getRelativeMousePos();
+        if (mousePos.y <= 176 && mousePos.y >= 164 ) {
+            if (260 <= mousePos.x && 272 >= mousePos.x && Gdx.input.isTouched()){
+                drawing = attackInv.sortInventory();
+            } else if (274 <= mousePos.x && 286 >= mousePos.x && Gdx.input.isTouched()){
+                drawing = defInv.sortInventory();
+            } else if (289 <= mousePos.x && 301 >= mousePos.x && Gdx.input.isTouched()){
+                drawing = trapInv.sortInventory();
+            } else if (303 <= mousePos.x && 315 >= mousePos.x && Gdx.input.isTouched()){
+                drawing = fullInv.sortInventory();
+            }
+        }
+    }
+
     public void ronda1(){
         try {
             DBManager.dbManager.connect("Databases/base.db");
@@ -253,7 +264,7 @@ public class GameScreen implements Screen {
             try {
                 Scanner sc= new Scanner(new FileInputStream("core/assets/ronda1.csv"));
                 while (sc.hasNext()) {
-                    String line= sc.next();
+                    String line = sc.next();
                     String[] campos = line.split(";");
                     if (enemies.size()<6){
                         larry = DBManager.dbManager.getEnemy(0);
@@ -287,7 +298,7 @@ public class GameScreen implements Screen {
         }
     }
 
-    public void crearObjetos(){
+    public void createObjects(){
         try {
             DBManager.dbManager.connect("Databases/base.db");
         } catch (DBException e) {
@@ -298,9 +309,9 @@ public class GameScreen implements Screen {
             // sentencias SQL en la base de datos.
         for (int i = 0; i < 2; i++){
             try {
-                Defender def=DBManager.dbManager.getDefender(i);
-                if (def.getId()==0) {
-                    def.setX(145);
+                Defender def = DBManager.dbManager.getDefender(i);
+                if (def.getId() == 0) {
+                    def.setX(144);
                     def.setY(90);
                     def.setHp(90000);
                 }
@@ -308,8 +319,8 @@ public class GameScreen implements Screen {
                 def.textures();
                 objects.add(def);
                 if (def.getId()!=0) {
-                    inventory.insert(def);
-                    defensive.insert(def);
+                    fullInv.insert(def);
+                    defInv.insert(def);
 
                 }
 
@@ -320,12 +331,12 @@ public class GameScreen implements Screen {
 
         for (int i = 0; i < 5; i++){
             try {
-                Trap trap=DBManager.dbManager.getTrap(i);
+                Trap trap = DBManager.dbManager.getTrap(i);
                 trap.hpBar.setMaxHP(trap.getHp());
                 trap.textures();
                 objects.add(trap);
-                inventory.insert(trap);
-                tramps.insert(trap);
+                fullInv.insert(trap);
+                trapInv.insert(trap);
             } catch (DBException e) {
                 log( Level.INFO, "No se ha podido obtener la trampa", null );
             }
@@ -333,12 +344,12 @@ public class GameScreen implements Screen {
 
         for (int i = 0; i < 1; i++){
             try {
-                Attacker att=DBManager.dbManager.getAttacker(i);
+                Attacker att = DBManager.dbManager.getAttacker(i);
                 att.hpBar.setMaxHP(att.getHp());
                 att.textures();
                 objects.add(att);
-                inventory.insert(att);
-                weapons.insert(att);
+                fullInv.insert(att);
+                attackInv.insert(att);
             } catch (DBException e) {
                 log( Level.INFO, "No se ha podido obtener el objeto de ataque", null );
             }
