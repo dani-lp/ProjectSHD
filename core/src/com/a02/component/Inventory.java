@@ -55,6 +55,14 @@ public class Inventory {
         gameObject.setY(positions[objects.size() - 1].y);
     }
 
+    public Inventory sort(){
+        Inventory order= new Inventory();
+        for (GameObject object:this.getObjects()) {    //Objetos del inventario
+            order.insert(object);
+        }
+        return order;
+    }
+
     public boolean contains(GameObject obj) {
         return objects.contains(obj);
     }

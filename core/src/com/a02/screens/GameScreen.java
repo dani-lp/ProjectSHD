@@ -88,7 +88,7 @@ public class GameScreen implements Screen {
 
         crearObjetos();
 
-        drawing= inventory;
+        drawing= inventory.sort();
         ronda2();
 
         map = new Map("map1.png");
@@ -146,13 +146,13 @@ public class GameScreen implements Screen {
         //Cambios de inventario
 
         if (1576<Gdx.input.getX() && 1606>Gdx.input.getX() && 45<Gdx.input.getY() && 75>Gdx.input.getY() && Gdx.input.isTouched()){
-            drawing=weapons;
+            drawing=weapons.sort();
         } else if (1668<Gdx.input.getX() && 1698>Gdx.input.getX() && 45<Gdx.input.getY() && 75>Gdx.input.getY() && Gdx.input.isTouched()){
-            drawing=defensive;
+            drawing=defensive.sort();
         } else if (1751<Gdx.input.getX() && 1781>Gdx.input.getX() && 45<Gdx.input.getY() && 75>Gdx.input.getY() && Gdx.input.isTouched()){
-            drawing=tramps;
+            drawing=tramps.sort();
         } else if (1840<Gdx.input.getX() && 1870>Gdx.input.getX() && 45<Gdx.input.getY() && 75>Gdx.input.getY() && Gdx.input.isTouched()){
-            drawing=inventory;
+            drawing=inventory.sort();
         }
         //Dibujado
         draw();
