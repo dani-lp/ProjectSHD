@@ -154,13 +154,12 @@ public class GameScreen implements Screen {
         } else if (1840<Gdx.input.getX() && 1870>Gdx.input.getX() && 45<Gdx.input.getY() && 75>Gdx.input.getY() && Gdx.input.isTouched()){
             drawing=inventory;
         }
-        if (objects.get(0).getHp()<=0) {
-            game.setScreen(new MenuScreen(game));
-        }
-
         //Dibujado
         draw();
 
+        if (objects.get(0).getHp()<=0) {
+            game.setScreen(new MenuScreen(game));
+        }
     }
 
     @Override
@@ -195,9 +194,9 @@ public class GameScreen implements Screen {
             game.entityBatch.draw(enemy.hpBar.getForeground(), enemy.hpBar.getX(), enemy.hpBar.getY(), enemy.hpBar.getCurrentWidth(),2);
         }
 
-        game.entityBatch.draw(drawing.getTexture(), drawing.getX(), drawing.getY());
+        game.entityBatch.draw(inventory.getTexture(), inventory.getX(), inventory.getY());
 
-        for (GameObject object:drawing.getObjects()) {    //Objetos del inventario
+        for (GameObject object:inventory.getObjects()) {    //Objetos del inventario
             if (object != null) game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
         }
 
@@ -271,6 +270,7 @@ public class GameScreen implements Screen {
                     larry.setWidth(16);
                     larry.setHeight(16);
                     larry.hpBar.setMaxHP(larry.getHp());
+                    larry.animations();
                     enemies.add(larry);
                 }
                 sc.close();

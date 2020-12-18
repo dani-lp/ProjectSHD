@@ -1,11 +1,10 @@
 package com.a02.game.windows;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import com.sun.tools.javac.comp.Flow;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import java.awt.*;
+import java.awt.event.*;
 
 public class LoginWindow extends JFrame{
     public LoginWindow() {
@@ -21,11 +20,8 @@ public class LoginWindow extends JFrame{
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setVisible(true);
         setResizable(false);
-        //Colocación en el centro
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation((screenSize.width - this.getSize().width) / 2,
-                (screenSize.height - this.getSize().height)/2);
-
+        setIconImage(Toolkit.getDefaultToolkit().createImage("core/assets/boredlion.png"));
+        this.setLocationRelativeTo(null);
         setLayout(new GridLayout(5,1));
 
         //2.- Creación de elementos
@@ -50,7 +46,24 @@ public class LoginWindow extends JFrame{
         JButton loginButton = new JButton("Login");
         JButton registerButton = new JButton("Register");
 
-        //3.- Introducción de elementos
+        //3.- Interacción
+        loginButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        registerButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        new RegisterWindow();
+                    }
+                });
+            }
+        });
+
+        //4.- Introducción de componentes
         userLabelPanel.add(userLabel);
         userTFPanel.add(userJTF);
         pwdLabelPanel.add(pwdLabel);

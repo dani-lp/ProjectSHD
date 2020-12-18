@@ -26,7 +26,7 @@ public class Enemy extends Entity {
     private String deathpath;
     protected Animation<TextureRegion> walkAnimation;
     protected Animation<TextureRegion> attackAnimation;
-    protected Animation<TextureRegion> deathAnimation;
+    protected Animation<TextureRegion> deathAnimation; //TODO: implementar muerte
 
     public enum State {
         IDLE, WALKING, ATTACKING, DYING, DEAD
