@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class Enemy extends Entity {
     private String wakpath;
     private String attackpath;
     private String deathpath;
+    private Vector2 focus;
     protected Animation<TextureRegion> walkAnimation;
     protected Animation<TextureRegion> attackAnimation;
     protected Animation<TextureRegion> deathAnimation; //TODO: implementar muerte
@@ -66,6 +68,7 @@ public class Enemy extends Entity {
         this.trapEffect = TrapEffect.NEUTRAL;
         this.hpBar = new HealthBar(this, 0);
         this.goldValue = 50;
+        this.focus = new Vector2(0,0);
     }
 
     public void animations(int wcol, int wrow,int acol,int arow,int dcol,int drow){
@@ -154,6 +157,10 @@ public class Enemy extends Entity {
         this.startTime = startTime;
     }
 
+    public Vector2 getFocus() {
+        return focus;
+    }
+
     /**
      * Actualiza la posición, estado y efectos de un enemigo.
      * @param gs GameScreen utilizada
@@ -170,10 +177,10 @@ public class Enemy extends Entity {
 
             case WALKING: //Movimiento a beacon
                 if (this.trapEffect == TrapEffect.CONFUSED) {
-                    this.move(2,2); //TODO: posición random
+                    this.move(); //TODO: posición random
                 }
                 else {
-                    this.move(gs.objects.get(0).getX(), gs.objects.get(0).getY());
+                    this.move();
                 }
 
                 if (this.getHp() <= 0) {
@@ -229,15 +236,23 @@ public class Enemy extends Entity {
                 if (gs.secTimer > this.effectTimer + 300) this.state = State.WALKING;
                 break;
             case CONFUSED:
-                if (gs.secTimer > this.effectTimer + 280) this.trapEffect = TrapEffect.NEUTRAL;
+                if (gs.secTimer == this.effectTimer) {
+                    this.focus.x = (float)(Math.random() * 320); //Posición X máxima
+                    this.focus.y = (float)(Math.random() * 180); //Posición Y máxima
+                }
+                if (gs.secTimer > this.effectTimer + 280) {
+                    this.trapEffect = TrapEffect.NEUTRAL;
+                    this.focus.x = gs.objects.get(0).getX();
+                    this.focus.y = gs.objects.get(0).getY();
+                }
             case NEUTRAL:
                 break;
         }
         this.hpBar.update(this, this.getHp());
     }
 
-    protected void move(float x, float y) {
-        double angle = Math.toDegrees(-Math.atan((this.getY() - y) / (this.getX() - x)));
+    protected void move() {
+        double angle = Math.toDegrees(-Math.atan((this.getY() - this.focus.y) / (this.getX() - this.focus.x)));
 
         this.setX((float) (this.getX() + Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed));
         this.setY((float) (this.getY() + Math.cos(angle) * Gdx.graphics.getDeltaTime() * this.speed));

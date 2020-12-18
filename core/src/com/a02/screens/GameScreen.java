@@ -270,6 +270,8 @@ public class GameScreen implements Screen {
                     larry.setWidth(16);
                     larry.setHeight(16);
                     larry.hpBar.setMaxHP(larry.getHp());
+                    larry.getFocus().x = objects.get(0).getX();
+                    larry.getFocus().y = objects.get(0).getY();
                     enemies.add(larry);
                 }
                 sc.close();
