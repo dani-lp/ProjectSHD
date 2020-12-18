@@ -88,7 +88,7 @@ public class GameScreen implements Screen {
 
         crearObjetos();
 
-        drawing= inventory.sort();
+        drawing = inventory.sort();
         ronda2();
 
         map = new Map("map1.png");
@@ -300,6 +300,7 @@ public class GameScreen implements Screen {
                 if (def.getId()==0) {
                     def.setX(145);
                     def.setY(90);
+                    def.setHp(90000);
                 }
                 def.hpBar.setMaxHP(def.getHp());
                 def.textures();

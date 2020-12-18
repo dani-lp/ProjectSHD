@@ -43,13 +43,26 @@ public class LoginWindow extends JFrame{
         JLabel pwdLabel = new JLabel("Password:");
         JTextField userJTF = new JTextField();
         JPasswordField pwdJTF = new JPasswordField();
+        JButton cancelButton = new JButton("Cancel");
         JButton loginButton = new JButton("Login");
         JButton registerButton = new JButton("Register");
 
         //3.- Interacción
+        cancelButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
+                //checkUser()
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        new SettingsWindow();
+                    }
+                });
+                dispose();
             }
         });
 
@@ -68,6 +81,7 @@ public class LoginWindow extends JFrame{
         userTFPanel.add(userJTF);
         pwdLabelPanel.add(pwdLabel);
         pwdTFPanel.add(pwdJTF);
+        buttonsPanel.add(cancelButton);
         buttonsPanel.add(loginButton);
         buttonsPanel.add(registerButton);
 
@@ -77,6 +91,7 @@ public class LoginWindow extends JFrame{
         add(pwdTFPanel);
         add(buttonsPanel);
     }
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
