@@ -1,12 +1,16 @@
 package com.a02.entity;
 
 import com.a02.component.Map;
+import com.a02.component.Shoot;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector3;
 
 import java.util.List;
 import java.util.logging.Logger;
+
+import static com.a02.game.Utils.getRelativeMousePos;
 
 public class Attacker extends GameObject {
     private float attackDamage;
@@ -33,6 +37,8 @@ public class Attacker extends GameObject {
             case 0: //Electricidad
                 this.setTexture(new Texture(Gdx.files.internal("electricity.png")));
                 break;
+            case 2:
+                this.setTexture(new Texture(Gdx.files.internal("boredlion.png")));
         }
     }
 
@@ -75,6 +81,10 @@ public class Attacker extends GameObject {
     public void update(GameScreen gs) {
         switch (this.state) {
             case IDLE:
+                if (this.getId()==2){
+                    this.state = State.ATTACKING;
+                }
+
                 if (this.overlappedEnemy(gs) != null) {
                     this.state = State.ATTACKING;
                     logger.info("Enemigo atacando");
@@ -82,14 +92,23 @@ public class Attacker extends GameObject {
                 break;
 
             case ATTACKING:
-                if (this.overlappedEnemy(gs) != null) {
-                    Enemy tempEnemy = this.overlappedEnemy(gs);
-                    if (tempEnemy.getHp() > 0 && gs.secTimer % 60 == 0) {
-                        tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackDamage));
-                    } else if (tempEnemy.getHp() <= 0) {
-                        this.state = State.IDLE;
+                if (this.getId()!=2){
+                    if (this.overlappedEnemy(gs) != null) {
+                        Enemy tempEnemy = this.overlappedEnemy(gs);
+                        if (tempEnemy.getHp() > 0 && gs.secTimer % 60 == 0) {
+                            tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackDamage));
+                        } else if (tempEnemy.getHp() <= 0) {
+                            this.state = State.IDLE;
+                        }
                     }
+                } else{
+                    if (!this.isInInventory(gs) && gs.secTimer % 60 == 0){
+                        Shoot shoot= new Shoot(this.getX(),this.getY(),20,this.getAttackDamage(),"shoot.png");
+                        GameScreen.shoots.add(shoot);
+                    }
+
                 }
+
                 break;
         }
         this.hpBar.update(this, this.getHp());

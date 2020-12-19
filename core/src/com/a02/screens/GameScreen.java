@@ -1,5 +1,6 @@
 package com.a02.screens;
 
+import com.a02.component.Shoot;
 import com.a02.dbmanager.DBException;
 import com.a02.dbmanager.DBManager;
 import com.a02.entity.Attacker;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
@@ -40,6 +42,7 @@ public class GameScreen implements Screen {
 
     public List<GameObject> objects = new ArrayList<GameObject>(); //Objetos en el juego
     public List<Enemy> enemies = new ArrayList<Enemy>(); // Enemigos del juego
+    public static List<Shoot> shoots= new ArrayList<Shoot>();
 
     public Inventory drawing;
     public Inventory fullInv; //Inventario full
@@ -149,6 +152,13 @@ public class GameScreen implements Screen {
                 enemyIterator.remove();
             }
         }
+        ListIterator<Shoot> shootIterator = shoots.listIterator();
+
+        while(shootIterator.hasNext()){
+            Shoot tempSh = shootIterator.next();
+            tempSh.update(this);
+        }
+
         //Cambios de inventario
 
         inventorySwap();
@@ -191,6 +201,11 @@ public class GameScreen implements Screen {
             game.entityBatch.draw(enemy.hpBar.getBackground(), enemy.hpBar.getX(), enemy.hpBar.getY(), 14,2);
             game.entityBatch.draw(enemy.hpBar.getForeground(), enemy.hpBar.getX(), enemy.hpBar.getY(), enemy.hpBar.getCurrentWidth(),2);
         }
+        for(Shoot shoot: shoots){
+            game.entityBatch.draw(new Texture(shoot.getSprite()),shoot.getX(),shoot.getY());
+        }
+
+
 
         game.entityBatch.draw(drawing.getTexture(), drawing.getX(), drawing.getY());
 
@@ -361,7 +376,12 @@ public class GameScreen implements Screen {
                 log( Level.INFO, "No se ha podido obtener el objeto de ataque", null );
             }
         }
-
+        Attacker disp= new Attacker(0,0,16,18,2,"Shoot",20,true,100,"Shoot",20);
+        disp.hpBar.setMaxHP(disp.getHp());
+        disp.textures();
+        objects.add(disp);
+        fullInv.insert(disp);
+        attackInv.insert(disp);
 
     }
 
