@@ -52,7 +52,7 @@ public class SettingsWindow extends JFrame {
         String[] cbEntries = {"Rondas", "Infinito", "Pacifico"};
         JComboBox<String> modeCB = new JComboBox<>(cbEntries);
         JLabel diffLabel = new JLabel("Difficulty:");
-        JSlider diffSlider = new JSlider(JSlider.HORIZONTAL, 0, 10, 5);
+        JSlider diffSlider = new JSlider(JSlider.HORIZONTAL, 0, 10, 0);
         diffSlider.setPaintTrack(true);
         diffSlider.setPaintTicks(true);
         diffSlider.setPaintLabels(true);
