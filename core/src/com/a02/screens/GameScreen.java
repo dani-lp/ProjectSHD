@@ -90,7 +90,12 @@ public class GameScreen implements Screen {
         createObjects();
 
         drawing = fullInv.sortInventory();
-        ronda2();
+        if (MenuScreen.ronda==1){
+            ronda1();
+        } else if(MenuScreen.ronda==2){
+            ronda2();
+        }
+
 
         map = new Map("map1.png");
 
@@ -237,6 +242,8 @@ public class GameScreen implements Screen {
                     larry.setWidth(16);
                     larry.setHeight(16);
                     larry.hpBar.setMaxHP(larry.getHp());
+                    larry.getFocus().x = objects.get(0).getX();
+                    larry.getFocus().y = objects.get(0).getY();
                     larry.animations(3,1,2,2,2,2);
                     enemies.add(larry);
                 }

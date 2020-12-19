@@ -7,21 +7,22 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector3;
 
 import java.awt.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.a02.game.MainGame.mainGameScreen;
+import static com.a02.game.Utils.getRelativeMousePos;
 
 public class MenuScreen implements Screen {
 
+    public static int ronda;
     final MainGame game;
 
     private OrthographicCamera camera;
-
     private static Logger logger = Logger.getLogger(MenuScreen.class.getName());
-
     public MenuScreen(MainGame game) {
         this.game = game;
 
@@ -45,13 +46,21 @@ public class MenuScreen implements Screen {
 
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
-
         game.entityBatch.begin();
-        game.entityBatch.draw(new Texture(Gdx.files.internal("wallpaper.png")),0,0);
+        game.entityBatch.draw(new Texture(Gdx.files.internal("wallpaperTest.png")),0,0);
+        game.entityBatch.draw(new Texture(Gdx.files.internal("Boton1.png")),120,110);
+        game.entityBatch.draw(new Texture(Gdx.files.internal("Boton2.png")),120,50);
         game.entityBatch.end();
 
-        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
-            game.setScreen(new GameScreen(game));
+        Vector3 mousePos = getRelativeMousePos();
+        if (mousePos.x <=210 & mousePos.x >= 120 ) {
+            if (110 <= mousePos.y && 137 >= mousePos.y && Gdx.input.isTouched()){
+                ronda=1;
+                game.setScreen(new GameScreen(game));
+            } else if (51 <= mousePos.y && 77 >= mousePos.y && Gdx.input.isTouched()){
+                ronda=2;
+                game.setScreen(new GameScreen(game));
+            }
         }
     }
 
