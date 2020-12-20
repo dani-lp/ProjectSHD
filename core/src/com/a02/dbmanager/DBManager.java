@@ -44,6 +44,12 @@ public class DBManager {
         }
     }
 
+    /**
+     * Devuelve un objeto Enemy.
+     * @param id ID del objeto Enemy
+     * @return
+     * @throws DBException
+     */
     public Enemy getEnemy(int id) throws DBException {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM enemy WHERE ID_E=?")) {
             stmt.setInt(1, id);
@@ -69,6 +75,12 @@ public class DBManager {
         }
     }
 
+    /**
+     * Devuelve un objeto Trap.
+     * @param id ID del objeto Trap
+     * @return
+     * @throws DBException
+     */
     public Trap getTrap(int id) throws DBException {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM trap WHERE ID_T=?")) {
             stmt.setInt(1, id);
@@ -98,6 +110,12 @@ public class DBManager {
         }
     }
 
+    /**
+     * Devuelve un objeto Defender.
+     * @param id ID del objeto Defender
+     * @return
+     * @throws DBException
+     */
     public Defender getDefender(int id) throws DBException {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM defender WHERE ID_D=?")) {
             stmt.setInt(1, id);
@@ -123,6 +141,12 @@ public class DBManager {
         }
     }
 
+    /**
+     * Devuelve un objeto Attacker.
+     * @param id ID del objeto Attacker
+     * @return
+     * @throws DBException
+     */
     public Attacker getAttacker(int id) throws DBException {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM attacker WHERE ID_A=?")) {
             stmt.setInt(1, id);

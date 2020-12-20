@@ -12,6 +12,7 @@ import com.a02.component.Inventory;
 import com.a02.game.MainGame;
 import com.a02.component.Map;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -37,7 +38,7 @@ public class GameScreen implements Screen {
 
     private static Logger logger = Logger.getLogger(GameScreen.class.getName());
 
-    private static boolean buying;
+    private static boolean buying, pauseFlag;
     private static int gold;
 
     public List<GameObject> objects = new ArrayList<GameObject>(); //Objetos en el juego
@@ -78,6 +79,7 @@ public class GameScreen implements Screen {
 
         this.game = game;
         buying = false;
+        pauseFlag = false;
         gold = 6000;
 
         font = new BitmapFont(Gdx.files.internal("Fonts/test.fnt"));
@@ -117,6 +119,29 @@ public class GameScreen implements Screen {
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
 
+        //Actualiza lógica sólo si el juego no está en pausa, pero sí realiza el dibujado.
+        //TODO: menú de pausa
+        if (!pauseFlag) {
+            //Actualiza lógica
+            updateLogic();
+
+            //Cambios de inventario
+            inventorySwap();
+        }
+
+        //Dibujado
+        draw();
+
+        if (objects.get(0).getHp()<=0) {
+            game.setScreen(new MenuScreen(game));
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) pauseFlag = !pauseFlag;
+    }
+
+    /**
+     * Actualiza la lógica de las entidades.
+     */
+    private void updateLogic() {
         //Actualiza valores estáticos
         secTimer += 1;
         animationTimer += Gdx.graphics.getDeltaTime();
@@ -130,7 +155,6 @@ public class GameScreen implements Screen {
 
         //Actualiza "presencia" y estado de enemigos y objetos
         ListIterator<GameObject> objectIterator = objects.listIterator();
-
         while(objectIterator.hasNext()){
             GameObject tempObj = objectIterator.next();
             tempObj.update(this);
@@ -152,8 +176,8 @@ public class GameScreen implements Screen {
                 enemyIterator.remove();
             }
         }
-        ListIterator<Shoot> shootIterator = shoots.listIterator();
 
+        ListIterator<Shoot> shootIterator = shoots.listIterator();
         while(shootIterator.hasNext()){
             Shoot tempSh = shootIterator.next();
             tempSh.update(this);
@@ -161,27 +185,11 @@ public class GameScreen implements Screen {
                 shootIterator.remove();
             }
         }
-
-        //Cambios de inventario
-
-        inventorySwap();
-        //Dibujado
-        draw();
-
-        if (objects.get(0).getHp()<=0) {
-            game.setScreen(new MenuScreen(game));
-        }
     }
 
-    @Override
-    public void dispose() {
-        game.entityBatch.dispose();
-
-        for (GameObject object: objects) {
-            object.getTexture().dispose();
-        }
-    }
-
+    /**
+     * Dibuja las entidades
+     */
     private void draw() {
         game.entityBatch.begin();
         game.entityBatch.draw(map.getTexture(), 0, 0);
@@ -222,7 +230,7 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Cambia el inventario al actual
+     * Cambia el inventario visible al que está en uso
      */
     private void inventorySwap() {
         Vector3 mousePos = getRelativeMousePos();
@@ -260,8 +268,7 @@ public class GameScreen implements Screen {
                     larry.setWidth(16);
                     larry.setHeight(16);
                     larry.hpBar.setMaxHP(larry.getHp());
-                    larry.getFocus().x = objects.get(0).getX();
-                    larry.getFocus().y = objects.get(0).getY();
+                    larry.setFocus(objects.get(0).getX(), objects.get(0).getY());
                     larry.animations(3,1,2,2,2,2);
                     enemies.add(larry);
                 }
@@ -306,8 +313,7 @@ public class GameScreen implements Screen {
                     larry.setWidth(16);
                     larry.setHeight(16);
                     larry.hpBar.setMaxHP(larry.getHp());
-                    larry.getFocus().x = objects.get(0).getX();
-                    larry.getFocus().y = objects.get(0).getY();
+                    larry.setFocus(objects.get(0).getX(), objects.get(0).getY());
                     enemies.add(larry);
                 }
                 sc.close();
@@ -386,6 +392,15 @@ public class GameScreen implements Screen {
         fullInv.insert(disp);
         attackInv.insert(disp);
 
+    }
+
+    @Override
+    public void dispose() {
+        game.entityBatch.dispose();
+
+        for (GameObject object: objects) {
+            object.getTexture().dispose();
+        }
     }
 
     public OrthographicCamera getCamera() {

@@ -29,6 +29,9 @@ public class Inventory {
         return texture;
     }
 
+    /**
+     * Constructor de Inventory. Genera las posiciones de forma automática.
+     */
     public Inventory(){
         this.objects = new ArrayList<>();
         this.positions = new Vector2[15];
@@ -49,6 +52,10 @@ public class Inventory {
         return sprite;
     }
 
+    /**
+     * Introduce en el inventario un objeto, posicionándolo en unas coordenadas correspondientes al orden de entrada.
+     * @param gameObject Objeto a introducir
+     */
     public void insert(GameObject gameObject){
         this.objects.add(gameObject);
         gameObject.setX(positions[objects.size() - 1].x);

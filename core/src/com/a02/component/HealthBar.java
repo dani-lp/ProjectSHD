@@ -4,12 +4,14 @@ import com.a02.entity.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
+/**
+ * Barra de vida asociada a las entidades. 2 rectángulos, uno de ellos varía de tamaño.
+ */
 public class HealthBar {
     private float x;
     private float y;
     private int maxHP;
     private int currentHP;
-    private int width;
     private final Texture foreground = new Texture(Gdx.files.internal("hpBarFront.png"));
     private final Texture background = new Texture(Gdx.files.internal("hpBarBack.png"));
 
@@ -22,7 +24,6 @@ public class HealthBar {
     public void update(Entity entity, int hp) {
         this.x = entity.getX() + 1;
         this.y = entity.getY() + entity.getHeight() + 1;
-        this.width = this.getCurrentWidth();
         this.currentHP = hp;
     }
 

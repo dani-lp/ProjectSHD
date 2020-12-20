@@ -101,14 +101,13 @@ public class Attacker extends GameObject {
                             this.state = State.IDLE;
                         }
                     }
-                } else{
+                } else {
                     if (!this.isInInventory(gs) && gs.secTimer % 60 == 0){
-                        Shoot shoot= new Shoot(this.getX(),this.getY(),2,2,20,this.getAttackDamage(),"shoot.png",5);
+                        Shoot shoot = new Shoot(this.getX(),this.getY(),2,2,50,this.getAttackDamage(),"shoot.png",5);
                         GameScreen.shoots.add(shoot);
                     }
 
                 }
-
                 break;
         }
         this.hpBar.update(this, this.getHp());

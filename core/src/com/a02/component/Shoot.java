@@ -1,10 +1,8 @@
 package com.a02.component;
 
-import com.a02.entity.Attacker;
 import com.a02.entity.Enemy;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 import static com.a02.game.Utils.getRelativeMousePos;
@@ -24,17 +22,18 @@ public class Shoot {
     public Shoot(float x, float y, int height, int width,int speed, float attackdamage,String sprite,int hp) {
         this.x = x;
         this.y = y;
-        this.hp=hp;
+        this.hp = hp;
         this.speed = speed;
-        this.attackdamage=attackdamage;
-        this.sprite=sprite;
+        this.attackdamage = attackdamage;
+        this.sprite = sprite;
         this.state = State.IDLE;
-        this.height=height;
-        this.width=width;
+        this.height = height;
+        this.width = width;
     }
     private enum State {
         ATTACKING,IMPACT,IDLE
     }
+
     public float getX() {
         return x;
     }
@@ -100,14 +99,14 @@ public class Shoot {
                 '}';
     }
 
-    Vector3 focus=new Vector3();
+    Vector3 focus = new Vector3();
+
     public void update(GameScreen gs) {
         switch (this.state) {
             case IDLE:
                 if (Gdx.input.isTouched()){
-                    focus=getRelativeMousePos();
+                    focus = getRelativeMousePos();
                     this.state = State.ATTACKING;
-
                 }
                 break;
 
@@ -124,7 +123,7 @@ public class Shoot {
                     tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackdamage));
                     this.setHp(0);
                 }
-
+                break;
         }
     }
 

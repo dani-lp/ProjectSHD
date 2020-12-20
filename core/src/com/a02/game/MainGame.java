@@ -39,9 +39,12 @@ public class MainGame extends Game {
 			Gdx.app.exit();
 			System.exit(0);
 		}
+		/*
 		else if (Gdx.input.isKeyPressed(Input.Keys.P)) {
 			this.setScreen(new PauseScreen(this));
 		}
+
+		 */
 	}
 
 	public void dispose() {

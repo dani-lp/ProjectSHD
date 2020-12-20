@@ -6,9 +6,18 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
 public class Map {
-    private boolean[][] occGrid; //Cuadrícula de ocupación (true si la casilla está ocupada)
-    private GameObject[][] entityGrid; //Cuadrícula de ocupación por GameObject
-    private final Vector2[][] coordGrid; //Cuadrícula de coordenadas
+    /**
+     * Cuadrícula de ocupación (true si la casilla está ocupada)
+     */
+    private boolean[][] occGrid;
+    /**
+     * Cuadrícula de ocupación por GameObject
+     */
+    private GameObject[][] entityGrid;
+    /**
+     * Cuadrícula de coordenadas
+     */
+    private final Vector2[][] coordGrid;
     private String sprite;
     private Texture texture;
 

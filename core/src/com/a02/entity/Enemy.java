@@ -157,8 +157,9 @@ public class Enemy extends Entity {
         this.startTime = startTime;
     }
 
-    public Vector2 getFocus() {
-        return focus;
+    public void setFocus(float x, float y) {
+        this.focus.x = x;
+        this.focus.y = y;
     }
 
     /**
