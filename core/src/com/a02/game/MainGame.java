@@ -17,6 +17,14 @@ public class MainGame extends Game {
 	public SpriteBatch entityBatch;
 	public static GameScreen mainGameScreen;
 
+	public MainGame(String gamemode, double diff, boolean musicCheck, boolean soundCheck, boolean tutorialCheck) {
+		Settings.settings.setGamemode(gamemode);
+		Settings.settings.setDiff(diff);
+		Settings.settings.setMusicCheck(musicCheck);
+		Settings.settings.setSoundCheck(soundCheck);
+		Settings.settings.setTutorialCheck(tutorialCheck);
+	}
+
 	@Override
 	public void create () {
 		entityBatch = new SpriteBatch();

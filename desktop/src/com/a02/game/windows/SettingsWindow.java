@@ -1,11 +1,11 @@
 package com.a02.game.windows;
 
+import com.a02.game.desktop.DesktopLauncher;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class SettingsWindow extends JFrame {
     public SettingsWindow(){
@@ -26,14 +26,6 @@ public class SettingsWindow extends JFrame {
 
         setLayout(new GridLayout(4,1));
 
-        /*
-        Dificultad (JSlider)
-        Con/sin música (Checkbox)
-        Con/sin sonido
-        Modo inicial ? (JComboBox)
-        Tutorial? (Checkbox, para tutorial)
-         */
-
         //2.- Creación de elementos
         JPanel modePanel = new JPanel();
         JPanel diffPanel = new JPanel();
@@ -50,9 +42,9 @@ public class SettingsWindow extends JFrame {
 
         JLabel modeLabel = new JLabel("Gamemode:");
         String[] cbEntries = {"Rondas", "Infinito", "Pacifico"};
-        JComboBox<String> modeCB = new JComboBox<>(cbEntries);
+        final JComboBox<String> modeCB = new JComboBox<>(cbEntries);
         JLabel diffLabel = new JLabel("Difficulty:");
-        JSlider diffSlider = new JSlider(JSlider.HORIZONTAL, 0, 10, 0);
+        final JSlider diffSlider = new JSlider(JSlider.HORIZONTAL, 0, 10, 0);
         diffSlider.setPaintTrack(true);
         diffSlider.setPaintTicks(true);
         diffSlider.setPaintLabels(true);
@@ -60,10 +52,10 @@ public class SettingsWindow extends JFrame {
         diffSlider.setMinorTickSpacing(1);
         JLabel musicLabel = new JLabel("Music:");
         JLabel soundLabel = new JLabel("     Sound:");
-        JCheckBox musicCheck = new JCheckBox();
-        JCheckBox soundCheck = new JCheckBox();
+        final JCheckBox musicCheck = new JCheckBox();
+        final JCheckBox soundCheck = new JCheckBox();
         JLabel tutorialLabel = new JLabel("     Tutorial:");
-        JCheckBox tutorialCB = new JCheckBox();
+        final JCheckBox tutorialCheck = new JCheckBox();
         JButton cancelButton = new JButton("Cancel");
         JButton confirmButton = new JButton("Confirm");
 
@@ -76,7 +68,32 @@ public class SettingsWindow extends JFrame {
 
         confirmButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                DesktopLauncher.gamemode = String.valueOf(modeCB.getSelectedItem());;
+                DesktopLauncher.diff = round(((double) diffSlider.getValue() + 5) * 0.1,1);
+                DesktopLauncher.musicCheck = musicCheck.isSelected();
+                DesktopLauncher.soundCheck = soundCheck.isSelected();
+                DesktopLauncher.tutorialCheck = tutorialCheck.isSelected();
 
+                DesktopLauncher.begin = true;
+                dispose();
+            }
+        });
+
+        musicLabel.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                musicCheck.setSelected(!musicCheck.isSelected());
+            }
+        });
+
+        soundLabel.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                soundCheck.setSelected(!soundCheck.isSelected());
+            }
+        });
+
+        tutorialLabel.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                tutorialCheck.setSelected(!tutorialCheck.isSelected());
             }
         });
 
@@ -88,7 +105,7 @@ public class SettingsWindow extends JFrame {
         checkPanel.add(soundLabel);
         checkPanel.add(soundCheck);
         checkPanel.add(tutorialLabel);
-        checkPanel.add(tutorialCB);
+        checkPanel.add(tutorialCheck);
         modePanel.add(modeLabel);
         modePanel.add(modeCB);
         buttonsPanel.add(cancelButton);
@@ -98,5 +115,16 @@ public class SettingsWindow extends JFrame {
         add(diffPanel);
         add(checkPanel);
         add(buttonsPanel);
+    }
+
+    /**
+     * Redondea con n decimales.
+     * @param value Valor a redondear
+     * @param precision Número de decimales
+     * @return
+     */
+    private static double round(double value, int precision) {
+        int scale = (int) Math.pow(10, precision);
+        return (double) Math.round(value * scale) / scale;
     }
 }

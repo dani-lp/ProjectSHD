@@ -33,19 +33,20 @@ public class LoginWindow extends JFrame{
 
         userLabelPanel.setLayout(new FlowLayout());
         userTFPanel.setLayout(new BorderLayout());
-        userTFPanel.setBorder(BorderFactory.createEmptyBorder(1,20,1,20));
+        userTFPanel.setBorder(BorderFactory.createEmptyBorder(1,20,5,20));
         pwdLabelPanel.setLayout(new FlowLayout());
         pwdTFPanel.setLayout(new BorderLayout());
-        pwdTFPanel.setBorder(BorderFactory.createEmptyBorder(1,20,1,20));
+        pwdTFPanel.setBorder(BorderFactory.createEmptyBorder(0,20,1,20));
         buttonsPanel.setLayout(new FlowLayout());
 
         JLabel userLabel = new JLabel("User:");
         JLabel pwdLabel = new JLabel("Password:");
-        JTextField userJTF = new JTextField();
-        JPasswordField pwdJTF = new JPasswordField();
+        final JTextField userJTF = new JTextField();
+        final JPasswordField pwdJTF = new JPasswordField();
         JButton cancelButton = new JButton("Cancel");
         JButton loginButton = new JButton("Login");
         JButton registerButton = new JButton("Register");
+
 
         //3.- Interacción
         cancelButton.addActionListener(new ActionListener() {
@@ -56,7 +57,11 @@ public class LoginWindow extends JFrame{
 
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //checkUser()
+                if (userJTF.getText().equals("")) userJTF.putClientProperty("JComponent.outline", "error");
+                else userJTF.putClientProperty("JComponent.outline", "");
+                if (pwdJTF.getPassword().length == 0) pwdJTF.putClientProperty("JComponent.outline", "error");
+                else pwdJTF.putClientProperty("JComponent.outline", "");
+
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         new SettingsWindow();
