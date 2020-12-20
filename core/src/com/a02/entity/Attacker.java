@@ -103,7 +103,7 @@ public class Attacker extends GameObject {
                     }
                 } else{
                     if (!this.isInInventory(gs) && gs.secTimer % 60 == 0){
-                        Shoot shoot= new Shoot(this.getX(),this.getY(),20,this.getAttackDamage(),"shoot.png");
+                        Shoot shoot= new Shoot(this.getX(),this.getY(),2,2,20,this.getAttackDamage(),"shoot.png",5);
                         GameScreen.shoots.add(shoot);
                     }
 

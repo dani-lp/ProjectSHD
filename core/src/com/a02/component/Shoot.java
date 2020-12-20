@@ -15,16 +15,22 @@ public class Shoot {
     private float y;
     private float speed;
     private float attackdamage;
+    private int height;
+    private int width;
     private String sprite;
+    private int hp;
     State state;
 
-    public Shoot(float x, float y, int speed, float attackdamage,String sprite) {
+    public Shoot(float x, float y, int height, int width,int speed, float attackdamage,String sprite,int hp) {
         this.x = x;
         this.y = y;
+        this.hp=hp;
         this.speed = speed;
         this.attackdamage=attackdamage;
         this.sprite=sprite;
         this.state = State.IDLE;
+        this.height=height;
+        this.width=width;
     }
     private enum State {
         ATTACKING,IMPACT,IDLE
@@ -61,6 +67,30 @@ public class Shoot {
 
     public void setSprite(String sprite) { this.sprite = sprite; }
 
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
     @Override
     public String toString() {
         return "Shoot{" +
@@ -83,7 +113,18 @@ public class Shoot {
 
             case ATTACKING:
                 this.move(focus.x, focus.y);
+                if (this.overlappedEnemy(gs) != null) {
+                    this.state = State.IMPACT;
+                }
                 break;
+
+            case IMPACT:
+                if (this.overlappedEnemy(gs) != null) {
+                    Enemy tempEnemy = this.overlappedEnemy(gs);
+                    tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackdamage));
+                    this.setHp(0);
+                }
+
         }
     }
 
@@ -91,5 +132,15 @@ public class Shoot {
             double angle = Math.toDegrees(-Math.atan((this.getY() - targy) / (this.getX() - targx)));
             this.setX((float) (this.getX() + Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed));
             this.setY((float) (this.getY() + Math.cos(angle) * Gdx.graphics.getDeltaTime() * this.speed));
+    }
+
+    protected Enemy overlappedEnemy(GameScreen gs) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
+        for (Enemy enemy : gs.enemies) {
+            if (this.getX() < enemy.getX() + enemy.getWidth() && this.getX() + this.getWidth() > enemy.getX() &&
+                    this.getY() < enemy.getY() + enemy.getHeight() && this.getY() + this.getHeight() > enemy.getY()) {
+                return enemy;
+            }
+        }
+        return null;
     }
 }

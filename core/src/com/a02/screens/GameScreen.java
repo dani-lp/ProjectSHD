@@ -157,6 +157,9 @@ public class GameScreen implements Screen {
         while(shootIterator.hasNext()){
             Shoot tempSh = shootIterator.next();
             tempSh.update(this);
+            if(tempSh.getHp() <= 0) {
+                shootIterator.remove();
+            }
         }
 
         //Cambios de inventario
@@ -376,7 +379,7 @@ public class GameScreen implements Screen {
                 log( Level.INFO, "No se ha podido obtener el objeto de ataque", null );
             }
         }
-        Attacker disp= new Attacker(0,0,16,18,2,"Shoot",20,true,100,"Shoot",20);
+        Attacker disp= new Attacker(0,0,16,18,2,"Shoot",20,true,100,"Shoot",75);
         disp.hpBar.setMaxHP(disp.getHp());
         disp.textures();
         objects.add(disp);
