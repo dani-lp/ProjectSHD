@@ -13,8 +13,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Trap extends GameObject {
+    private static Logger logger = Logger.getLogger(GameObject.class.getName());
     private int attackDamage;
     private String effect;
     public enum Effect {
@@ -112,25 +114,30 @@ public class Trap extends GameObject {
                         tempEnemy.trapEffect = Enemy.TrapEffect.BURNING;
                         tempEnemy.setEffectTimer(gs.secTimer);
                         this.state = State.DYING;
+                        logger.info("Quemado por trampa");
                         break;
                     case FREEZE :
                         tempEnemy.trapEffect = Enemy.TrapEffect.FREEZE;
                         tempEnemy.setEffectTimer(gs.secTimer);
                         this.state = State.DYING;
+                        logger.info("Congelado por trampa");
                         break;
                     case TELEPORT :
                         this.focusedEnemy.setX((float) Math.random() * 320);
                         this.focusedEnemy.setY((float) Math.random() * 180);
                         this.state = State.DYING;
+                        logger.info("Teleportado por trampa");
                         break;
                     case DAMAGE :
                         this.focusedEnemy.setHp(focusedEnemy.getHp() - this.attackDamage) ;
                         this.state = State.DYING;
+                        logger.info("Dañado por trampa");
                         break;
                     case CONFUSE :
                         tempEnemy.trapEffect = Enemy.TrapEffect.CONFUSED;
                         tempEnemy.setEffectTimer(gs.secTimer);
                         this.state = State.DYING;
+                        logger.info("Confundido por trampa");
                         break;
                 }
                 break;
