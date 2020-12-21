@@ -1,9 +1,13 @@
 package com.a02.component;
 
+import com.a02.entity.Attacker;
 import com.a02.entity.Enemy;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import sun.jvm.hotspot.gc.shared.Space;
 
 import static com.a02.game.Utils.getRelativeMousePos;
 
@@ -33,7 +37,6 @@ public class Shoot {
     private enum State {
         ATTACKING,IMPACT,IDLE
     }
-
     public float getX() {
         return x;
     }
@@ -104,9 +107,10 @@ public class Shoot {
     public void update(GameScreen gs) {
         switch (this.state) {
             case IDLE:
-                if (Gdx.input.isTouched()){
+                if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
                     focus = getRelativeMousePos();
                     this.state = State.ATTACKING;
+
                 }
                 break;
 
