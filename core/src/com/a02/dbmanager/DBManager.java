@@ -63,7 +63,7 @@ public class DBManager {
                 enemy.setAttackDamage(rs.getInt("ATTACKDAMAGE_E"));
                 enemy.setSpeed(rs.getFloat("SPEED_E"));
                 enemy.setGoldValue(rs.getInt("GOLD_VALUE_E"));
-                enemy.setWakpath(rs.getString("WALKPATH"));
+                enemy.setWalkpath(rs.getString("WALKPATH"));
                 enemy.setAttackpath(rs.getString("ATTACKPATH"));
                 enemy.setDeathpath(rs.getString("DEATHPATH"));
                 return enemy;

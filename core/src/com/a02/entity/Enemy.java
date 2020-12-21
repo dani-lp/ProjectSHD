@@ -22,7 +22,7 @@ public class Enemy extends Entity {
     private int goldValue;
     private int startTime;  //Tiempo de inicio de movimiento
     private int effectTimer;    //Timer de efectos de las trampas
-    private String wakpath;
+    private String walkpath;
     private String attackpath;
     private String deathpath;
     private Vector2 focus;
@@ -50,7 +50,7 @@ public class Enemy extends Entity {
         this.trapEffect = TrapEffect.NEUTRAL;
 
         //*
-        this.walkAnimation = createAnimation(wakpath, 3, 1, 0.2f);
+        this.walkAnimation = createAnimation(walkpath, 3, 1, 0.2f);
         this.attackAnimation = createAnimation(attackpath, 2, 2, 0.2f);
         this.deathAnimation = createAnimation(deathpath, 2, 2, 0.25f);
         this.startTime = startTime;
@@ -72,7 +72,7 @@ public class Enemy extends Entity {
     }
 
     public void animations(int wcol, int wrow,int acol,int arow,int dcol,int drow){
-        this.walkAnimation = createAnimation(wakpath, wcol, wrow, 0.2f);
+        this.walkAnimation = createAnimation(walkpath, wcol, wrow, 0.2f);
         this.attackAnimation = createAnimation(attackpath, acol, arow, 0.2f);
         this.deathAnimation = createAnimation(deathpath, dcol, drow, 0.25f);
     }
@@ -125,12 +125,12 @@ public class Enemy extends Entity {
         this.goldValue = goldValue;
     }
 
-    public String getWakpath() {
-        return wakpath;
+    public String getWalkpath() {
+        return walkpath;
     }
 
-    public void setWakpath(String wakpath) {
-        this.wakpath = wakpath;
+    public void setWalkpath(String walkpath) {
+        this.walkpath = walkpath;
     }
 
     public String getAttackpath() {
