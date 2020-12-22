@@ -2,10 +2,9 @@ package com.a02.game;
 
 import java.io.Serializable;
 
-public class User  implements Serializable {
+public class User implements Serializable {
 
-
-
+    private static final long serialVersionUID = 4050798975698164181L;
     private String username;
     private String password;
     private String name;
@@ -18,6 +17,21 @@ public class User  implements Serializable {
         this.name = name;
         this.age = age;
         this.mail = mail;
+    }
+
+    public User() {
+
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", mail='" + mail + '\'' +
+                '}';
     }
 
     public String getUsername() {

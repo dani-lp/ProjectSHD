@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 
 public class RegisterWindow extends JFrame {
     public RegisterWindow() {
@@ -82,7 +84,48 @@ public class RegisterWindow extends JFrame {
 
         acceptButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if (!userJTF.getText().equals("") && pwdJTF.getPassword().length != 0) {
+                    //read
+                    HashMap<String, User> tempMap = new HashMap<>();
+                    User tempUser;
+                    try {
+                        if (readSer("users.ser") != null) tempMap = readSer("users.ser");
+                    } catch (IOException | ClassNotFoundException ioException) {
+                        ioException.printStackTrace();
+                    }
 
+                    //rewrite
+                    tempUser = new User();
+                    tempUser.setAge((Integer) ageSpinner.getValue());
+                    tempUser.setMail(mailJTF.getText());
+                    tempUser.setUsername(userJTF.getText());
+                    tempUser.setPassword(String.valueOf(pwdJTF.getPassword()));
+                    tempUser.setName(nameJTF.getText());
+
+                    try {
+                        tempMap.put(tempUser.getUsername(), tempUser);
+                    } catch (Exception nullPointerException) {
+                        nullPointerException.printStackTrace();
+                    }
+
+                    //write
+                    try {
+                        writeSer("users.ser", tempMap);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+                else {
+                    //TODO poner en rojo
+                }
+
+                HashMap<String, User> m = new HashMap<>();
+                try {
+                    m = readSer("users.ser");
+                } catch (IOException | ClassNotFoundException ioException) {
+                    ioException.printStackTrace();
+                }
+                if (m != null) printMap(m);
             }
         });
 
@@ -124,5 +167,14 @@ public class RegisterWindow extends JFrame {
         ObjectOutputStream oos = new ObjectOutputStream(fos);
 
         oos.writeObject(map);
+    }
+
+    public static void printMap(Map mp) {
+        Iterator it = mp.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            System.out.println(pair.getKey() + " = " + pair.getValue());
+            it.remove();
+        }
     }
 }
