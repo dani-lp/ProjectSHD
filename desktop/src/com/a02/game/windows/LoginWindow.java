@@ -1,10 +1,16 @@
 package com.a02.game.windows;
 
+import com.a02.dbmanager.DBManager;
 import com.formdev.flatlaf.FlatLightLaf;
+import org.lwjgl.Sys;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class LoginWindow extends JFrame{
     public LoginWindow() {
@@ -61,13 +67,20 @@ public class LoginWindow extends JFrame{
                 else userJTF.putClientProperty("JComponent.outline", "");
                 if (pwdJTF.getPassword().length == 0) pwdJTF.putClientProperty("JComponent.outline", "error");
                 else pwdJTF.putClientProperty("JComponent.outline", "");
-
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        new SettingsWindow();
+                try {
+                    if (checkSystem(userJTF.getText(), String.valueOf(pwdJTF.getPassword()))){
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                new SettingsWindow();
+                            }
+                        });
+                        dispose();
                     }
-                });
-                dispose();
+                    else pwdJTF.putClientProperty("JComponent.outline", "");
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                }
+
             }
         });
 
@@ -95,6 +108,17 @@ public class LoginWindow extends JFrame{
         add(pwdLabelPanel);
         add(pwdTFPanel);
         add(buttonsPanel);
+    }
+
+    public boolean checkSystem(String usern, String pass) throws FileNotFoundException {
+        boolean result=false;
+        Scanner sc= new Scanner(new FileInputStream("core/assets/users.csv"));
+        while (sc.hasNext()) {
+            String line = sc.next();
+            String[] campos = line.split(";");
+            if (usern.equals(campos[0]) && pass.equals(campos[1])) result=true;
+        }
+        return result;
     }
 
     public static void main(String[] args) {
