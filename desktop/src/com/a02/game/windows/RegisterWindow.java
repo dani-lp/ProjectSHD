@@ -1,11 +1,15 @@
 package com.a02.game.windows;
 
+import com.a02.game.User;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class RegisterWindow extends JFrame {
     public RegisterWindow() {
@@ -60,12 +64,12 @@ public class RegisterWindow extends JFrame {
         JLabel nameLabel = new JLabel("Name:");
         JLabel ageLabel = new JLabel("Age:");
         JLabel mailLabel = new JLabel("Email:");
-        JTextField userJTF = new JTextField();
-        JPasswordField pwdJTF = new JPasswordField();
-        JTextField nameJTF = new JTextField();
+        final JTextField userJTF = new JTextField();
+        final JPasswordField pwdJTF = new JPasswordField();
+        final JTextField nameJTF = new JTextField();
         SpinnerModel sm = new SpinnerNumberModel(0, 0, 130, 1);
-        JSpinner ageSpinner = new JSpinner(sm);
-        JTextField mailJTF = new JTextField();
+        final JSpinner ageSpinner = new JSpinner(sm);
+        final JTextField mailJTF = new JTextField();
         JButton cancelButton = new JButton("Cancel"); //TODO: confirmar con un JOptionPane
         JButton acceptButton = new JButton("Accept");
 
@@ -107,5 +111,18 @@ public class RegisterWindow extends JFrame {
         add(mailLabelPanel);
         add(mailJTFPanel);
         add(buttonsPanel);
+    }
+    private HashMap<String, User> readSer(String path) throws IOException, ClassNotFoundException {
+        FileInputStream fs = new FileInputStream(path);
+        ObjectInputStream os = new ObjectInputStream(fs);
+
+        return (HashMap<String, User>) os.readObject();
+    }
+
+    private void writeSer(String path, HashMap<String,User> map) throws IOException {
+        FileOutputStream fos = new FileOutputStream(path);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+        oos.writeObject(map);
     }
 }

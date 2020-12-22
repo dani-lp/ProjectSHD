@@ -1,15 +1,16 @@
 package com.a02.game.windows;
 
 import com.a02.dbmanager.DBManager;
+import com.a02.game.User;
 import com.formdev.flatlaf.FlatLightLaf;
 import org.lwjgl.Sys;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class LoginWindow extends JFrame{
@@ -126,11 +127,18 @@ public class LoginWindow extends JFrame{
 
     public boolean checkSystem(String usern, String pass) throws FileNotFoundException {
         boolean result=false;
-        Scanner sc= new Scanner(new FileInputStream("core/assets/users.csv"));
-        while (sc.hasNext()) {
-            String line = sc.next();
-            String[] campos = line.split(";");
-            if (usern.equals(campos[0]) && pass.equals(campos[1])) result=true;
+        try (ObjectInputStream is = new ObjectInputStream(new FileInputStream("core/assets/users.csv"))) {
+            HashMap<String,User> users = (HashMap) is.readObject();
+
+            for (String key: users.keySet()) {
+                if (users.get(key).getUsername().equals(usern) && users.get(key).getPassword().equals(pass)){
+                    result=true;
+                }
+            }
+            is.close();
+
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error. No se pudo deserializar el objeto. " + e.getMessage());
         }
         return result;
     }
