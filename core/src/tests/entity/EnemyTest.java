@@ -7,17 +7,17 @@ import static org.junit.Assert.*;
 
 public class EnemyTest {
 
-    Enemy enemyTest = new Enemy(1, 2, 20, 30, 3, 4, 5, 6, 7, 8, "Wpath", "Apath", "Dpath");
+    Enemy enemyTest = new Enemy(2, 2, 20, 30, 1, 23, 5, 6, 7, 8, "Wpath", "Apath", "Dpath");
 
 
     @Test
     public void getId() {
-        assertEquals(3, enemyTest.getId());
+        assertEquals(1, enemyTest.getId());
     }
 
     @Test
     public void getHp() {
-        assertEquals(4, enemyTest.getHp());
+        assertEquals(23, enemyTest.getHp());
     }
 
     @Test

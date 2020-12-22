@@ -2,12 +2,15 @@ package com.a02.component;
 
 import com.a02.entity.Attacker;
 import com.a02.entity.Enemy;
+import com.a02.entity.GameObject;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import sun.jvm.hotspot.gc.shared.Space;
+
+import java.util.logging.Logger;
 
 import static com.a02.game.Utils.getRelativeMousePos;
 
@@ -22,6 +25,7 @@ public class Shoot {
     private String sprite;
     private int hp;
     State state;
+    private static Logger logger = Logger.getLogger(Shoot.class.getName());
 
     public Shoot(float x, float y, int height, int width,int speed, float attackdamage,String sprite,int hp) {
         this.x = x;
@@ -126,6 +130,7 @@ public class Shoot {
                     Enemy tempEnemy = this.overlappedEnemy(gs);
                     tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackdamage));
                     this.setHp(0);
+                    logger.info("Enemigo impactado por disparo");
                 }
                 break;
         }
