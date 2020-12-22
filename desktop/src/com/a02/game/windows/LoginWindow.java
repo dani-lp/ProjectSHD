@@ -23,7 +23,7 @@ public class LoginWindow extends JFrame{
 
         setTitle("Login");
         setSize(340,210);
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
         setResizable(false);
         setIconImage(Toolkit.getDefaultToolkit().createImage("core/assets/boredlion.png"));
@@ -50,7 +50,7 @@ public class LoginWindow extends JFrame{
         final JTextField userJTF = new JTextField();
         final JPasswordField pwdJTF = new JPasswordField();
         JButton cancelButton = new JButton("Cancel");
-        JButton loginButton = new JButton("Login");
+        final JButton loginButton = new JButton("Login");
         JButton registerButton = new JButton("Register");
 
 
@@ -58,6 +58,7 @@ public class LoginWindow extends JFrame{
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
+                System.exit(0);
             }
         });
 
@@ -93,6 +94,19 @@ public class LoginWindow extends JFrame{
                 });
             }
         });
+
+        KeyAdapter enterKA = new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int key = e.getKeyCode();
+                if (key == KeyEvent.VK_ENTER) {
+                    loginButton.doClick();
+                }
+            }
+        };
+
+        userJTF.addKeyListener(enterKA);
+        pwdJTF.addKeyListener(enterKA);
 
         //4.- Introducción de componentes
         userLabelPanel.add(userLabel);
