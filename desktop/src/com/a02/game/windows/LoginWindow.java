@@ -127,18 +127,17 @@ public class LoginWindow extends JFrame{
 
     public boolean checkSystem(String usern, String pass) throws FileNotFoundException {
         boolean result=false;
-        try (ObjectInputStream is = new ObjectInputStream(new FileInputStream("core/assets/users.csv"))) {
-            HashMap<String,User> users = (HashMap) is.readObject();
+        HashMap<String, User> users= new HashMap<>();
+        try {
+            users = RegisterWindow.readSer("users.ser");
+        } catch (IOException | ClassNotFoundException ioException) {
+            ioException.printStackTrace();
+        }
 
-            for (String key: users.keySet()) {
-                if (users.get(key).getUsername().equals(usern) && users.get(key).getPassword().equals(pass)){
-                    result=true;
-                }
+        for (String key: users.keySet()) {
+            if (users.get(key).getUsername().equals(usern) && users.get(key).getPassword().equals(pass)){
+                result=true;
             }
-            is.close();
-
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Error. No se pudo deserializar el objeto. " + e.getMessage());
         }
         return result;
     }

@@ -114,18 +114,13 @@ public class RegisterWindow extends JFrame {
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
+
+                    dispose();
+
                 }
                 else {
                     //TODO poner en rojo
                 }
-
-                HashMap<String, User> m = new HashMap<>();
-                try {
-                    m = readSer("users.ser");
-                } catch (IOException | ClassNotFoundException ioException) {
-                    ioException.printStackTrace();
-                }
-                if (m != null) printMap(m);
             }
         });
 
@@ -155,14 +150,14 @@ public class RegisterWindow extends JFrame {
         add(mailJTFPanel);
         add(buttonsPanel);
     }
-    private HashMap<String, User> readSer(String path) throws IOException, ClassNotFoundException {
+    static HashMap<String, User> readSer(String path) throws IOException, ClassNotFoundException {
         FileInputStream fs = new FileInputStream(path);
         ObjectInputStream os = new ObjectInputStream(fs);
 
         return (HashMap<String, User>) os.readObject();
     }
 
-    private void writeSer(String path, HashMap<String,User> map) throws IOException {
+    private static void writeSer(String path, HashMap<String,User> map) throws IOException {
         FileOutputStream fos = new FileOutputStream(path);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
 
