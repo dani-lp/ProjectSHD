@@ -69,7 +69,7 @@ public class SettingsWindow extends JFrame {
         confirmButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 DesktopLauncher.gamemode = String.valueOf(modeCB.getSelectedItem());;
-                DesktopLauncher.diff = round(((double) diffSlider.getValue() + 5) * 0.1,1);
+                DesktopLauncher.diff = getDmgMult(diffSlider.getValue());
                 DesktopLauncher.musicCheck = musicCheck.isSelected();
                 DesktopLauncher.soundCheck = soundCheck.isSelected();
                 DesktopLauncher.tutorialCheck = tutorialCheck.isSelected();
@@ -115,6 +115,15 @@ public class SettingsWindow extends JFrame {
         add(diffPanel);
         add(checkPanel);
         add(buttonsPanel);
+    }
+
+    /**
+     * Calcula el valor multiplicador de daño relativo, con valores entre 0.5 y 1.5
+     * @param ogValue Valor original (0-10)
+     * @return Valor transformado
+     */
+    public static double getDmgMult(double ogValue) {
+        return round(((double) ogValue + 5) * 0.1,1);
     }
 
     /**

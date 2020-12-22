@@ -18,11 +18,11 @@ public class MainGame extends Game {
 	public static GameScreen mainGameScreen;
 
 	public MainGame(String gamemode, double diff, boolean musicCheck, boolean soundCheck, boolean tutorialCheck) {
-		Settings.settings.setGamemode(gamemode);
-		Settings.settings.setDiff(diff);
-		Settings.settings.setMusicCheck(musicCheck);
-		Settings.settings.setSoundCheck(soundCheck);
-		Settings.settings.setTutorialCheck(tutorialCheck);
+		Settings.s.setGamemode(gamemode);
+		Settings.s.setDiff(diff);
+		Settings.s.setMusicCheck(musicCheck);
+		Settings.s.setSoundCheck(soundCheck);
+		Settings.s.setTutorialCheck(tutorialCheck);
 	}
 
 	@Override

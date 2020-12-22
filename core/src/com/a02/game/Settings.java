@@ -5,7 +5,7 @@ public class Settings {
     private double diff;
     private boolean musicCheck, soundCheck, tutorialCheck;
 
-    public static final Settings settings = new Settings();
+    public static final Settings s = new Settings();
 
     private Settings(){}
 

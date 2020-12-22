@@ -177,12 +177,7 @@ public class Enemy extends Entity {
                 break;
 
             case WALKING: //Movimiento a beacon
-                if (this.trapEffect == TrapEffect.CONFUSED) {
-                    this.move(); //TODO: posición random
-                }
-                else {
-                    this.move();
-                }
+                this.move();
 
                 if (this.getHp() <= 0) {
                     this.state = State.DYING;
