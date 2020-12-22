@@ -18,7 +18,7 @@ public class SettingsWindow extends JFrame {
 
         setTitle("Settings");
         setSize(310,225);
-        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
         setResizable(true);
         setIconImage(Toolkit.getDefaultToolkit().createImage("core/assets/boredlion.png"));
@@ -63,6 +63,7 @@ public class SettingsWindow extends JFrame {
         cancelButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
+                System.exit(0);
             }
         });
 
