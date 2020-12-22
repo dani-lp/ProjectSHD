@@ -84,45 +84,51 @@ public class RegisterWindow extends JFrame {
 
         acceptButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (!userJTF.getText().equals("") && pwdJTF.getPassword().length != 0) {
-                    //read
-                    HashMap<String, User> tempMap = new HashMap<>();
-                    User tempUser;
-                    try {
-                        if (readSer("users.ser") != null) tempMap = readSer("users.ser");
-                    } catch (IOException | ClassNotFoundException ioException) {
-                        ioException.printStackTrace();
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!userJTF.getText().equals("") && pwdJTF.getPassword().length != 0) {
+                            //read
+                            HashMap<String, User> tempMap = new HashMap<>();
+                            User tempUser;
+                            try {
+                                if (readSer("users.ser") != null) tempMap = readSer("users.ser");
+                            } catch (IOException | ClassNotFoundException ioException) {
+                                ioException.printStackTrace();
+                            }
+
+                            //rewrite
+                            tempUser = new User();
+                            tempUser.setAge((Integer) ageSpinner.getValue());
+                            tempUser.setMail(mailJTF.getText());
+                            tempUser.setUsername(userJTF.getText());
+                            tempUser.setPassword(String.valueOf(pwdJTF.getPassword()));
+                            tempUser.setName(nameJTF.getText());
+
+                            try {
+                                tempMap.put(tempUser.getUsername(), tempUser);
+                            } catch (Exception nullPointerException) {
+                                nullPointerException.printStackTrace();
+                            }
+
+                            //write
+                            try {
+                                writeSer("users.ser", tempMap);
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
+
+                            dispose();
+
+                        } else {
+                            //TODO poner en rojo
+                        }
                     }
-
-                    //rewrite
-                    tempUser = new User();
-                    tempUser.setAge((Integer) ageSpinner.getValue());
-                    tempUser.setMail(mailJTF.getText());
-                    tempUser.setUsername(userJTF.getText());
-                    tempUser.setPassword(String.valueOf(pwdJTF.getPassword()));
-                    tempUser.setName(nameJTF.getText());
-
-                    try {
-                        tempMap.put(tempUser.getUsername(), tempUser);
-                    } catch (Exception nullPointerException) {
-                        nullPointerException.printStackTrace();
-                    }
-
-                    //write
-                    try {
-                        writeSer("users.ser", tempMap);
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
-
-                    dispose();
-
-                }
-                else {
-                    //TODO poner en rojo
-                }
+                });
+                t.start();
             }
         });
+
 
         //4.- Introducción de componentes
         userLabelPanel.add(userLabel);
