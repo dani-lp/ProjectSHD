@@ -126,8 +126,8 @@ public class LoginWindow extends JFrame{
     }
 
     public boolean checkSystem(String usern, String pass) throws FileNotFoundException {
-        boolean result=false;
-        HashMap<String, User> users= new HashMap<>();
+        boolean result = false;
+        HashMap<String, User> users = new HashMap<>();
         try {
             users = RegisterWindow.readSer("users.ser");
         } catch (IOException | ClassNotFoundException ioException) {
@@ -136,7 +136,7 @@ public class LoginWindow extends JFrame{
 
         for (String key: users.keySet()) {
             if (users.get(key).getUsername().equals(usern) && users.get(key).getPassword().equals(pass)){
-                result=true;
+                result = true;
             }
         }
         return result;

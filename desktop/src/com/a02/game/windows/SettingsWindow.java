@@ -74,7 +74,6 @@ public class SettingsWindow extends JFrame {
                 DesktopLauncher.musicCheck = musicCheck.isSelected();
                 DesktopLauncher.soundCheck = soundCheck.isSelected();
                 DesktopLauncher.tutorialCheck = tutorialCheck.isSelected();
-
                 DesktopLauncher.begin = true;
                 dispose();
             }

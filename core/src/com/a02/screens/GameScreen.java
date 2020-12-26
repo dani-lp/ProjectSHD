@@ -3,11 +3,7 @@ package com.a02.screens;
 import com.a02.component.Shoot;
 import com.a02.dbmanager.DBException;
 import com.a02.dbmanager.DBManager;
-import com.a02.entity.Attacker;
-import com.a02.entity.Defender;
-import com.a02.entity.Enemy;
-import com.a02.entity.Trap;
-import com.a02.entity.GameObject;
+import com.a02.entity.*;
 import com.a02.component.Inventory;
 import com.a02.game.MainGame;
 import com.a02.component.Map;
@@ -21,16 +17,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
-import java.awt.*;
 import java.io.*;
-import java.sql.*;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import static com.a02.game.MainGame.mainGameScreen;
 import static com.a02.game.Utils.getRelativeMousePos;
 
 public class GameScreen implements Screen {
@@ -41,9 +33,9 @@ public class GameScreen implements Screen {
     private static boolean buying, pauseFlag;
     private static int gold;
 
-    public List<GameObject> objects = new ArrayList<GameObject>(); //Objetos en el juego
-    public List<Enemy> enemies = new ArrayList<Enemy>(); // Enemigos del juego
-    public static List<Shoot> shoots= new ArrayList<Shoot>();
+    public List<GameObject> objects = new ArrayList<>(); //Objetos en el juego
+    public List<Enemy> enemies = new ArrayList<>(); // Enemigos del juego
+    public static List<Shoot> shoots= new ArrayList<>();
 
     public Inventory drawing;
     public Inventory fullInv; //Inventario full
@@ -55,6 +47,8 @@ public class GameScreen implements Screen {
     OrthographicCamera camera;
 
     BitmapFont font;
+
+    private UIButton pauseButton;
 
     public int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones
@@ -72,7 +66,7 @@ public class GameScreen implements Screen {
             logger.log( level, msg, exception );
     }
 
-    public GameScreen(MainGame game) {
+    public GameScreen(MainGame game, int round) {
         Logger.getLogger("").setLevel(Level.INFO);
         Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
         logger.info("Inicio del GameScreen");
@@ -95,14 +89,19 @@ public class GameScreen implements Screen {
         createObjects();
 
         drawing = fullInv.sortInventory();
-        if (MenuScreen.ronda==1){
-            ronda1();
-        } else if(MenuScreen.ronda==2){
-            ronda2();
+
+        switch (round) {
+            case 1:
+                ronda1();
+                break;
+            case 2:
+                ronda2();
+                break;
         }
 
-
         map = new Map("map1.png");
+
+        pauseButton = new UIButton(299, 6, 16, 16, "pause.png",1);
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
@@ -135,7 +134,7 @@ public class GameScreen implements Screen {
         if (objects.get(0).getHp()<=0) {
             game.setScreen(new MenuScreen(game));
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) pauseFlag = !pauseFlag;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
     }
 
     /**
@@ -194,16 +193,17 @@ public class GameScreen implements Screen {
         game.entityBatch.begin();
         game.entityBatch.draw(map.getTexture(), 0, 0);
 
+        //Objetos y enemigos
         for (GameObject object:objects) {
             game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
         }
-
-        for (Enemy enemy: enemies) {
+        for (Enemy enemy:enemies) {
             if (enemy.state != Enemy.State.DEAD) {
                 game.entityBatch.draw(enemy.getCurrentAnimation(animationTimer), enemy.getX(), enemy.getY());
             }
         }
 
+        //Barras de vida y disparos
         for (GameObject object:objects) {
             game.entityBatch.draw(object.hpBar.getBackground(), object.hpBar.getX(), object.hpBar.getY(), 14,2);
             game.entityBatch.draw(object.hpBar.getForeground(), object.hpBar.getX(), object.hpBar.getY(), object.hpBar.getCurrentWidth(),2);
@@ -216,15 +216,19 @@ public class GameScreen implements Screen {
             game.entityBatch.draw(new Texture(shoot.getSprite()),shoot.getX(),shoot.getY());
         }
 
-
-
+        //Inventario
         game.entityBatch.draw(drawing.getTexture(), drawing.getX(), drawing.getY());
 
-        for (GameObject object:drawing.getObjects()) {    //Objetos del inventario
+        //Objetos del inventario
+        for (GameObject object:drawing.getObjects()) {
             if (object != null) game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
         }
 
+        //Oro
         font.draw(game.entityBatch, "ORO  " + Integer.toString(gold), 5, 175);
+
+        //Botones
+        game.entityBatch.draw(pauseButton.getTexture(), pauseButton.getX(), pauseButton.getY());
 
         game.entityBatch.end();
     }
@@ -253,10 +257,10 @@ public class GameScreen implements Screen {
         } catch (DBException e) {
             log( Level.INFO, "Error en la conexion a la base de datos", null );
         }
-        Enemy larry= new Enemy();
+        Enemy larry = new Enemy();
         try {
             try {
-                Scanner sc= new Scanner(new FileInputStream("core/assets/ronda1.csv"));
+                Scanner sc = new Scanner(new FileInputStream("core/assets/ronda1.csv"));
                 while (sc.hasNext()) {
                     String line= sc.next();
                     String[] campos = line.split(";");
@@ -283,6 +287,11 @@ public class GameScreen implements Screen {
         } catch (DBException e) {
             log( Level.INFO, "No se ha podido obtener el enemigo", null );
         }
+        try{
+            DBManager.dbManager.disconnect();
+        } catch (DBException ignored) {
+
+        }
     }
 
     public void ronda2(){
@@ -291,7 +300,7 @@ public class GameScreen implements Screen {
         } catch (DBException e) {
             log( Level.INFO, "Error en la conexion a la base de datos", null );
         }
-        Enemy larry= new Enemy();
+        Enemy larry = new Enemy();
         try {
             try {
                 Scanner sc= new Scanner(new FileInputStream("core/assets/ronda1.csv"));
@@ -322,10 +331,13 @@ public class GameScreen implements Screen {
             } catch (FileNotFoundException e) {
                 log( Level.INFO, "No se ha podido abrir el fichero", null );
             }
-
-
         } catch (DBException e) {
             log( Level.INFO, "No se ha podido obtener el enemigo", null );
+        }
+        try{
+            DBManager.dbManager.disconnect();
+        } catch (DBException ignored) {
+
         }
     }
 
@@ -391,7 +403,11 @@ public class GameScreen implements Screen {
         objects.add(disp);
         fullInv.insert(disp);
         attackInv.insert(disp);
+        try{
+            DBManager.dbManager.disconnect();
+        } catch (DBException ignored) {
 
+        }
     }
 
     @Override

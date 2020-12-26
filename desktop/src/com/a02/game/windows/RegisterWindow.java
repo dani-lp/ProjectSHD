@@ -119,10 +119,20 @@ public class RegisterWindow extends JFrame {
                             }
 
                             dispose();
-
                         } else {
                             //TODO poner en rojo
                         }
+
+                        //Comprobación de escritura
+                        HashMap<String, User> m = new HashMap<>();
+                        try {
+                            m = readSer("users.ser");
+                        } catch (IOException | ClassNotFoundException ioException) {
+                            ioException.printStackTrace();
+                        }
+
+                        printMap(m);
+
                     }
                 });
                 t.start();
