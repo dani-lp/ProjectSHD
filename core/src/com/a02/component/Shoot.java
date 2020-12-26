@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 import static com.a02.game.Utils.getRelativeMousePos;
 
 public class Shoot {
-
+    private double angle=0;
     private float x;
     private float y;
     private float speed;
@@ -109,17 +109,18 @@ public class Shoot {
     Vector3 focus = new Vector3();
 
     public void update(GameScreen gs) {
+        System.out.println(this.state);
         switch (this.state) {
             case IDLE:
                 if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
                     focus = getRelativeMousePos();
+                    angle=((Math.atan2(this.getY() - focus.y, this.getX() - focus.x)*180) / Math.PI + 90);
                     this.state = State.ATTACKING;
-
                 }
                 break;
 
             case ATTACKING:
-                this.move(focus.x, focus.y);
+                this.move();
                 if (this.overlappedEnemy(gs) != null) {
                     this.state = State.IMPACT;
                 }
@@ -136,10 +137,9 @@ public class Shoot {
         }
     }
 
-    public void move(float targx, float targy) {
-            double angle = Math.toDegrees(-Math.atan((this.getY() - targy) / (this.getX() - targx)));
-            this.setX((float) (this.getX() + Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed));
-            this.setY((float) (this.getY() + Math.cos(angle) * Gdx.graphics.getDeltaTime() * this.speed));
+    public void move() {
+        this.setX((float) (this.getX() + Math.cos(Math.toRadians(angle + 90)) * 2));
+        this.setY((float) (this.getY() + Math.sin(Math.toRadians(angle + 90))* 2));
     }
 
     protected Enemy overlappedEnemy(GameScreen gs) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro

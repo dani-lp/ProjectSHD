@@ -249,7 +249,6 @@ public class Enemy extends Entity {
 
     protected void move() {
         double angle = Math.toDegrees(-Math.atan((this.getY() - this.focus.y) / (this.getX() - this.focus.x)));
-
         this.setX((float) (this.getX() + Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed));
         this.setY((float) (this.getY() + Math.cos(angle) * Gdx.graphics.getDeltaTime() * this.speed));
     }
