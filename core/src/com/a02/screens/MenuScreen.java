@@ -1,5 +1,6 @@
 package com.a02.screens;
 
+import com.a02.entity.UIButton;
 import com.a02.game.MainGame;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -16,14 +17,20 @@ import static com.a02.game.Utils.getRelativeMousePos;
 public class MenuScreen implements Screen {
 
     final MainGame game;
+    private UIButton round1Button;
+    private UIButton round2Button;
 
     private OrthographicCamera camera;
     private static Logger logger = Logger.getLogger(MenuScreen.class.getName());
+
     public MenuScreen(MainGame game) {
         this.game = game;
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
+
+        round1Button = new UIButton(120, 110, 90, 27, "Boton1.png", -1);
+        round2Button = new UIButton(120, 50, 90, 27, "Boton2.png", -1);
 
         Logger.getLogger("").setLevel(Level.INFO);
         Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
@@ -49,13 +56,11 @@ public class MenuScreen implements Screen {
         game.entityBatch.draw(new Texture(Gdx.files.internal("Boton2.png")),120,50);
         game.entityBatch.end();
 
-        Vector3 mousePos = getRelativeMousePos();
-        if (mousePos.x <= 210 & mousePos.x >= 120 ) {
-            if (110 <= mousePos.y && 137 >= mousePos.y && Gdx.input.isTouched()){
-                game.setScreen(new GameScreen(game, 1));
-            } else if (51 <= mousePos.y && 77 >= mousePos.y && Gdx.input.isTouched()){
-                game.setScreen(new GameScreen(game, 2));
-            }
+        if (round1Button.isJustClicked()) {
+            game.setScreen(new GameScreen(game, 1));
+        }
+        else if (round2Button.isJustClicked()) {
+            game.setScreen(new GameScreen(game, 2));
         }
     }
 
