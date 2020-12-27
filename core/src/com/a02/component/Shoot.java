@@ -112,10 +112,12 @@ public class Shoot {
         System.out.println(this.state);
         switch (this.state) {
             case IDLE:
-                if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-                    focus = getRelativeMousePos();
-                    angle=((Math.atan2(this.getY() - focus.y, this.getX() - focus.x)*180) / Math.PI + 90);
-                    this.state = State.ATTACKING;
+                if (Attacker.selected){
+                    if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+                        focus = getRelativeMousePos();
+                        angle=((Math.atan2(this.getY() - focus.y, this.getX() - focus.x)*180) / Math.PI + 90);
+                        this.state = State.ATTACKING;
+                    }
                 }
                 break;
 

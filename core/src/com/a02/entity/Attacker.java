@@ -4,6 +4,8 @@ import com.a02.component.Map;
 import com.a02.component.Shoot;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
@@ -16,6 +18,7 @@ public class Attacker extends GameObject {
     private float attackDamage;
     private String attackType;
     private static Logger logger = Logger.getLogger(GameObject.class.getName());
+    public static boolean selected;
 
     private enum State {
         IDLE, ATTACKING
@@ -103,8 +106,16 @@ public class Attacker extends GameObject {
                     }
                 } else {
                     if (!this.isInInventory(gs) && gs.secTimer % 60 == 0){
-                        Shoot shoot = new Shoot(this.getX()+8,this.getY(),2,2,50,this.getAttackDamage(),"shoot.png",5);
-                        GameScreen.shoots.add(shoot);
+                        Vector3 mousePos = getRelativeMousePos();
+                        if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched()){
+                            selected=true;
+                            Pixmap pm = new Pixmap(Gdx.files.internal("mira-export.png"));
+                            Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+                            pm.dispose();
+                            Shoot shoot = new Shoot(this.getX()+8,this.getY(),2,2,50,this.getAttackDamage(),"shoot.png",5);
+                            GameScreen.shoots.add(shoot);
+                        }
+
                     }
 
                 }

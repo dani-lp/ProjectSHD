@@ -127,7 +127,12 @@ public class GameScreen implements Screen {
         //Actualiza cámara
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
-
+        if (Gdx.input.isKeyPressed(Input.Keys.E)){
+            Attacker.selected=false;
+            Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
+            Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+            pm.dispose();
+        }
         //Actualiza lógica sólo si el juego no está en pausa, pero sí realiza el dibujado.
         if (pauseFlag) {
             updateMenuLogic();
@@ -389,6 +394,11 @@ public class GameScreen implements Screen {
     }
 
     public void createObjects(){
+
+        Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
+        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+        pm.dispose();
+
         try {
             DBManager.dbManager.connect("Databases/base.db");
         } catch (DBException e) {
