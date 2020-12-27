@@ -112,10 +112,11 @@ public class Attacker extends GameObject {
                             Pixmap pm = new Pixmap(Gdx.files.internal("mira-export.png"));
                             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                             pm.dispose();
+                        }
+                        if (selected){
                             Shoot shoot = new Shoot(this.getX()+8,this.getY(),2,2,50,this.getAttackDamage(),"shoot.png",5);
                             GameScreen.shoots.add(shoot);
                         }
-
                     }
 
                 }
