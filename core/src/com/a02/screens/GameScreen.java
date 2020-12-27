@@ -12,11 +12,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
+import java.awt.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
@@ -105,11 +107,11 @@ public class GameScreen implements Screen {
 
         map = new Map("map1.png");
 
-        pauseButton = new UIButton(299, 6, 16, 16, "pause.png",1);
+        pauseButton = new UIButton(299, 6, 16, 16, "pause.png");
 
-        resumeButton = new UIButton(123, 113, 74, 36, "Buttons/resumeButtonIdle.png", -1);
-        menuButton = new UIButton(123, 73, 74, 36, "Buttons/menuButtonIdle.png", -1);
-        quitButton = new UIButton(123, 33, 74, 36, "Buttons/quitButtonIdle.png", -1);
+        resumeButton = new UIButton(123, 113, 74, 36, "Buttons/resumeButtonIdle.png");
+        menuButton = new UIButton(123, 73, 74, 36, "Buttons/menuButtonIdle.png");
+        quitButton = new UIButton(123, 33, 74, 36, "Buttons/quitButtonIdle.png");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
@@ -127,7 +129,6 @@ public class GameScreen implements Screen {
         game.entityBatch.setProjectionMatrix(camera.combined);
 
         //Actualiza lógica sólo si el juego no está en pausa, pero sí realiza el dibujado.
-        //TODO: menú de pausa
         if (pauseFlag) {
             updateMenuLogic();
         }
@@ -197,6 +198,9 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * Lógica de los botones del menú de pausa.
+     */
     private void updateMenuLogic() {
         //Botones tocados
         if (resumeButton.isTouched()) resumeButton.setTexture(new Texture("Buttons/resumeButtonPressed.png"));
@@ -213,7 +217,7 @@ public class GameScreen implements Screen {
             pauseFlag = !pauseFlag;
         }
         else if (menuButton.isJustClicked()) {
-            //Ir a menú
+            game.setScreen(new MenuScreen(game));
         }
         else if (quitButton.isJustClicked()) {
             Gdx.app.exit();

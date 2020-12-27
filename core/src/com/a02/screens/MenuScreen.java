@@ -16,6 +16,9 @@ public class MenuScreen implements Screen {
     final MainGame game;
     private UIButton round1Button;
     private UIButton round2Button;
+    private UIButton quitButton;
+
+    private int introTimer; //Para poder hacer click en el botón de "Menu" en GameScreen sin tocar el de "Round 2"
 
     private OrthographicCamera camera;
     private static Logger logger = Logger.getLogger(MenuScreen.class.getName());
@@ -26,8 +29,11 @@ public class MenuScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
 
-        round1Button = new UIButton(120, 110, 90, 27, "Boton1.png", -1);
-        round2Button = new UIButton(120, 50, 90, 27, "Boton2.png", -1);
+        round1Button = new UIButton(123, 113, 74, 36, "Buttons/round1ButtonIdle.png");
+        round2Button = new UIButton(123, 73, 74, 36, "Buttons/round2ButtonIdle.png");
+        quitButton = new UIButton(123, 33, 74, 36, "Buttons/quitButtonIdle.png");
+
+        introTimer = 0;
 
         Logger.getLogger("").setLevel(Level.INFO);
         Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
@@ -49,15 +55,36 @@ public class MenuScreen implements Screen {
 
         game.entityBatch.begin();
         game.entityBatch.draw(new Texture(Gdx.files.internal("wallpaperTest.png")),0,0);
-        game.entityBatch.draw(new Texture(Gdx.files.internal("Boton1.png")),120,110);
-        game.entityBatch.draw(new Texture(Gdx.files.internal("Boton2.png")),120,50);
+        game.entityBatch.draw(round1Button.getTexture(), round1Button.getX(),round1Button.getY());
+        game.entityBatch.draw(round2Button.getTexture(), round2Button.getX(),round2Button.getY());
+        game.entityBatch.draw(quitButton.getTexture(),quitButton.getX(),quitButton.getY());
         game.entityBatch.end();
 
+        updateButtonLogic();
+        introTimer++;
+    }
+
+    private void updateButtonLogic() {
+        //Aspecto
+        if (round1Button.isTouched()) round1Button.setTexture(new Texture("Buttons/round1ButtonPressed.png"));
+        else round1Button.setTexture(new Texture("Buttons/round1ButtonIdle.png"));
+
+        if (round2Button.isTouched()) round2Button.setTexture(new Texture("Buttons/round2ButtonPressed.png"));
+        else round2Button.setTexture(new Texture("Buttons/round2ButtonIdle.png"));
+
+        if (quitButton.isTouched()) quitButton.setTexture(new Texture("Buttons/quitButtonPressed.png"));
+        else quitButton.setTexture(new Texture("Buttons/quitButtonIdle.png"));
+
+        //Lógica
         if (round1Button.isJustClicked()) {
             game.setScreen(new GameScreen(game, 1));
         }
-        else if (round2Button.isJustClicked()) {
+        else if (round2Button.isJustClicked() && introTimer > 0) {
             game.setScreen(new GameScreen(game, 2));
+        }
+        else if (quitButton.isJustClicked()) {
+            Gdx.app.exit();
+            System.exit(0);
         }
     }
 

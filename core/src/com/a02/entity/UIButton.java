@@ -11,19 +11,16 @@ import static com.a02.game.Utils.getRelativeMousePos;
  */
 public class UIButton extends Entity {
 
-    private int id; //Define funcionalidad
     private Texture texture; //Aspecto del botón
     private boolean pressed;
 
-    public UIButton(float x, float y, int width, int height, String texturePath, int id) {
+    public UIButton(float x, float y, int width, int height, String texturePath) {
         super(x, y, width, height);
-        this.id = id;
         this.texture = new Texture(texturePath);
     }
 
     public UIButton() {
         super();
-        this.id = -1;
         this.texture = null;
     }
 
@@ -42,12 +39,7 @@ public class UIButton extends Entity {
      */
     public boolean isBeingClicked() {
         Vector3 mousePos = getRelativeMousePos();
-        if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched()) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched();
     }
 
     /**
@@ -67,19 +59,6 @@ public class UIButton extends Entity {
         else {
             return false;
         }
-    }
-
-    /**
-     * Actualiza el estado del botón o realiza su acción asociada.
-     */
-    public void update() {
-        switch (this.id) {
-
-        }
-    }
-
-    public int getId() {
-        return id;
     }
 
     public Texture getTexture() {
