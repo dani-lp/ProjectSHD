@@ -33,11 +33,6 @@ public class MainGame extends Game {
 
 	public void render() {
 		super.render();
-
-		if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-			Gdx.app.exit();
-			System.exit(0);
-		}
 	}
 
 	public void dispose() {

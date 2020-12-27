@@ -89,4 +89,8 @@ public class UIButton extends Entity {
     public boolean isPressed() {
         return pressed;
     }
+
+    public void setTexture(Texture texture) {
+        this.texture = texture;
+    }
 }

@@ -6,6 +6,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.security.Key;
 
 public class SettingsWindow extends JFrame {
     public SettingsWindow(){
@@ -57,7 +58,7 @@ public class SettingsWindow extends JFrame {
         JLabel tutorialLabel = new JLabel("     Tutorial:");
         final JCheckBox tutorialCheck = new JCheckBox();
         JButton cancelButton = new JButton("Cancel");
-        JButton confirmButton = new JButton("Confirm");
+        final JButton confirmButton = new JButton("Confirm");
 
         //3.- Interacción
         cancelButton.addActionListener(new ActionListener() {
@@ -96,6 +97,30 @@ public class SettingsWindow extends JFrame {
                 tutorialCheck.setSelected(!tutorialCheck.isSelected());
             }
         });
+
+        KeyAdapter enterKA = new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int key = e.getKeyCode();
+                if (key == KeyEvent.VK_ENTER) {
+                    confirmButton.doClick();
+                }
+            }
+        };
+
+        //Tecla enter presiona los botones
+        modeLabel.addKeyListener(enterKA);
+        modeCB.addKeyListener(enterKA);
+        diffLabel.addKeyListener(enterKA);
+        diffSlider.addKeyListener(enterKA);
+        musicLabel.addKeyListener(enterKA);
+        soundLabel.addKeyListener(enterKA);
+        musicCheck.addKeyListener(enterKA);
+        soundCheck.addKeyListener(enterKA);
+        tutorialLabel.addKeyListener(enterKA);
+        tutorialCheck.addKeyListener(enterKA);
+        cancelButton.addKeyListener(enterKA);
+        confirmButton.addKeyListener(enterKA);
 
         //4.- Introducción de elementos
         diffPanel.add(diffLabel);

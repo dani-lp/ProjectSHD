@@ -50,6 +50,10 @@ public class GameScreen implements Screen {
 
     private UIButton pauseButton;
 
+    private UIButton resumeButton;
+    private UIButton menuButton;
+    private UIButton quitButton;
+
     public int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones
     private static boolean LOGGING = true;
@@ -103,6 +107,10 @@ public class GameScreen implements Screen {
 
         pauseButton = new UIButton(299, 6, 16, 16, "pause.png",1);
 
+        resumeButton = new UIButton(123, 113, 74, 36, "Buttons/resumeButtonIdle.png", -1);
+        menuButton = new UIButton(123, 73, 74, 36, "Buttons/menuButtonIdle.png", -1);
+        quitButton = new UIButton(123, 33, 74, 36, "Buttons/quitButtonIdle.png", -1);
+
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
         game.entityBatch = new SpriteBatch();
@@ -120,9 +128,12 @@ public class GameScreen implements Screen {
 
         //Actualiza lógica sólo si el juego no está en pausa, pero sí realiza el dibujado.
         //TODO: menú de pausa
-        if (!pauseFlag) {
+        if (pauseFlag) {
+            updateMenuLogic();
+        }
+        else {
             //Actualiza lógica
-            updateLogic();
+            updateGameLogic();
 
             //Cambios de inventario
             inventorySwap();
@@ -134,13 +145,13 @@ public class GameScreen implements Screen {
         if (objects.get(0).getHp()<=0) {
             game.setScreen(new MenuScreen(game));
         }
-        if (Gdx.input.isKeyJustPressed(Input.Keys.P) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
     }
 
     /**
      * Actualiza la lógica de las entidades.
      */
-    private void updateLogic() {
+    private void updateGameLogic() {
         //Actualiza valores estáticos
         secTimer += 1;
         animationTimer += Gdx.graphics.getDeltaTime();
@@ -183,6 +194,30 @@ public class GameScreen implements Screen {
             if(tempSh.getHp() <= 0) {
                 shootIterator.remove();
             }
+        }
+    }
+
+    private void updateMenuLogic() {
+        //Botones tocados
+        if (resumeButton.isTouched()) resumeButton.setTexture(new Texture("Buttons/resumeButtonPressed.png"));
+        else resumeButton.setTexture(new Texture("Buttons/resumeButtonIdle.png"));
+
+        if (menuButton.isTouched()) menuButton.setTexture(new Texture("Buttons/menuButtonPressed.png"));
+        else menuButton.setTexture(new Texture("Buttons/menuButtonIdle.png"));
+
+        if (quitButton.isTouched()) quitButton.setTexture(new Texture("Buttons/quitButtonPressed.png"));
+        else quitButton.setTexture(new Texture("Buttons/quitButtonIdle.png"));
+
+        //Acciones
+        if (resumeButton.isJustClicked()){
+            pauseFlag = !pauseFlag;
+        }
+        else if (menuButton.isJustClicked()) {
+            //Ir a menú
+        }
+        else if (quitButton.isJustClicked()) {
+            Gdx.app.exit();
+            System.exit(0);
         }
     }
 
@@ -229,6 +264,14 @@ public class GameScreen implements Screen {
 
         //Botones
         game.entityBatch.draw(pauseButton.getTexture(), pauseButton.getX(), pauseButton.getY());
+
+        //Menu de pausa
+        if (pauseFlag) {
+            game.entityBatch.draw(new Texture("pauseMenu.png"), 50, 26);
+            game.entityBatch.draw(resumeButton.getTexture(), resumeButton.getX(), resumeButton.getY());
+            game.entityBatch.draw(menuButton.getTexture(), menuButton.getX(), menuButton.getY());
+            game.entityBatch.draw(quitButton.getTexture(), quitButton.getX(), quitButton.getY());
+        }
 
         game.entityBatch.end();
     }

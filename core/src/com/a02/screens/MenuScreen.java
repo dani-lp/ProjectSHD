@@ -7,12 +7,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector3;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static com.a02.game.Utils.getRelativeMousePos;
 
 public class MenuScreen implements Screen {
 
