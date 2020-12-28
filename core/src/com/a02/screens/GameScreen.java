@@ -454,12 +454,19 @@ public class GameScreen implements Screen {
                 log( Level.INFO, "No se ha podido obtener el objeto de ataque", null );
             }
         }
-        Attacker disp= new Attacker(0,0,16,18,2,"Shoot",20,true,100,"Shoot",75);
+        Attacker disp= new Attacker(0,0,16,18,2,"Shoot",20,true,1000,"Shoot",125);
         disp.hpBar.setMaxHP(disp.getHp());
         disp.textures();
         objects.add(disp);
         fullInv.insert(disp);
         attackInv.insert(disp);
+
+        Attacker ond= new Attacker(0,0,16,18,3,"Wave",20,true,1000,"Wave",400);
+        ond.hpBar.setMaxHP(ond.getHp());
+        ond.textures();
+        objects.add(ond);
+        fullInv.insert(ond);
+        attackInv.insert(ond);
         try{
             DBManager.dbManager.disconnect();
         } catch (DBException ignored) {

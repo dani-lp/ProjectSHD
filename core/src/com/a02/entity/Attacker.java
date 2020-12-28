@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -19,7 +20,6 @@ public class Attacker extends GameObject {
     private String attackType;
     private static Logger logger = Logger.getLogger(GameObject.class.getName());
     public static boolean selected;
-
     private enum State {
         IDLE, ATTACKING
     }
@@ -42,6 +42,10 @@ public class Attacker extends GameObject {
                 break;
             case 2:
                 this.setTexture(new Texture(Gdx.files.internal("boredlion.png")));
+                break;
+            case 3:
+                this.setTexture(new Texture(Gdx.files.internal("waves.png")));
+                break;
         }
     }
 
@@ -84,7 +88,7 @@ public class Attacker extends GameObject {
     public void update(GameScreen gs) {
         switch (this.state) {
             case IDLE:
-                if (this.getId()==2){
+                if (this.getId() == 2 || this.getId() == 3){
                     this.state = State.ATTACKING;
                 }
 
@@ -95,7 +99,7 @@ public class Attacker extends GameObject {
                 break;
 
             case ATTACKING:
-                if (this.getId()!=2){
+                if (this.getId() == 1){
                     if (this.overlappedEnemy(gs) != null) {
                         Enemy tempEnemy = this.overlappedEnemy(gs);
                         if (tempEnemy.getHp() > 0 && gs.secTimer % 60 == 0) {
@@ -104,21 +108,34 @@ public class Attacker extends GameObject {
                             this.state = State.IDLE;
                         }
                     }
-                } else {
-                    if (!this.isInInventory(gs) && gs.secTimer % 60 == 0){
+                }
+                else if (this.getId() == 2) {
+                    if (!this.isInInventory(gs) && gs.secTimer % 60 == 0) {
                         Vector3 mousePos = getRelativeMousePos();
-                        if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched()){
-                            selected=true;
+                        if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched()) {
+                            selected = true;
                             Pixmap pm = new Pixmap(Gdx.files.internal("mira-export.png"));
                             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                             pm.dispose();
                         }
-                        if (selected){
-                            Shoot shoot = new Shoot(this.getX()+8,this.getY(),2,2,50,this.getAttackDamage(),"shoot.png",5);
+                        if (selected) {
+                            Shoot shoot = new Shoot(this.getX(), this.getY(), 2, 2, 2, this.getAttackDamage(), "shoot.png", 5, this.getId(),"n");
                             GameScreen.shoots.add(shoot);
                         }
                     }
+                }
+                else if (this.getId() == 3) {
+                    if (!this.isInInventory(gs) && gs.secTimer % 60 == 0) {
+                        Shoot right = new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 5, this.getAttackDamage(), "shoot.png", 5, this.getId(),"r");
+                        Shoot left = new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 5, this.getAttackDamage(), "shoot.png", 5, this.getId(),"l");
+                        Shoot up = new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 5, this.getAttackDamage(), "shoot.png", 5, this.getId(),"u");
+                        Shoot down = new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 5, this.getAttackDamage(), "shoot.png", 5, this.getId(),"d");
 
+                        GameScreen.shoots.add(right);
+                        GameScreen.shoots.add(left);
+                        GameScreen.shoots.add(up);
+                        GameScreen.shoots.add(down);
+                    }
                 }
                 break;
         }

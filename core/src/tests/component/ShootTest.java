@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 public class ShootTest {
 
-    Shoot shootTest = new Shoot(1,2,50,100,3,20,"TestSprite",4);
+    Shoot shootTest = new Shoot(1,2,50,100,3,20,"TestSprite",4,1,"");
     @Test
     public void getX() {
         assertEquals(1,shootTest.getX(), 0.0f);
