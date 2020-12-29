@@ -133,7 +133,7 @@ public class Shoot {
                         }
                     }
                 }
-                if (this.att_id==3){
+                if (this.att_id == 3){
                     if (this.getDir().equals("r")){
                         angle = ((Math.atan2(this.getY() - this.getY(), this.getX() - 300)*180) / Math.PI + 90);
                         this.state = State.ATTACKING;
@@ -155,7 +155,7 @@ public class Shoot {
                         break;
                     }
                 }
-
+                break;
 
             case ATTACKING:
                 this.move();

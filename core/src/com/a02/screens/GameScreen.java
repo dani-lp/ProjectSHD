@@ -129,6 +129,11 @@ public class GameScreen implements Screen {
         game.entityBatch.setProjectionMatrix(camera.combined);
         if (Gdx.input.isKeyPressed(Input.Keys.E)){
             Attacker.selected=false;
+            for (GameObject att:objects) {
+                if (att instanceof Attacker){
+                    ((Attacker) att).setSelected(false);
+                }
+            }
             Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
             pm.dispose();

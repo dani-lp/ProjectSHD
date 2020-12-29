@@ -16,10 +16,11 @@ import java.util.logging.Logger;
 import static com.a02.game.Utils.getRelativeMousePos;
 
 public class Attacker extends GameObject {
+    public static boolean selected;
     private float attackDamage;
     private String attackType;
     private static Logger logger = Logger.getLogger(GameObject.class.getName());
-    public static boolean selected;
+    private boolean isSelected;
     private enum State {
         IDLE, ATTACKING
     }
@@ -32,6 +33,7 @@ public class Attacker extends GameObject {
         this.attackType = attackType;
         this.attackDamage = attackDamage;
         this.state = State.IDLE;
+        this.isSelected=false;
         textures();
     }
 
@@ -81,6 +83,14 @@ public class Attacker extends GameObject {
         this.attackType = attackType;
     }
 
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
     /**
      * Actualiza el estado de los objetos de ataque.
      * @param gs GameScreen utilizada
@@ -91,7 +101,6 @@ public class Attacker extends GameObject {
                 if (this.getId() == 2 || this.getId() == 3){
                     this.state = State.ATTACKING;
                 }
-
                 if (this.overlappedEnemy(gs) != null) {
                     this.state = State.ATTACKING;
                     logger.info("Enemigo atacando");
@@ -113,12 +122,13 @@ public class Attacker extends GameObject {
                     if (!this.isInInventory(gs) && gs.secTimer % 60 == 0) {
                         Vector3 mousePos = getRelativeMousePos();
                         if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched()) {
-                            selected = true;
+                            this.isSelected = true;
+                            selected=true;
                             Pixmap pm = new Pixmap(Gdx.files.internal("mira-export.png"));
                             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                             pm.dispose();
                         }
-                        if (selected) {
+                        if (this.isSelected) {
                             Shoot shoot = new Shoot(this.getX(), this.getY(), 2, 2, 2, this.getAttackDamage(), "shoot.png", 5, this.getId(),"n");
                             GameScreen.shoots.add(shoot);
                         }
