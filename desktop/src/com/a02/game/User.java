@@ -6,10 +6,11 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 4050798975698164181L;
     private String username;
-    private String password;
+    private String password; //TODO: seguridad/encriptar
     private String name;
     private int age;
     private String mail;
+    private boolean admin;
 
     public User(String username, String password, String name, int age, String mail) {
         this.username = username;
@@ -17,6 +18,7 @@ public class User implements Serializable {
         this.name = name;
         this.age = age;
         this.mail = mail;
+        this.admin = false;
     }
 
     public User() {
@@ -31,6 +33,7 @@ public class User implements Serializable {
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", mail='" + mail + '\'' +
+                ", admin=" + admin +
                 '}';
     }
 
@@ -72,5 +75,13 @@ public class User implements Serializable {
 
     public void setMail(String mail) {
         this.mail = mail;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }

@@ -1,15 +1,15 @@
 package com.a02.game.windows;
 
+import com.a02.game.User;
 import com.a02.game.desktop.DesktopLauncher;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.security.Key;
 
 public class SettingsWindow extends JFrame {
-    public SettingsWindow(){
+    public SettingsWindow(final User user){
         //1.- Ajustes de ventana
         try {
             UIManager.setLookAndFeel(new FlatLightLaf());   //UI Look&Feel más moderno y limpio
@@ -59,6 +59,10 @@ public class SettingsWindow extends JFrame {
         final JCheckBox tutorialCheck = new JCheckBox();
         JButton cancelButton = new JButton("Cancel");
         final JButton confirmButton = new JButton("Confirm");
+        JButton adminButton = new JButton("Users");
+        adminButton.setToolTipText("Available to administrators");
+        //Visible si el usuario es administrador del sistema
+        adminButton.setEnabled(user.isAdmin() || user.getUsername().equals("admin"));
 
         //3.- Interacción
         cancelButton.addActionListener(new ActionListener() {
@@ -77,6 +81,12 @@ public class SettingsWindow extends JFrame {
                 DesktopLauncher.tutorialCheck = tutorialCheck.isSelected();
                 DesktopLauncher.begin = true;
                 dispose();
+            }
+        });
+
+        adminButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new UsersWindow();
             }
         });
 
@@ -104,6 +114,9 @@ public class SettingsWindow extends JFrame {
                 int key = e.getKeyCode();
                 if (key == KeyEvent.VK_ENTER) {
                     confirmButton.doClick();
+                }
+                else if (key == KeyEvent.VK_E) { //TODO: temporal para testeo
+                    System.out.println(user);
                 }
             }
         };
@@ -135,6 +148,7 @@ public class SettingsWindow extends JFrame {
         modePanel.add(modeCB);
         buttonsPanel.add(cancelButton);
         buttonsPanel.add(confirmButton);
+        buttonsPanel.add(adminButton);
 
         add(modePanel);
         add(diffPanel);
