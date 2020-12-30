@@ -124,23 +124,37 @@ public class Shoot {
         switch (this.state) {
             case IDLE:
                 if (this.att_id == 2){
-                    if (Attacker.selected){
+                    Attacker boss=null;
+                    for (GameObject att:gs.objects) {
+                        if (att instanceof Attacker && ((Attacker) att).isSelected()){
+                            boss= (Attacker) att;
+                        }
+                    }
+                    if (Attacker.selected && boss.getX() == this.getX() && boss.getY() == this.getY()){
                         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
                             focus = getRelativeMousePos();
                             angle = ((Math.atan2(this.getY() - focus.y, this.getX() - focus.x)*180) / Math.PI + 90);
                             this.state = State.ATTACKING;
                             break;
                         }
+                    } else {
+                        Enemy target = this.overlappedArea(gs);
+                        if (target != null) {
+                            angle = ((Math.atan2(this.getY() - overlappedArea(gs).getY(), this.getX() - overlappedArea(gs).getX())*180) / Math.PI + 90);
+                            this.state = State.ATTACKING;
+                            break;
+                        }
+                        break;
                     }
                 }
                 if (this.att_id == 3){
                     if (this.getDir().equals("r")){
-                        angle = ((Math.atan2(this.getY() - this.getY(), this.getX() - 300)*180) / Math.PI + 90);
+                        angle = ((Math.atan2(this.getY() - this.getY(), this.getX() - 350)*180) / Math.PI + 90);
                         this.state = State.ATTACKING;
                         break;
                     }
                     else if (this.getDir().equals("l")) {
-                        angle = ((Math.atan2(this.getY() - this.getY(), this.getX() - 0)*180) / Math.PI + 90);
+                        angle = ((Math.atan2(this.getY() - this.getY(), this.getX() - -100)*180) / Math.PI + 90);
                         this.state = State.ATTACKING;
                         break;
                     }
@@ -150,7 +164,7 @@ public class Shoot {
                         break;
                     }
                     else if (this.getDir().equals("d")) {
-                        angle = ((Math.atan2(this.getY() - 0, this.getX() - this.getX())*180) / Math.PI + 90);
+                        angle = ((Math.atan2(this.getY() - -50, this.getX() - this.getX())*180) / Math.PI + 90);
                         this.state = State.ATTACKING;
                         break;
                     }
@@ -187,6 +201,15 @@ public class Shoot {
         for (Enemy enemy : gs.enemies) {
             if (this.getX() < enemy.getX() + enemy.getWidth() && this.getX() + this.getWidth() > enemy.getX() &&
                     this.getY() < enemy.getY() + enemy.getHeight() && this.getY() + this.getHeight() > enemy.getY()) {
+                return enemy;
+            }
+        }
+        return null;
+    }
+
+    protected Enemy overlappedArea(GameScreen gs) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
+        for (Enemy enemy : gs.enemies) {
+            if ((enemy.getX() < this.getX() + 50 && enemy.getX() > this.getX() - 50) && (enemy.getY() < this.getY() + 50 && enemy.getY() > this.getY() - 50)) {
                 return enemy;
             }
         }

@@ -38,6 +38,7 @@ public class GameScreen implements Screen {
     public List<GameObject> objects = new ArrayList<>(); //Objetos en el juego
     public List<Enemy> enemies = new ArrayList<>(); // Enemigos del juego
     public static List<Shoot> shoots= new ArrayList<>();
+    public boolean deselect=false;
 
     public Inventory drawing;
     public Inventory fullInv; //Inventario full
@@ -51,7 +52,6 @@ public class GameScreen implements Screen {
     BitmapFont font;
 
     private UIButton pauseButton;
-
     private UIButton resumeButton;
     private UIButton menuButton;
     private UIButton quitButton;
@@ -127,7 +127,14 @@ public class GameScreen implements Screen {
         //Actualiza cámara
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
-        if (Gdx.input.isKeyPressed(Input.Keys.E)){
+
+        for (GameObject att:objects) {
+            if (att instanceof Attacker && att.getHp() <= 0 && att.getId() == 2 ){
+                deselect=true;
+            }
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.E) || deselect){
             Attacker.selected=false;
             for (GameObject att:objects) {
                 if (att instanceof Attacker){
@@ -138,6 +145,8 @@ public class GameScreen implements Screen {
             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
             pm.dispose();
         }
+
+        deselect=false;
         //Actualiza lógica sólo si el juego no está en pausa, pero sí realiza el dibujado.
         if (pauseFlag) {
             updateMenuLogic();

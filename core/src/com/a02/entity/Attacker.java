@@ -128,29 +128,31 @@ public class Attacker extends GameObject {
                             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                             pm.dispose();
                         }
-                        if (this.isSelected) {
-                            Shoot shoot = new Shoot(this.getX(), this.getY(), 2, 2, 2, this.getAttackDamage(), "shoot.png", 5, this.getId(),"n");
-                            GameScreen.shoots.add(shoot);
-                        }
+                        Shoot shoot = new Shoot(this.getX(), this.getY(), 2, 2, 2, this.getAttackDamage(), "shoot.png", 5, this.getId(),"n");
+
+                        GameScreen.shoots.add(shoot);
+
                     }
                 }
                 else if (this.getId() == 3) {
-                    if (!this.isInInventory(gs) && gs.secTimer % 60 == 0) {
-                        Shoot right = new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 5, this.getAttackDamage(), "shoot.png", 5, this.getId(),"r");
-                        Shoot left = new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 5, this.getAttackDamage(), "shoot.png", 5, this.getId(),"l");
-                        Shoot up = new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 5, this.getAttackDamage(), "shoot.png", 5, this.getId(),"u");
-                        Shoot down = new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 5, this.getAttackDamage(), "shoot.png", 5, this.getId(),"d");
+                    if (!this.isInInventory(gs) && gs.secTimer % 120 == 0) {
+                        Shoot right = new Shoot(this.getX()-8, this.getY()-9, 2, 2, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"r");
+                        Shoot left = new Shoot(this.getX()-8, this.getY()-9, 2, 2, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"l");
+                        Shoot up = new Shoot(this.getX()-8, this.getY()-9, 2, 2, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"u");
+                        Shoot down = new Shoot(this.getX()-8, this.getY()-9, 2, 2, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"d");
 
                         GameScreen.shoots.add(right);
                         GameScreen.shoots.add(left);
                         GameScreen.shoots.add(up);
                         GameScreen.shoots.add(down);
+
                     }
                 }
                 break;
         }
         this.hpBar.update(this, this.getHp());
     }
+
 
 }
 
