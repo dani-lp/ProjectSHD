@@ -2,6 +2,7 @@ package com.a02.game.windows;
 
 import com.a02.game.User;
 import com.formdev.flatlaf.FlatLightLaf;
+import jdk.nashorn.internal.scripts.JO;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,9 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
+
+import static com.a02.game.components.Utils.*;
 
 public class RegisterWindow extends JFrame {
     public RegisterWindow() {
@@ -88,51 +88,21 @@ public class RegisterWindow extends JFrame {
                     @Override
                     public void run() {
                         if (!userJTF.getText().equals("") && pwdJTF.getPassword().length != 0) {
-                            //read
-                            HashMap<String, User> tempMap = new HashMap<>();
-                            User tempUser;
-                            try {
-                                if (readSer("users.ser") != null) tempMap = readSer("users.ser");
-                            } catch (IOException | ClassNotFoundException ioException) {
-                                ioException.printStackTrace();
-                            }
-
-                            //rewrite
-                            tempUser = new User();
+                            User tempUser = new User();
                             tempUser.setAge((Integer) ageSpinner.getValue());
                             tempUser.setMail(mailJTF.getText());
                             tempUser.setUsername(userJTF.getText());
                             tempUser.setPassword(String.valueOf(pwdJTF.getPassword()));
                             tempUser.setName(nameJTF.getText());
 
-                            try {
-                                tempMap.put(tempUser.getUsername(), tempUser);
-                            } catch (Exception nullPointerException) {
-                                nullPointerException.printStackTrace();
-                            }
-
-                            //write
-                            try {
-                                writeSer("users.ser", tempMap);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
+                            addUser("users.ser", tempUser);
 
                             dispose();
                         } else {
-                            //TODO poner en rojo
+                            JOptionPane.showMessageDialog(null,
+                                    "'Username' and 'Password' fields are required.",
+                                    "Missing fields", JOptionPane.ERROR_MESSAGE);
                         }
-
-                        //Comprobación de escritura
-                        HashMap<String, User> m = new HashMap<>();
-                        try {
-                            m = readSer("users.ser");
-                        } catch (IOException | ClassNotFoundException ioException) {
-                            ioException.printStackTrace();
-                        }
-
-                        printMap(m);
-
                     }
                 });
                 t.start();
@@ -166,26 +136,28 @@ public class RegisterWindow extends JFrame {
         add(mailJTFPanel);
         add(buttonsPanel);
     }
-    static HashMap<String, User> readSer(String path) throws IOException, ClassNotFoundException {
-        FileInputStream fs = new FileInputStream(path);
-        ObjectInputStream os = new ObjectInputStream(fs);
 
-        return (HashMap<String, User>) os.readObject();
-    }
+    /**
+     * Añade un usuario a un HashMap serializado.
+     * @param path Ruta del archivo
+     * @param user Usuario a introducir
+     */
+    private static void addUser(String path, User user) {
+        HashMap<String, User> map = null;
+        try {
+            map = readSer(path);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
 
-    private static void writeSer(String path, HashMap<String,User> map) throws IOException {
-        FileOutputStream fos = new FileOutputStream(path);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        if (map != null && !map.containsKey(user.getUsername())) {
+            map.put(user.getUsername(), user);
+        }
 
-        oos.writeObject(map);
-    }
-
-    public static void printMap(Map mp) {
-        Iterator it = mp.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            System.out.println(pair.getKey() + " = " + pair.getValue());
-            it.remove();
+        try {
+            writeSer(path, map);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -18,7 +18,7 @@ public class MenuScreen implements Screen {
     private UIButton round2Button;
     private UIButton quitButton;
 
-    private int introTimer; //Para poder hacer click en el botón de "Menu" en GameScreen sin tocar el de "Round 2"
+    private boolean introTimer; //Para poder hacer click en el botón de "Menu" en GameScreen sin tocar el de "Round 2"
 
     private OrthographicCamera camera;
     private static Logger logger = Logger.getLogger(MenuScreen.class.getName());
@@ -33,7 +33,7 @@ public class MenuScreen implements Screen {
         round2Button = new UIButton(123, 73, 74, 36, "Buttons/round2ButtonIdle.png");
         quitButton = new UIButton(123, 33, 74, 36, "Buttons/quitButtonIdle.png");
 
-        introTimer = 0;
+        introTimer = false;
 
         Logger.getLogger("").setLevel(Level.INFO);
         Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
@@ -61,7 +61,7 @@ public class MenuScreen implements Screen {
         game.entityBatch.end();
 
         updateButtonLogic();
-        introTimer++;
+        introTimer = true;
     }
 
     private void updateButtonLogic() {
@@ -76,13 +76,13 @@ public class MenuScreen implements Screen {
         else quitButton.setTexture(new Texture("Buttons/quitButtonIdle.png"));
 
         //Lógica
-        if (round1Button.isJustClicked()) {
+        if (round1Button.isJustClicked() && introTimer) {
             game.setScreen(new GameScreen(game, 1));
         }
-        else if (round2Button.isJustClicked() && introTimer > 0) {
+        else if (round2Button.isJustClicked() && introTimer) {
             game.setScreen(new GameScreen(game, 2));
         }
-        else if (quitButton.isJustClicked()) {
+        else if (quitButton.isJustClicked() && introTimer) {
             Gdx.app.exit();
             System.exit(0);
         }

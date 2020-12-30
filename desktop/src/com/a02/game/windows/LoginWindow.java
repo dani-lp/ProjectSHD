@@ -1,17 +1,15 @@
 package com.a02.game.windows;
 
-import com.a02.dbmanager.DBManager;
 import com.a02.game.User;
 import com.formdev.flatlaf.FlatLightLaf;
-import org.lwjgl.Sys;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
+
+import static com.a02.game.components.Utils.readSer;
 
 public class LoginWindow extends JFrame{
     public LoginWindow() {
@@ -63,6 +61,9 @@ public class LoginWindow extends JFrame{
             }
         });
 
+        /*
+         * TODO: optimizable. Implementar forma de crear usuarios administradores desde un usuario admin inicial
+         */
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (userJTF.getText().equals("")) userJTF.putClientProperty("JComponent.outline", "error");
@@ -73,7 +74,13 @@ public class LoginWindow extends JFrame{
                     if (checkSystem(userJTF.getText(), String.valueOf(pwdJTF.getPassword()))){
                         SwingUtilities.invokeLater(new Runnable() {
                             public void run() {
-                                new SettingsWindow();
+                                HashMap<String, User> users = new HashMap<>();
+                                try {
+                                    users = readSer("users.ser");
+                                } catch (IOException | ClassNotFoundException ioException) {
+                                    ioException.printStackTrace();
+                                }
+                                new SettingsWindow(users.get(userJTF.getText()));
                             }
                         });
                         dispose();
@@ -129,12 +136,12 @@ public class LoginWindow extends JFrame{
         boolean result = false;
         HashMap<String, User> users = new HashMap<>();
         try {
-            users = RegisterWindow.readSer("users.ser");
+            users = readSer("users.ser");
         } catch (IOException | ClassNotFoundException ioException) {
             ioException.printStackTrace();
         }
 
-        for (String key: users.keySet()) {
+        for (String key: users.keySet()) { //TODO: la llave no es el username?
             if (users.get(key).getUsername().equals(usern) && users.get(key).getPassword().equals(pass)){
                 result = true;
             }
