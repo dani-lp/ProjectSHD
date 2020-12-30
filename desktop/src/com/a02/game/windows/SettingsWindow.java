@@ -60,7 +60,9 @@ public class SettingsWindow extends JFrame {
         JButton cancelButton = new JButton("Cancel");
         final JButton confirmButton = new JButton("Confirm");
         JButton adminButton = new JButton("Users");
-        adminButton.setVisible(user.isAdmin() || user.getUsername().equals("admin")); //Visible si el usuario es administrador del sistema
+        adminButton.setToolTipText("Available to administrators");
+        //Visible si el usuario es administrador del sistema
+        adminButton.setEnabled(user.isAdmin() || user.getUsername().equals("admin"));
 
         //3.- Interacción
         cancelButton.addActionListener(new ActionListener() {

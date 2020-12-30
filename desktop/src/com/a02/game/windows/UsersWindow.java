@@ -77,7 +77,9 @@ public class UsersWindow extends JFrame {
             e.printStackTrace();
         }
         if (map != null) table = new JTable(new UserTableModel(map));
+
         table.setAutoCreateRowSorter(true);
+        table.setShowGrid(true);
 
         //3.- Interacción
         editJCB.addActionListener(new ActionListener() {

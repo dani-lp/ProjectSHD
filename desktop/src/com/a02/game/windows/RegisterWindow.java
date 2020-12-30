@@ -88,16 +88,21 @@ public class RegisterWindow extends JFrame {
                     @Override
                     public void run() {
                         if (!userJTF.getText().equals("") && pwdJTF.getPassword().length != 0) {
-                            User tempUser = new User();
-                            tempUser.setAge((Integer) ageSpinner.getValue());
-                            tempUser.setMail(mailJTF.getText());
-                            tempUser.setUsername(userJTF.getText());
-                            tempUser.setPassword(String.valueOf(pwdJTF.getPassword()));
-                            tempUser.setName(nameJTF.getText());
+                            if (validateMail(mailJTF.getText())) {
+                                User tempUser = new User();
+                                tempUser.setAge((Integer) ageSpinner.getValue());
+                                tempUser.setMail(mailJTF.getText());
+                                tempUser.setUsername(userJTF.getText());
+                                tempUser.setPassword(String.valueOf(pwdJTF.getPassword()));
+                                tempUser.setName(nameJTF.getText());
 
-                            addUser("users.ser", tempUser);
-
-                            dispose();
+                                if (addUser("users.ser", tempUser)) dispose();
+                            }
+                            else {
+                                JOptionPane.showMessageDialog(null,
+                                        "'Email' field is invalid. Enter valid email address.",
+                                        "Invalid field", JOptionPane.ERROR_MESSAGE);
+                            }
                         } else {
                             JOptionPane.showMessageDialog(null,
                                     "'Username' and 'Password' fields are required.",
@@ -142,7 +147,7 @@ public class RegisterWindow extends JFrame {
      * @param path Ruta del archivo
      * @param user Usuario a introducir
      */
-    private static void addUser(String path, User user) {
+    private static boolean addUser(String path, User user) {
         HashMap<String, User> map = null;
         try {
             map = readSer(path);
@@ -150,8 +155,13 @@ public class RegisterWindow extends JFrame {
             e.printStackTrace();
         }
 
-        if (map != null && !map.containsKey(user.getUsername())) {
-            map.put(user.getUsername(), user);
+        if (map != null) {
+            if (map.containsKey(user.getUsername())) {
+                JOptionPane.showMessageDialog(null,
+                        "Username already exists.", "User exists", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            else map.put(user.getUsername(), user);
         }
 
         try {
@@ -159,5 +169,6 @@ public class RegisterWindow extends JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return true;
     }
 }
