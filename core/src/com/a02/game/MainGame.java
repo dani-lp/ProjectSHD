@@ -15,13 +15,14 @@ public class MainGame extends Game {
 	public static GameScreen mainGameScreen;
 	static boolean tutorial;
 
-	public MainGame(String gamemode, double diff, boolean musicCheck, boolean soundCheck, boolean tutorialCheck) {
+	public MainGame(String gamemode, double diff, boolean musicCheck, boolean soundCheck, boolean tutorialCheck, String username) {
 		Settings.s.setGamemode(gamemode);
 		Settings.s.setDiff(diff);
 		Settings.s.setMusicCheck(musicCheck);
 		Settings.s.setSoundCheck(soundCheck);
 		Settings.s.setTutorialCheck(tutorialCheck);
 		tutorial=tutorialCheck;
+		Settings.s.setUsername(username);
 	}
 	public static boolean tutorial(){
 		return tutorial;

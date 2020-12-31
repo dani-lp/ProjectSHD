@@ -59,6 +59,7 @@ public class SettingsWindow extends JFrame {
         final JCheckBox tutorialCheck = new JCheckBox();
         JButton cancelButton = new JButton("Cancel");
         final JButton confirmButton = new JButton("Confirm");
+        confirmButton.setEnabled(!user.getUsername().equals("admin"));
         JButton adminButton = new JButton("Users");
         adminButton.setToolTipText("Available to administrators");
         //Visible si el usuario es administrador del sistema
@@ -80,6 +81,7 @@ public class SettingsWindow extends JFrame {
                 DesktopLauncher.soundCheck = soundCheck.isSelected();
                 DesktopLauncher.tutorialCheck = tutorialCheck.isSelected();
                 DesktopLauncher.begin = true;
+                DesktopLauncher.username = user.getUsername();
                 dispose();
             }
         });

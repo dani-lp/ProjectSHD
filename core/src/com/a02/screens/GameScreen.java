@@ -7,6 +7,7 @@ import com.a02.entity.*;
 import com.a02.component.Inventory;
 import com.a02.game.MainGame;
 import com.a02.component.Map;
+import com.a02.game.Settings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -35,6 +36,8 @@ public class GameScreen implements Screen {
     private static boolean buying, pauseFlag;
     private static int gold;
     private static int rounda;
+    private static int points; //Puntos que consigue el usuario
+
     public List<GameObject> objects = new ArrayList<>(); //Objetos en el juego
     public List<Enemy> enemies = new ArrayList<>(); // Enemigos del juego
     public static List<Shoot> shoots= new ArrayList<>();
@@ -150,9 +153,10 @@ public class GameScreen implements Screen {
         //Actualiza cámara
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
+        int id = 0;
         for (GameObject obj:objects) {
             if (((obj instanceof Attacker && obj.getHp() <= 0 && obj.getId() == 2) || (obj instanceof Defender && obj.getHp() <= 0 && obj.getId() == 3)) && obj.isSelected()){
-                deselect=true;
+                deselect = true;
             }
         }
 
@@ -229,7 +233,8 @@ public class GameScreen implements Screen {
             pm.dispose();
         }
 
-        deselect=false;
+        deselect = false;
+
         //Actualiza lógica sólo si el juego no está en pausa, pero sí realiza el dibujado.
         if (pauseFlag) {
             updateMenuLogic();
@@ -246,7 +251,8 @@ public class GameScreen implements Screen {
         draw();
 
         if (objects.get(0).getHp()<=0) {
-            game.setScreen(new MenuScreen(game));
+            game.setScreen(new MenuScreen(game)); //TODO: cambiar a EndScreen
+            //game.setScreen(new EndScreen(Settings.s.getUsername(), points));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
     }
@@ -260,6 +266,7 @@ public class GameScreen implements Screen {
         animationTimer += Gdx.graphics.getDeltaTime();
 
         if (secTimer % 20 == 0) gold++;
+        points += 1;
 
         //Actualiza estado de objetos del inventario
         for (GameObject object : drawing.getObjects()) {
