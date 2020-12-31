@@ -42,6 +42,9 @@ public class Attacker extends GameObject {
             case 0: //Electricidad
                 this.setTexture(new Texture(Gdx.files.internal("electricity.png")));
                 break;
+            case 1:
+                this.setTexture(new Texture(Gdx.files.internal("maquinaDeMatar.png")));
+                break;
             case 2:
                 this.setTexture(new Texture(Gdx.files.internal("boredlion.png")));
                 break;
@@ -108,10 +111,21 @@ public class Attacker extends GameObject {
                 break;
 
             case ATTACKING:
-                if (this.getId() == 1){
+                if (this.getId() == 0){
                     if (this.overlappedEnemy(gs) != null) {
                         Enemy tempEnemy = this.overlappedEnemy(gs);
                         if (tempEnemy.getHp() > 0 && gs.secTimer % 60 == 0) {
+                            tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackDamage));
+                        } else if (tempEnemy.getHp() <= 0) {
+                            this.state = State.IDLE;
+                        }
+                    }
+                }
+
+                if (this.getId() == 1){
+                    if (this.overlappedEnemy(gs) != null) {
+                        Enemy tempEnemy = this.overlappedEnemy(gs);
+                        if (tempEnemy.getHp() > 0 && gs.secTimer % 300 == 0) {
                             tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackDamage));
                         } else if (tempEnemy.getHp() <= 0) {
                             this.state = State.IDLE;
@@ -136,10 +150,10 @@ public class Attacker extends GameObject {
                 }
                 else if (this.getId() == 3) {
                     if (!this.isInInventory(gs) && gs.secTimer % 120 == 0) {
-                        Shoot right = new Shoot(this.getX()-8, this.getY()-9, 2, 2, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"r");
-                        Shoot left = new Shoot(this.getX()-8, this.getY()-9, 2, 2, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"l");
-                        Shoot up = new Shoot(this.getX()-8, this.getY()-9, 2, 2, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"u");
-                        Shoot down = new Shoot(this.getX()-8, this.getY()-9, 2, 2, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"d");
+                        Shoot right = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"r");
+                        Shoot left = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"l");
+                        Shoot up = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"u");
+                        Shoot down = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"d");
 
                         GameScreen.shoots.add(right);
                         GameScreen.shoots.add(left);

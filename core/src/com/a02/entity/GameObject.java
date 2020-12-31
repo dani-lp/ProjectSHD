@@ -21,6 +21,7 @@ public abstract class GameObject extends Entity {
     private int price;
     private boolean unlocked;
     private int hp;
+    private int maxHp;
     private boolean grabbed;
     private Texture texture;
     private Vector2 ogPos;
@@ -35,6 +36,7 @@ public abstract class GameObject extends Entity {
         this.price = price;
         this.unlocked = unlocked;
         this.hp = hp;
+        this.maxHp= hp;
         this.hpBar = new HealthBar(this, hp);
         this.ogPos = new Vector2();
     }
@@ -110,6 +112,14 @@ public abstract class GameObject extends Entity {
 
     public void setTexture(Texture texture) {
         this.texture = texture;
+    }
+
+    public int getMaxHp() {
+        return maxHp;
+    }
+
+    public void setMaxHp(int maxHp) {
+        this.maxHp = maxHp;
     }
 
     @Override

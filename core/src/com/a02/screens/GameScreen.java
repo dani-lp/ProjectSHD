@@ -443,6 +443,27 @@ public class GameScreen implements Screen {
             }
         }
 
+        Defender val= new Defender(0,0,16,18,2,"Valla",200,true,600);
+        val.hpBar.setMaxHP(val.getHp());
+        val.textures();
+        objects.add(val);
+        fullInv.insert(val);
+        defInv.insert(val);
+
+        Defender mar= new Defender(0,0,16,18,3,"Repair",200,true,600);
+        mar.hpBar.setMaxHP(mar.getHp());
+        mar.textures();
+        objects.add(mar);
+        fullInv.insert(mar);
+        defInv.insert(mar);
+
+        Defender hea= new Defender(0,0,16,18,4,"Health",200,true,600);
+        hea.hpBar.setMaxHP(hea.getHp());
+        hea.textures();
+        objects.add(hea);
+        fullInv.insert(hea);
+        defInv.insert(hea);
+
         for (int i = 0; i < 5; i++){
             try {
                 Trap trap = DBManager.dbManager.getTrap(i);
@@ -475,12 +496,20 @@ public class GameScreen implements Screen {
         fullInv.insert(disp);
         attackInv.insert(disp);
 
-        Attacker ond= new Attacker(0,0,16,18,3,"Wave",20,true,1000,"Wave",400);
+        Attacker ond= new Attacker(0,0,16,18,3,"Wave",20,true,1000,"Wave",70);
         ond.hpBar.setMaxHP(ond.getHp());
         ond.textures();
         objects.add(ond);
         fullInv.insert(ond);
         attackInv.insert(ond);
+
+        Attacker timmy= new Attacker(0,0,16,18,1,"Timmy",20,true,1000,"Timmy",320);
+        timmy.hpBar.setMaxHP(timmy.getHp());
+        timmy.textures();
+        objects.add(timmy);
+        fullInv.insert(timmy);
+        attackInv.insert(timmy);
+
         try{
             DBManager.dbManager.disconnect();
         } catch (DBException ignored) {

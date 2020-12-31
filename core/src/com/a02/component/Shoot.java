@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import sun.jvm.hotspot.gc.shared.Space;
 
+import javax.annotation.processing.SupportedSourceVersion;
 import java.util.logging.Logger;
 
 import static com.a02.game.Utils.getRelativeMousePos;
@@ -174,6 +175,7 @@ public class Shoot {
             case ATTACKING:
                 this.move();
                 if (this.overlappedEnemy(gs) != null) {
+                    System.out.println("Ey");
                     this.state = State.IMPACT;
                 }
                 if (this.getX()<0 || this.getY()<0 || this.getX()>300 || this.getY()>180){
@@ -185,7 +187,11 @@ public class Shoot {
                 if (this.overlappedEnemy(gs) != null) {
                     Enemy tempEnemy = this.overlappedEnemy(gs);
                     tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackdamage));
-                    this.setHp(0);
+                    if (this.getDir().equals("n")){
+                        this.setHp(0);
+                    } else{
+                        this.state=State.ATTACKING;
+                    }
                     logger.info("Enemigo impactado por disparo");
                 }
                 break;
