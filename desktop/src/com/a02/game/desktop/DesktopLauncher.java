@@ -9,7 +9,7 @@ import com.a02.game.MainGame;
 import javax.swing.*;
 
 public class DesktopLauncher {
-	public static String gamemode;
+	public static String gamemode, username;
 	public static double diff;
 	public static boolean musicCheck, soundCheck, tutorialCheck;
 
@@ -29,6 +29,6 @@ public class DesktopLauncher {
 		config.fullscreen = true;
 		config.foregroundFPS = 60;
 		config.addIcon("boredlion.png", Files.FileType.Internal);
-		new LwjglApplication(new MainGame(gamemode,diff,musicCheck,soundCheck,tutorialCheck), config);
+		new LwjglApplication(new MainGame(gamemode,diff,musicCheck,soundCheck,tutorialCheck, username), config);
 	}
 }

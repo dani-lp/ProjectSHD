@@ -175,7 +175,7 @@ public class UsersWindow extends JFrame {
     public class UserTableModel extends AbstractTableModel {
         private static final long serialVersionUID = -3976167725010173391L; //No sé si será necesario, pero mejor tenerlo
 
-        private final String[] columnNames = {"Username", "Password", "Name", "Age", "Email", "Admin"};
+        private final String[] columnNames = {"Username", "Password", "Name", "Age", "Email", "Admin", "Max score"};
         private Object[][] data; //Datos de los usuarios
 
         private HashMap<String, User> map; //Mapa de datos de usuario
@@ -189,7 +189,7 @@ public class UsersWindow extends JFrame {
         }
 
         public UserTableModel(HashMap<String, User> map) { //Pasa los datos del mapa a el array 'data'
-            data = new Object[map.size()][6];
+            data = new Object[map.size()][7];
             int index = 0;
             for (User user : map.values()) {
                 data[index][0] = user.getUsername();
@@ -198,6 +198,7 @@ public class UsersWindow extends JFrame {
                 data[index][3] = user.getAge();
                 data[index][4] = user.getMail();
                 data[index][5] = user.isAdmin();
+                data[index][6] = user.getScoreRecord();
                 index++;
             }
         }
@@ -209,7 +210,7 @@ public class UsersWindow extends JFrame {
 
         @Override
         public int getColumnCount() {
-            return 6;
+            return 7;
         }
 
         @Override
@@ -235,7 +236,7 @@ public class UsersWindow extends JFrame {
 
         @Override
         public Class<?> getColumnClass(int columnIndex) {
-            if (columnIndex == 3) return Integer.class;
+            if (columnIndex == 3 || columnIndex == 6) return Integer.class;
             else if (columnIndex == 5) return Boolean.class;
             else return String.class;
         }
@@ -266,6 +267,7 @@ public class UsersWindow extends JFrame {
             user.setAge((Integer) table.getValueAt(row, 3));
             user.setMail(table.getValueAt(row, 4).toString());
             user.setAdmin((Boolean) table.getValueAt(row, 5));
+            user.setScoreRecord((Integer) table.getValueAt(row, 6));
 
             map.put(user.getUsername(), user);
         }

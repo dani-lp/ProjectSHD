@@ -1,5 +1,6 @@
 package com.a02.game;
 
+import com.a02.component.User;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
@@ -7,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
+
+import java.io.*;
+import java.util.HashMap;
 
 public class Utils {
     /**
@@ -61,5 +65,19 @@ public class Utils {
         System.out.println(fh);
         PixmapIO.writePNG(fh, pixmap);
         pixmap.dispose();
+    }
+
+    public static HashMap<String, User> readSer(String path) throws IOException, ClassNotFoundException {
+        FileInputStream fs = new FileInputStream(path);
+        ObjectInputStream os = new ObjectInputStream(fs);
+
+        return (HashMap<String, User>) os.readObject();
+    }
+
+    public static void writeSer(String path, HashMap<String,User> map) throws IOException {
+        FileOutputStream fos = new FileOutputStream(path);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+        oos.writeObject(map);
     }
 }

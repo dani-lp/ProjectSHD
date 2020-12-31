@@ -78,12 +78,12 @@ public class LoginWindow extends JFrame{
                                     ioException.printStackTrace();
                                 }
                                 if (userJTF.getText().equals("admin")) {
-                                    new SettingsWindow(new User("admin"));
+                                    new UsersWindow();
                                 }
                                 else new SettingsWindow(users.get(userJTF.getText()));
                             }
                         });
-                        dispose();
+                        if (!userJTF.getText().equals("admin")) dispose();
                     }
                     else pwdJTF.putClientProperty("JComponent.outline", "");
                 } catch (FileNotFoundException fileNotFoundException) {
