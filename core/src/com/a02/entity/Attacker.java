@@ -57,6 +57,7 @@ public class Attacker extends GameObject {
         this.attackType = "";
         this.attackDamage = 0;
         this.state = State.IDLE;
+        this.isSelected=false;
         loadTextures();
     }
 
@@ -65,6 +66,7 @@ public class Attacker extends GameObject {
         this.attackType = other.getAttackType();
         this.attackDamage = other.getAttackDamage();
         this.state = other.state;
+        this.isSelected=false;
         this.setAnimation(other.getAnimation());
         this.setTexture(other.getTexture());
     }

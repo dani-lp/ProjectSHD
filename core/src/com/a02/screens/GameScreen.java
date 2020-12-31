@@ -131,19 +131,17 @@ public class GameScreen implements Screen {
         //Actualiza cámara
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
-
-        for (GameObject att:objects) {
-            if (att instanceof Attacker && att.getHp() <= 0 && att.getId() == 2 ){
+        int id = 0;
+        for (GameObject obj:objects) {
+            if (((obj instanceof Attacker && obj.getHp() <= 0 && obj.getId() == 2) || (obj instanceof Defender && obj.getHp() <= 0 && obj.getId() == 3)) && obj.isSelected()){
                 deselect=true;
             }
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.E) || deselect){
             Attacker.selected=false;
-            for (GameObject att:objects) {
-                if (att instanceof Attacker){
-                    ((Attacker) att).setSelected(false);
-                }
+            for (GameObject obj:objects) {
+                obj.setSelected(false);
             }
             Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
