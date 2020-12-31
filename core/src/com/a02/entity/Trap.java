@@ -35,24 +35,20 @@ public class Trap extends GameObject {
         this.attackDamage = attackDamage;
         this.effect=effect;
 
-        textures();
+        loadTextures();
 
         this.state = State.IDLE;
     }
 
-    public void textures(){
+    public void loadTextures(){
         switch (this.getId()) {   //Ajuste de textura y efecto
-            case 1 :
-                this.setTexture(new Texture(Gdx.files.internal("Traps/fire.png")));
-                this.effects = Effect.BURN;
-                break;
             case 0 :
                 this.setTexture(new Texture(Gdx.files.internal("Traps/freeze.png")));
                 this.effects = Effect.FREEZE;
                 break;
-            case 4 :
-                this.setTexture(new Texture(Gdx.files.internal("Traps/teleport.png")));
-                this.effects = Effect.TELEPORT;
+            case 1 :
+                this.setTexture(new Texture(Gdx.files.internal("Traps/fire.png")));
+                this.effects = Effect.BURN;
                 break;
             case 2 :
                 this.setTexture(new Texture(Gdx.files.internal("Traps/damage.png")));
@@ -61,6 +57,10 @@ public class Trap extends GameObject {
             case 3 :
                 this.setTexture(new Texture(Gdx.files.internal("Traps/confuse.png")));
                 this.effects = Effect.CONFUSE;
+                break;
+            case 4 :
+                this.setTexture(new Texture(Gdx.files.internal("Traps/teleport.png")));
+                this.effects = Effect.TELEPORT;
                 break;
         }
     }
@@ -71,6 +71,9 @@ public class Trap extends GameObject {
         this.effects = other.getEffect();
         this.attackDamage = other.getAttackDamage();
         this.state = other.state;
+        this.effect = other.effect;
+        this.focusedEnemy = other.focusedEnemy;
+        this.setAnimation(other.getAnimation());
         this.setTexture(other.getTexture());
     }
 
@@ -79,7 +82,7 @@ public class Trap extends GameObject {
         this.effects = Effect.FREEZE;
         this.attackDamage = 0;
         this.state = State.IDLE;
-        textures();
+        loadTextures();
     }
 
     public Effect getEffect() {

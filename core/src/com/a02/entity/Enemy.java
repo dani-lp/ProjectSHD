@@ -49,7 +49,6 @@ public class Enemy extends Entity {
         this.state = State.IDLE;
         this.trapEffect = TrapEffect.NEUTRAL;
 
-        //*
         this.walkAnimation = createAnimation(walkpath, 3, 1, 0.2f);
         this.attackAnimation = createAnimation(attackpath, 2, 2, 0.2f);
         this.deathAnimation = createAnimation(deathpath, 2, 2, 0.25f);

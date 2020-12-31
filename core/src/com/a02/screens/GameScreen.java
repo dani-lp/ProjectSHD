@@ -218,7 +218,7 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Lógica de los botones del menú de pausa.
+     * Atualiza la lógica de los botones del menú de pausa.
      */
     private void updateMenuLogic() {
         //Botones tocados
@@ -245,7 +245,7 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Dibuja las entidades
+     * Dibuja las entidades.
      */
     private void draw() {
         game.entityBatch.begin();
@@ -253,7 +253,8 @@ public class GameScreen implements Screen {
 
         //Objetos y enemigos
         for (GameObject object:objects) {
-            game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
+            if (object.getAnimation() != null) game.entityBatch.draw(object.getCurrentAnimation(animationTimer), object.getX(), object.getY());
+            else game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
         }
         for (Enemy enemy:enemies) {
             if (enemy.state != Enemy.State.DEAD) {
@@ -279,7 +280,10 @@ public class GameScreen implements Screen {
 
         //Objetos del inventario
         for (GameObject object:drawing.getObjects()) {
-            if (object != null) game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
+            if (object != null) {
+                if (object.getAnimation() == null) game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
+                else game.entityBatch.draw(object.getCurrentAnimation(animationTimer), object.getX(), object.getY());
+            }
         }
 
         //Oro
@@ -300,7 +304,7 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Cambia el inventario visible al que está en uso
+     * Cambia el inventario visible al que está en uso.
      */
     private void inventorySwap() {
         Vector3 mousePos = getRelativeMousePos();
@@ -419,47 +423,43 @@ public class GameScreen implements Screen {
             log( Level.INFO, "Error en la conexion a la base de datos", null );
         }
 
-            // A partir de una conexiÃ³n activa obtenemos el objeto para ejecutar
-            // sentencias SQL en la base de datos.
         for (int i = 0; i < 2; i++){
             try {
                 Defender def = DBManager.dbManager.getDefender(i);
                 if (def.getId() == 0) {
                     def.setX(144);
                     def.setY(90);
-                    def.setHp(90000);
+                    def.setHp(90000); //Temporal
                 }
                 def.hpBar.setMaxHP(def.getHp());
-                def.textures();
+                def.loadTextures();
                 objects.add(def);
-                if (def.getId()!=0) {
+                if (def.getId() != 0) {
                     fullInv.insert(def);
                     defInv.insert(def);
-
                 }
-
             } catch (DBException e) {
                 log( Level.INFO, "No se ha podido obtener el defender", null );
             }
         }
 
-        Defender val= new Defender(0,0,16,18,2,"Valla",200,true,600);
+        Defender val = new Defender(0,0,16,18,2,"Valla",200,true,600);
         val.hpBar.setMaxHP(val.getHp());
-        val.textures();
+        val.loadTextures();
         objects.add(val);
         fullInv.insert(val);
         defInv.insert(val);
 
-        Defender mar= new Defender(0,0,16,18,3,"Repair",200,true,600);
+        Defender mar = new Defender(0,0,16,18,3,"Repair",200,true,600);
         mar.hpBar.setMaxHP(mar.getHp());
-        mar.textures();
+        mar.loadTextures();
         objects.add(mar);
         fullInv.insert(mar);
         defInv.insert(mar);
 
-        Defender hea= new Defender(0,0,16,18,4,"Health",200,true,600);
+        Defender hea = new Defender(0,0,16,18,4,"Health",200,true,600);
         hea.hpBar.setMaxHP(hea.getHp());
-        hea.textures();
+        hea.loadTextures();
         objects.add(hea);
         fullInv.insert(hea);
         defInv.insert(hea);
@@ -468,7 +468,7 @@ public class GameScreen implements Screen {
             try {
                 Trap trap = DBManager.dbManager.getTrap(i);
                 trap.hpBar.setMaxHP(trap.getHp());
-                trap.textures();
+                trap.loadTextures();
                 objects.add(trap);
                 fullInv.insert(trap);
                 trapInv.insert(trap);
@@ -481,7 +481,7 @@ public class GameScreen implements Screen {
             try {
                 Attacker att = DBManager.dbManager.getAttacker(i);
                 att.hpBar.setMaxHP(att.getHp());
-                att.textures();
+                att.loadTextures();
                 objects.add(att);
                 fullInv.insert(att);
                 attackInv.insert(att);
@@ -489,23 +489,23 @@ public class GameScreen implements Screen {
                 log( Level.INFO, "No se ha podido obtener el objeto de ataque", null );
             }
         }
-        Attacker disp= new Attacker(0,0,16,18,2,"Shoot",20,true,1000,"Shoot",125);
+        Attacker disp = new Attacker(0,0,16,18,2,"Shoot",20,true,1000,"Shoot",125);
         disp.hpBar.setMaxHP(disp.getHp());
-        disp.textures();
+        disp.loadTextures();
         objects.add(disp);
         fullInv.insert(disp);
         attackInv.insert(disp);
 
-        Attacker ond= new Attacker(0,0,16,18,3,"Wave",20,true,1000,"Wave",70);
+        Attacker ond = new Attacker(0,0,16,18,3,"Wave",20,true,1000,"Wave",70);
         ond.hpBar.setMaxHP(ond.getHp());
-        ond.textures();
+        ond.loadTextures();
         objects.add(ond);
         fullInv.insert(ond);
         attackInv.insert(ond);
 
-        Attacker timmy= new Attacker(0,0,16,18,1,"Timmy",20,true,1000,"Timmy",320);
+        Attacker timmy = new Attacker(0,0,16,18,1,"Timmy",20,true,1000,"Timmy",320);
         timmy.hpBar.setMaxHP(timmy.getHp());
-        timmy.textures();
+        timmy.loadTextures();
         objects.add(timmy);
         fullInv.insert(timmy);
         attackInv.insert(timmy);

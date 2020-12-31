@@ -5,7 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import static com.a02.game.Utils.createAnimation;
 
 public class Defender extends GameObject {
 
@@ -19,12 +20,12 @@ public class Defender extends GameObject {
                     boolean unlocked, int hp) {
         super(x, y, width, height, id, type, price, unlocked, hp);
         this.state = State.IDLE;
-        textures();
+        loadTextures();
     }
 
     private ArrayList<GameObject> hurt=new ArrayList<GameObject>();
 
-    public void textures() {
+    public void loadTextures() {
         switch (this.getId()) {
             case 0: //Beacon
                 this.setTexture(new Texture(Gdx.files.internal("beacon.png")));
@@ -40,6 +41,7 @@ public class Defender extends GameObject {
                 break;
             case 4:
                 this.setTexture(new Texture(Gdx.files.internal("healer.png")));
+                this.setAnimation(createAnimation("mercy-Sheet.png", 5, 1, 0.1f));
                 break;
         }
     }
@@ -47,13 +49,15 @@ public class Defender extends GameObject {
     public Defender() {
         super();
         this.state = State.IDLE;
-        textures();
+        loadTextures();
     }
 
     public Defender(Defender other) {
         super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getId(), other.getType(),
                 other.getPrice(), other.isUnlocked(), other.getHp());
         this.state = other.state;
+        this.setAnimation(other.getAnimation());
+        this.hurt = other.hurt;
         this.setTexture(other.getTexture());
     }
 

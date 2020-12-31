@@ -1,18 +1,15 @@
 package com.a02.entity;
 
-import com.a02.component.Map;
 import com.a02.component.Shoot;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Logger;
 
+import static com.a02.game.Utils.createAnimation;
 import static com.a02.game.Utils.getRelativeMousePos;
 
 public class Attacker extends GameObject {
@@ -34,22 +31,24 @@ public class Attacker extends GameObject {
         this.attackDamage = attackDamage;
         this.state = State.IDLE;
         this.isSelected=false;
-        textures();
+        loadTextures();
     }
 
-    public void textures(){
+    public void loadTextures(){
         switch (this.getId()){
             case 0: //Electricidad
                 this.setTexture(new Texture(Gdx.files.internal("electricity.png")));
                 break;
             case 1:
                 this.setTexture(new Texture(Gdx.files.internal("maquinaDeMatar.png")));
+                this.setAnimation(createAnimation("willy-Sheet.png", 2, 2, 0.1f));
                 break;
             case 2:
                 this.setTexture(new Texture(Gdx.files.internal("boredlion.png")));
                 break;
             case 3:
                 this.setTexture(new Texture(Gdx.files.internal("waves.png")));
+                this.setAnimation(createAnimation("wifi-Sheet.png", 3, 1, 0.2f));
                 break;
         }
     }
@@ -59,7 +58,7 @@ public class Attacker extends GameObject {
         this.attackType = "";
         this.attackDamage = 0;
         this.state = State.IDLE;
-        textures();
+        loadTextures();
     }
 
     public Attacker(Attacker other) {
@@ -67,6 +66,7 @@ public class Attacker extends GameObject {
         this.attackType = other.getAttackType();
         this.attackDamage = other.getAttackDamage();
         this.state = other.state;
+        this.setAnimation(other.getAnimation());
         this.setTexture(other.getTexture());
     }
 
@@ -122,7 +122,7 @@ public class Attacker extends GameObject {
                     }
                 }
 
-                if (this.getId() == 1){
+                else if (this.getId() == 1){
                     if (this.overlappedEnemy(gs) != null) {
                         Enemy tempEnemy = this.overlappedEnemy(gs);
                         if (tempEnemy.getHp() > 0 && gs.secTimer % 300 == 0) {
@@ -166,7 +166,6 @@ public class Attacker extends GameObject {
         }
         this.hpBar.update(this, this.getHp());
     }
-
 
 }
 

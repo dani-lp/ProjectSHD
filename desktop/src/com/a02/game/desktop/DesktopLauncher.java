@@ -21,7 +21,7 @@ public class DesktopLauncher {
 				new LoginWindow();
 			}
 		});
-		while(!begin);
+		while(!begin); //Espera a que el flag 'begin' se active
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 320;

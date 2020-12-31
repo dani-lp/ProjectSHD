@@ -6,6 +6,8 @@ import com.a02.screens.GameScreen;
 import com.a02.screens.PauseScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -25,6 +27,7 @@ public abstract class GameObject extends Entity {
     private boolean grabbed;
     private Texture texture;
     private Vector2 ogPos;
+    private Animation<TextureRegion> animation;
 
     private static Logger logger = Logger.getLogger(GameObject.class.getName());
 
@@ -122,6 +125,14 @@ public abstract class GameObject extends Entity {
         this.maxHp = maxHp;
     }
 
+    public Animation<TextureRegion> getAnimation() {
+        return animation;
+    }
+
+    public void setAnimation(Animation<TextureRegion> animation) {
+        this.animation = animation;
+    }
+
     @Override
     public String toString() {
         return "GameObject{" +
@@ -136,6 +147,7 @@ public abstract class GameObject extends Entity {
     }
 
     public abstract void update(GameScreen gs);
+    public abstract void loadTextures();
 
     /**
      * Comprueba y gestiona el agarre y colocación de los objetos.
@@ -271,7 +283,12 @@ public abstract class GameObject extends Entity {
         return false;
     }
 
-    protected Enemy overlappedEnemy(GameScreen gs) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
+    /**
+     * Devuelve el enemigo con el que el objeto que hace la llamada hace colisión.
+     * @param gs Screen de juego principal
+     * @return Enemy colisionado
+     */
+    protected Enemy overlappedEnemy(GameScreen gs) {
         if (this.isGrabbed()) return null;
         for (Enemy enemy : gs.enemies) {
             if (this.getX() < enemy.getX() + enemy.getWidth() && this.getX() + this.getWidth() > enemy.getX() &&
@@ -281,5 +298,9 @@ public abstract class GameObject extends Entity {
             }
         }
         return null;
+    }
+
+    public TextureRegion getCurrentAnimation(float animationTimer) {
+        return this.getAnimation().getKeyFrame(animationTimer, true);
     }
 }
