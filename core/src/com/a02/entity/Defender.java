@@ -1,25 +1,32 @@
 package com.a02.entity;
 
+import com.a02.component.Shoot;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
 
 import static com.a02.game.Utils.createAnimation;
+import static com.a02.game.Utils.getRelativeMousePos;
 
 public class Defender extends GameObject {
 
     private enum State {
         IDLE, HEALING
     }
-
+    public static boolean selected;
+    private boolean isSelected;
     State state;
 
     public Defender(float x, float y, int width, int height, int id, String type, int price,
                     boolean unlocked, int hp) {
         super(x, y, width, height, id, type, price, unlocked, hp);
         this.state = State.IDLE;
+        this.isSelected=false;
         loadTextures();
     }
 
@@ -49,6 +56,7 @@ public class Defender extends GameObject {
     public Defender() {
         super();
         this.state = State.IDLE;
+        this.isSelected=false;
         loadTextures();
     }
 
@@ -58,7 +66,16 @@ public class Defender extends GameObject {
         this.state = other.state;
         this.setAnimation(other.getAnimation());
         this.hurt = other.hurt;
+        this.isSelected=other.isSelected;
         this.setTexture(other.getTexture());
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public void update(GameScreen gs) {
@@ -69,29 +86,49 @@ public class Defender extends GameObject {
                     if (hurt.size() > 0) {
                         this.state = State.HEALING;
                     }
+                } else if (this.getId() == 3 && !this.isInInventory(gs)){
+                    Vector3 mousePos = getRelativeMousePos();
+                    if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched()) {
+                        Pixmap pm = new Pixmap(Gdx.files.internal("healcross.png"));
+                        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+                        pm.dispose();
+                        this.state = State.HEALING;
+                    }
                 }
                 break;
             case HEALING:
-                if (!this.isInInventory(gs)){
-                    System.out.println(this.getHp());
-                }
-
                 boolean healed=false;
-                if (gs.secTimer % 120 == 0) {
-                    for (GameObject obj : hurt) {
-                        if (obj.getHp() < obj.getMaxHp()) {
-                            obj.setHp(obj.getHp() + 75);
-                            healed=true;
+                if (this.getId() == 4){
+                    if (gs.secTimer % 120 == 0) {
+                        for (GameObject obj : hurt) {
+                            if (obj.getHp() < obj.getMaxHp()) {
+                                obj.setHp(obj.getHp() + 75);
+                                healed=true;
+                            }
+                        }
+                        if (healed){
+                            this.setHp(this.getHp() - 75);
                         }
                     }
-                    if (this.getX() == 261){
-                        this.getHp();
-                    }
-                    if (healed){
-                        this.setHp(this.getHp() - 75);
+                    break;
+                } else if (this.getId() == 3){
+                    this.isSelected = true;
+                    selected=true;
+
+                    if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+                        Vector3 focus = getRelativeMousePos();
+                        GameObject obj = overlappedObject(gs,focus.x, focus.y);
+                        if (obj != null && obj.getHp() < obj.getMaxHp()){
+                            obj.setHp(obj.getMaxHp());
+                            this.setHp(0);
+                            Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
+                            Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+                            pm.dispose();
+                            this.state = State.IDLE;
+                        }
+                        break;
                     }
                 }
-                break;
         }
         this.hpBar.update(this, this.getHp());
     }
@@ -101,10 +138,10 @@ public class Defender extends GameObject {
      * @param gs Screen de juego
      * @return GameObject colisionado
      */
-    public GameObject overlappedObject(GameScreen gs) {
+    public GameObject overlappedObject(GameScreen gs,float x, float y) {
         for (GameObject obj : gs.objects) {
-            if (this.getX() < obj.getX() + obj.getWidth() && this.getX() + this.getWidth() > obj.getX() &&
-                    this.getY() < obj.getY() + obj.getHeight() && this.getY() + this.getHeight() > obj.getY()) {
+            if (x < obj.getX() + obj.getWidth() && x + this.getWidth() > obj.getX() &&
+                    y < obj.getY() + obj.getHeight() && y > obj.getY()) {
                 return obj;
             }
         }

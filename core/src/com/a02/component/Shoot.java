@@ -175,7 +175,6 @@ public class Shoot {
             case ATTACKING:
                 this.move();
                 if (this.overlappedEnemy(gs) != null) {
-                    System.out.println("Ey");
                     this.state = State.IMPACT;
                 }
                 if (this.getX()<0 || this.getY()<0 || this.getX()>300 || this.getY()>180){

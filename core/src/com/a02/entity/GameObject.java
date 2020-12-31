@@ -28,6 +28,7 @@ public abstract class GameObject extends Entity {
     private Texture texture;
     private Vector2 ogPos;
     private Animation<TextureRegion> animation;
+    private boolean isSelected;
 
     private static Logger logger = Logger.getLogger(GameObject.class.getName());
 
@@ -42,6 +43,7 @@ public abstract class GameObject extends Entity {
         this.maxHp= hp;
         this.hpBar = new HealthBar(this, hp);
         this.ogPos = new Vector2();
+        this.isSelected=false;
     }
 
     public GameObject(GameObject other) {
@@ -63,6 +65,7 @@ public abstract class GameObject extends Entity {
         this.hp = 0;
         this.hpBar = new HealthBar(this, hp);
         this.ogPos = new Vector2();
+        this.isSelected=false;
     }
 
     public int getId() {
@@ -320,5 +323,13 @@ public abstract class GameObject extends Entity {
      */
     public TextureRegion getCurrentAnimation(float animationTimer) {
         return this.getAnimation().getKeyFrame(animationTimer, true);
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }
