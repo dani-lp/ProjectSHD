@@ -146,7 +146,15 @@ public abstract class GameObject extends Entity {
                 '}';
     }
 
+    /**
+     * Actualiza el estado de los GameObject.
+     * @param gs Screen del juego
+     */
     public abstract void update(GameScreen gs);
+
+    /**
+     * Carga las texturas y/o animaciones de los objetos.
+     */
     public abstract void loadTextures();
 
     /**
@@ -225,6 +233,11 @@ public abstract class GameObject extends Entity {
         }
     }
 
+    /**
+     * Comprueba si el objeto está en algún inventario.
+     * @param gs
+     * @return
+     */
     public boolean isInInventory(GameScreen gs){
         return gs.defInv.contains(this) ||
                 gs.drawing.contains(this) ||
@@ -300,6 +313,11 @@ public abstract class GameObject extends Entity {
         return null;
     }
 
+    /**
+     * Devuelve el frame actual de la animación correspondiente.
+     * @param animationTimer Timer de animaciones de GameScreen
+     * @return TextureRegion del frame requerido
+     */
     public TextureRegion getCurrentAnimation(float animationTimer) {
         return this.getAnimation().getKeyFrame(animationTimer, true);
     }

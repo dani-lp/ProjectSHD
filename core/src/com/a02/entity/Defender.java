@@ -23,7 +23,7 @@ public class Defender extends GameObject {
         loadTextures();
     }
 
-    private ArrayList<GameObject> hurt=new ArrayList<GameObject>();
+    private ArrayList<GameObject> hurt = new ArrayList<GameObject>();
 
     public void loadTextures() {
         switch (this.getId()) {
@@ -62,7 +62,6 @@ public class Defender extends GameObject {
     }
 
     public void update(GameScreen gs) {
-
         switch (this.state) {
             case IDLE:
                 if (this.getId() == 4 && !this.isInInventory(gs)) {
@@ -91,13 +90,18 @@ public class Defender extends GameObject {
                     if (healed){
                         this.setHp(this.getHp() - 75);
                     }
-                    healed=false;
                 }
-                this.hpBar.update(this, this.getHp());
                 break;
         }
+        this.hpBar.update(this, this.getHp());
     }
-    public GameObject overlappedObject(GameScreen gs) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
+
+    /**
+     * Devuelve el primer GameObject con el que se detecta colisión.
+     * @param gs Screen de juego
+     * @return GameObject colisionado
+     */
+    public GameObject overlappedObject(GameScreen gs) {
         for (GameObject obj : gs.objects) {
             if (this.getX() < obj.getX() + obj.getWidth() && this.getX() + this.getWidth() > obj.getX() &&
                     this.getY() < obj.getY() + obj.getHeight() && this.getY() + this.getHeight() > obj.getY()) {
@@ -107,8 +111,13 @@ public class Defender extends GameObject {
         return null;
     }
 
-    protected ArrayList<GameObject> overlappedArea(GameScreen gs) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
-        ArrayList<GameObject> inArea= new ArrayList<GameObject>();
+    /**
+     * Devuelve un ArrayList de los GameObject dentro de un área cuyo centro es el objeto que realiza la llamada.
+     * @param gs Screen de juego
+     * @return ArrayList de GameObject en un área
+     */
+    protected ArrayList<GameObject> overlappedArea(GameScreen gs) {
+        ArrayList<GameObject> inArea = new ArrayList<GameObject>();
         for (GameObject obj : gs.objects) {
             if ((obj.getX() < this.getX() + 50 && obj.getX() > this.getX() - 50) && (obj.getY() < this.getY() + 50 && obj.getY() > this.getY() - 50) && !(obj.getX() == this.getX() && obj.getY() == this.getY()) && obj.getHp() < obj.getMaxHp()) {
                 inArea.add(obj);

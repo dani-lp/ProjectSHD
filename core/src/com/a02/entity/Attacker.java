@@ -9,8 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 
 import java.util.logging.Logger;
 
-import static com.a02.game.Utils.createAnimation;
-import static com.a02.game.Utils.getRelativeMousePos;
+import static com.a02.game.Utils.*;
 
 public class Attacker extends GameObject {
     public static boolean selected;

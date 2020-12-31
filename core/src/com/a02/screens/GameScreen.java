@@ -118,6 +118,10 @@ public class GameScreen implements Screen {
         game.entityBatch = new SpriteBatch();
     }
 
+    /**
+     * Renderiza los objetos de juego y actualiza su lógica cada 1/60 segundos.
+     * @param delta Tiempo entre cada frame renderizado
+     */
     @Override
     public void render(float delta) {
         //Reset de OpenGL
@@ -411,6 +415,9 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * Extrae los objetos de la Base de Datos y los introduce en los inventarios.
+     */
     public void createObjects(){
 
         Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
