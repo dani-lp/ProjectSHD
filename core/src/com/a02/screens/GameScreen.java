@@ -223,6 +223,15 @@ public class GameScreen implements Screen {
             enough++;
         }
 
+        if (enough == 1 && enemies.size() == 0){
+            msg1="Felicidades, estas listo para el desafio";
+            msg2="pulsa click una ultima vez para ir al menu";
+            if (contEnt == 13){
+                game.setScreen(new MenuScreen(this.game,false));
+            }
+
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.E) || deselect){
             Attacker.selected=false;
             for (GameObject obj:objects) {
@@ -251,7 +260,7 @@ public class GameScreen implements Screen {
         draw();
 
         if (objects.get(0).getHp()<=0) {
-            game.setScreen(new MenuScreen(game)); //TODO: cambiar a EndScreen
+            game.setScreen(new MenuScreen(game,false)); //TODO: cambiar a EndScreen
             //game.setScreen(new EndScreen(Settings.s.getUsername(), points));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
@@ -326,7 +335,7 @@ public class GameScreen implements Screen {
             pauseFlag = !pauseFlag;
         }
         else if (menuButton.isJustClicked()) {
-            game.setScreen(new MenuScreen(game));
+            game.setScreen(new MenuScreen(game,false));
         }
         else if (quitButton.isJustClicked()) {
             Gdx.app.exit();

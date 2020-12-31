@@ -31,7 +31,7 @@ public class MainGame extends Game {
 	public void create () {
 		entityBatch = new SpriteBatch();
 		mainGameScreen = new GameScreen(this, 0);
-		this.setScreen(new MenuScreen(this));
+		this.setScreen(new MenuScreen(this,tutorial()));
 	}
 
 	public void render() {

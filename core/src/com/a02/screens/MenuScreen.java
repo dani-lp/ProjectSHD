@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 public class MenuScreen implements Screen {
 
     final MainGame game;
+    public boolean tutorial;
     private UIButton round1Button;
     private UIButton round2Button;
     private UIButton quitButton;
@@ -23,9 +24,9 @@ public class MenuScreen implements Screen {
     private OrthographicCamera camera;
     private static Logger logger = Logger.getLogger(MenuScreen.class.getName());
 
-    public MenuScreen(MainGame game) {
+    public MenuScreen(MainGame game, boolean tutorial) {
         this.game = game;
-
+        this.tutorial=tutorial;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
 
@@ -38,6 +39,8 @@ public class MenuScreen implements Screen {
         Logger.getLogger("").setLevel(Level.INFO);
         Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
         logger.info("Inicio del MenuScreen");
+
+
     }
 
     @Override
@@ -50,12 +53,12 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (MainGame.tutorial()){
-            game.setScreen(new GameScreen(game, 0));
-        }
-
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
+
+        if (this.tutorial){
+            game.setScreen(new GameScreen(game, 0));
+        }
 
         game.entityBatch.begin();
         game.entityBatch.draw(new Texture(Gdx.files.internal("wallpaperTest.png")),0,0);
