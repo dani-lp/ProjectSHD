@@ -126,7 +126,7 @@ public class Attacker extends GameObject {
                 else if (this.getId() == 1){
                     if (this.overlappedEnemy(gs) != null) {
                         Enemy tempEnemy = this.overlappedEnemy(gs);
-                        if (tempEnemy.getHp() > 0 && gs.secTimer % 300 == 0) {
+                        if (tempEnemy.getHp() > 0 && gs.secTimer % 15 == 0) {
                             tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackDamage));
                         } else if (tempEnemy.getHp() <= 0) {
                             this.state = State.IDLE;
