@@ -51,10 +51,17 @@ public class GameScreen implements Screen {
 
     BitmapFont font;
 
+    //Botones del menú
     private UIButton pauseButton;
     private UIButton resumeButton;
     private UIButton menuButton;
     private UIButton quitButton;
+
+    //Botones del inventario
+    private UIButton allObjectsButton;
+    private UIButton attackerButton;
+    private UIButton defenderButton;
+    private UIButton trapButton;
 
     public int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones
@@ -108,10 +115,14 @@ public class GameScreen implements Screen {
         map = new Map("map1.png");
 
         pauseButton = new UIButton(299, 6, 16, 16, "pause.png");
-
         resumeButton = new UIButton(123, 113, 74, 36, "Buttons/resumeButtonIdle.png");
         menuButton = new UIButton(123, 73, 74, 36, "Buttons/menuButtonIdle.png");
         quitButton = new UIButton(123, 33, 74, 36, "Buttons/quitButtonIdle.png");
+
+        allObjectsButton = new UIButton(259,162,15,15,"Buttons/Inventory/allButtonIdle.png");
+        attackerButton = new UIButton(273,162,15,15,"Buttons/Inventory/attackerButtonIdle.png");
+        defenderButton = new UIButton(288,162,15,15,"Buttons/Inventory/defenderButtonIdle.png");
+        trapButton = new UIButton(302,162,15,15,"Buttons/Inventory/trapButtonIdle.png");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
@@ -181,7 +192,7 @@ public class GameScreen implements Screen {
         if (secTimer % 20 == 0) gold++;
 
         //Actualiza estado de objetos del inventario
-        for (GameObject object : fullInv.getObjects()) {
+        for (GameObject object : drawing.getObjects()) {
             object.grabObject(map, objects);
         }
 
@@ -279,6 +290,11 @@ public class GameScreen implements Screen {
 
         //Inventario
         game.entityBatch.draw(drawing.getTexture(), drawing.getX(), drawing.getY());
+        game.entityBatch.draw(allObjectsButton.getTexture(), allObjectsButton.getX(), allObjectsButton.getY());
+        game.entityBatch.draw(attackerButton.getTexture(), attackerButton.getX(), attackerButton.getY());
+        game.entityBatch.draw(defenderButton.getTexture(), defenderButton.getX(), defenderButton.getY());
+        game.entityBatch.draw(trapButton.getTexture(), trapButton.getX(), trapButton.getY());
+
 
         //Objetos del inventario
         for (GameObject object:drawing.getObjects()) {
@@ -309,18 +325,22 @@ public class GameScreen implements Screen {
      * Cambia el inventario visible al que está en uso.
      */
     private void inventorySwap() {
-        Vector3 mousePos = getRelativeMousePos();
-        if (mousePos.y <= 176 && mousePos.y >= 164 ) {
-            if (260 <= mousePos.x && 272 >= mousePos.x && Gdx.input.isTouched()){
-                drawing = attackInv.sortInventory();
-            } else if (274 <= mousePos.x && 286 >= mousePos.x && Gdx.input.isTouched()){
-                drawing = defInv.sortInventory();
-            } else if (289 <= mousePos.x && 301 >= mousePos.x && Gdx.input.isTouched()){
-                drawing = trapInv.sortInventory();
-            } else if (303 <= mousePos.x && 315 >= mousePos.x && Gdx.input.isTouched()){
-                drawing = fullInv.sortInventory();
-            }
-        }
+        if (allObjectsButton.isTouched()) allObjectsButton.setTexture(new Texture("Buttons/Inventory/allButtonTouched.png"));
+        else allObjectsButton.setTexture(new Texture("Buttons/Inventory/allButtonIdle.png"));
+
+        if (attackerButton.isTouched()) attackerButton.setTexture(new Texture("Buttons/Inventory/attackerButtonTouched.png"));
+        else attackerButton.setTexture(new Texture("Buttons/Inventory/attackerButtonIdle.png"));
+
+        if (defenderButton.isTouched()) defenderButton.setTexture(new Texture("Buttons/Inventory/defenderButtonTouched.png"));
+        else defenderButton.setTexture(new Texture("Buttons/Inventory/defenderButtonIdle.png"));
+
+        if (trapButton.isTouched()) trapButton.setTexture(new Texture("Buttons/Inventory/trapButtonTouched.png"));
+        else trapButton.setTexture(new Texture("Buttons/Inventory/trapButtonIdle.png"));
+
+        if (allObjectsButton.isJustClicked()) drawing = fullInv.sortInventory();
+        if (attackerButton.isJustClicked()) drawing = attackInv.sortInventory();
+        if (defenderButton.isJustClicked()) drawing = defInv.sortInventory();
+        if (trapButton.isJustClicked()) drawing = trapInv.sortInventory();
     }
 
     public void ronda1(){
