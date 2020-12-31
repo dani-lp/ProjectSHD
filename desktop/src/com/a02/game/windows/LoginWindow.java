@@ -61,9 +61,6 @@ public class LoginWindow extends JFrame{
             }
         });
 
-        /*
-         * TODO: optimizable. Implementar forma de crear usuarios administradores desde un usuario admin inicial
-         */
         loginButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (userJTF.getText().equals("")) userJTF.putClientProperty("JComponent.outline", "error");
@@ -80,7 +77,10 @@ public class LoginWindow extends JFrame{
                                 } catch (IOException | ClassNotFoundException ioException) {
                                     ioException.printStackTrace();
                                 }
-                                new SettingsWindow(users.get(userJTF.getText()));
+                                if (userJTF.getText().equals("admin")) {
+                                    new SettingsWindow(new User("admin"));
+                                }
+                                else new SettingsWindow(users.get(userJTF.getText()));
                             }
                         });
                         dispose();
@@ -132,8 +132,7 @@ public class LoginWindow extends JFrame{
         add(buttonsPanel);
     }
 
-    public boolean checkSystem(String usern, String pass) throws FileNotFoundException {
-        boolean result = false;
+    public boolean checkSystem(String user, String pwd) throws FileNotFoundException {
         HashMap<String, User> users = new HashMap<>();
         try {
             users = readSer("users.ser");
@@ -141,12 +140,14 @@ public class LoginWindow extends JFrame{
             ioException.printStackTrace();
         }
 
-        for (String key: users.keySet()) { //TODO: la llave no es el username?
-            if (users.get(key).getUsername().equals(usern) && users.get(key).getPassword().equals(pass)){
-                result = true;
-            }
+        if (users.containsKey(user)) return users.get(user).getPassword().equals(pwd);
+        else if (user.equals("admin") && pwd.equals("admin")) return true;
+        else {
+            if (!user.equals("")) JOptionPane.showMessageDialog(null,
+                    "User '" + user + "' does not exist.",
+                    "Invalid user", JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-        return result;
     }
 
     public static void main(String[] args) {
