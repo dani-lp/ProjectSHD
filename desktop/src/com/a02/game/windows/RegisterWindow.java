@@ -88,7 +88,12 @@ public class RegisterWindow extends JFrame {
                     @Override
                     public void run() {
                         if (!userJTF.getText().equals("") && pwdJTF.getPassword().length != 0) {
-                            if (validateMail(mailJTF.getText())) {
+                            if (userJTF.getText().equals("admin")) {
+                                JOptionPane.showMessageDialog(null,
+                                        "'admin' username is not available.",
+                                        "Invalid username", JOptionPane.ERROR_MESSAGE);
+                            }
+                            else if (validateMail(mailJTF.getText())) {
                                 User tempUser = new User();
                                 tempUser.setAge((Integer) ageSpinner.getValue());
                                 tempUser.setMail(mailJTF.getText());
