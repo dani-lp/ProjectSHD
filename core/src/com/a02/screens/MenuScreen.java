@@ -50,6 +50,10 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        if (MainGame.tutorial()){
+            game.setScreen(new GameScreen(game, 0));
+        }
+
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
 

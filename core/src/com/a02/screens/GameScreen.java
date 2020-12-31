@@ -34,7 +34,7 @@ public class GameScreen implements Screen {
 
     private static boolean buying, pauseFlag;
     private static int gold;
-
+    private static int rounda;
     public List<GameObject> objects = new ArrayList<>(); //Objetos en el juego
     public List<Enemy> enemies = new ArrayList<>(); // Enemigos del juego
     public static List<Shoot> shoots= new ArrayList<>();
@@ -66,6 +66,11 @@ public class GameScreen implements Screen {
     public int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones
     private static boolean LOGGING = true;
+    public String msg1;
+    public String msg2;
+    UIButton tutoBut= new UIButton(2,40,220,35,"textfield.png");
+    public int contEnt=0;
+    public int enough=0;
 
     private void log(Level level, String msg, Throwable exception) {
         if (!LOGGING) return;
@@ -102,6 +107,9 @@ public class GameScreen implements Screen {
         createObjects();
 
         drawing = fullInv.sortInventory();
+        rounda=round;
+        msg1="en este tutorial veras como jugar," ;
+        msg2="clicka el texto para seguir";
 
         switch (round) {
             case 1:
@@ -142,11 +150,73 @@ public class GameScreen implements Screen {
         //Actualiza cámara
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
-        int id = 0;
         for (GameObject obj:objects) {
             if (((obj instanceof Attacker && obj.getHp() <= 0 && obj.getId() == 2) || (obj instanceof Defender && obj.getHp() <= 0 && obj.getId() == 3)) && obj.isSelected()){
                 deselect=true;
             }
+        }
+
+        if (tutoBut.isJustClicked()){
+            contEnt++;
+        }
+
+        switch (contEnt){
+            case 1:
+                msg1="El objeto colocado en el centro es";
+                msg2="el beacon, si se destruye pierdes";
+                break;
+            case 2:
+                msg1="usa los objetos del inventario para";
+                msg2="protegerlo, colocarlos costara oro";
+                break;
+            case 3:
+                msg1="conseguiras oro periodicamente o";
+                msg2="acabando con enemigos";
+                break;
+            case 4:
+                msg1="puedes usar los botones en lo alto";
+                msg2="del inventario para navegar entre objetos";
+                break;
+            case 5:
+                msg1="tienes 3 tipos de objetos trampas,";
+                msg2="defensivos y ofensivos";
+                break;
+            case 6:
+                msg1="los defensivos curan objetos o";
+                msg2="ralentizan a los enemigos, prueba alguno";
+                break;
+            case 7:
+                msg1="cada trampa tiene un efecto unico,";
+                msg2="pero ten cuidado son de un solo uso";
+                break;
+            case 8:
+                msg1="los objetos de ataque ejercen daño";
+                msg2="a los enemigos a mele o a distancia";
+                break;
+            case 9:
+                msg1="Por ultimo, puedes tomar control de";
+                msg2="algunos objetos y usarlos si les haces click";
+                break;
+            case 10:
+                msg1="pulsando ESPACIO podras disparar con el ";
+                msg2="leon o elegir a quien curar con el martillo";
+                break;
+            case 11:
+                msg1="mientras controles un objeto no podras";
+                msg2="colocar otros, deja de controlarlo pulsando E";
+                break;
+            case 12:
+                msg1="ATENCION!!! se acerca un enemigo,";
+                msg2="veamos como te las arreglas...";
+                break;
+        }
+
+        if (contEnt == 12 && enough == 0){
+            Enemy larry = new Enemy(-15,90,16,16,1,500,300,15,(int) this.secTimer+30,200,"e1-walk.png","e1-attack.png","e1-death.png");
+            larry.hpBar.setMaxHP(larry.getHp());
+            larry.setFocus(objects.get(0).getX(), objects.get(0).getY());
+            enemies.add(larry);
+            enough++;
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.E) || deselect){
@@ -305,7 +375,16 @@ public class GameScreen implements Screen {
         }
 
         //Oro
-        font.draw(game.entityBatch, "ORO  " + Integer.toString(gold), 5, 175);
+        if (rounda != 0){
+            font.draw(game.entityBatch, "ORO : " + Integer.toString(gold), 5, 175);
+        } else{
+            gold=gold + 100000;
+            game.entityBatch.draw(tutoBut.getTexture(),tutoBut.getX(),tutoBut.getY());
+            font.draw(game.entityBatch, "ORO INFINITY: " , 5, 175);
+            font.draw(game.entityBatch, msg1 , 5, 68);
+            font.draw(game.entityBatch, msg2 , 5, 55);
+        }
+
 
         //Botones
         game.entityBatch.draw(pauseButton.getTexture(), pauseButton.getX(), pauseButton.getY());

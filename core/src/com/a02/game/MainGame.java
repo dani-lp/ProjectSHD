@@ -13,6 +13,7 @@ import com.badlogic.gdx.Game;
 public class MainGame extends Game {
 	public SpriteBatch entityBatch;
 	public static GameScreen mainGameScreen;
+	static boolean tutorial;
 
 	public MainGame(String gamemode, double diff, boolean musicCheck, boolean soundCheck, boolean tutorialCheck) {
 		Settings.s.setGamemode(gamemode);
@@ -20,8 +21,11 @@ public class MainGame extends Game {
 		Settings.s.setMusicCheck(musicCheck);
 		Settings.s.setSoundCheck(soundCheck);
 		Settings.s.setTutorialCheck(tutorialCheck);
+		tutorial=tutorialCheck;
 	}
-
+	public static boolean tutorial(){
+		return tutorial;
+	}
 	@Override
 	public void create () {
 		entityBatch = new SpriteBatch();

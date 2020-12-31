@@ -55,6 +55,7 @@ public class Enemy extends Entity {
         this.startTime = startTime;
         this.goldValue = goldValue;
         this.hpBar = new HealthBar(this, hp);
+        this.focus = new Vector2(0,0);
     }
 
     public Enemy() {        //Constructor vacio de enemigos
