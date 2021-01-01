@@ -1,6 +1,6 @@
 package com.a02.game;
 
-import com.a02.component.User;
+import com.a02.users.User;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
@@ -11,6 +11,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
     /**
@@ -68,10 +72,15 @@ public class Utils {
     }
 
     public static HashMap<String, User> readSer(String path) throws IOException, ClassNotFoundException {
+        HashMap<String, User> map;
         FileInputStream fs = new FileInputStream(path);
-        ObjectInputStream os = new ObjectInputStream(fs);
-
-        return (HashMap<String, User>) os.readObject();
+        try{
+            ObjectInputStream os = new ObjectInputStream(fs);
+            map = (HashMap<String, User>) os.readObject();
+            return map;
+        } catch (EOFException e) {
+            return new HashMap<String, User>();
+        }
     }
 
     public static void writeSer(String path, HashMap<String,User> map) throws IOException {
@@ -79,5 +88,38 @@ public class Utils {
         ObjectOutputStream oos = new ObjectOutputStream(fos);
 
         oos.writeObject(map);
+    }
+
+    public static void deleteUser(String path, String key) {
+        HashMap<String, User> map = null;
+        try {
+            map = readSer(path);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (map != null) map.remove(key);
+
+        try {
+            writeSer(path, map);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void printMap(Map mp) {
+        Iterator it = mp.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            System.out.println(pair.getKey() + " = " + pair.getValue());
+            it.remove();
+        }
+    }
+
+    public static boolean validateMail(String emailStr) {
+        final Pattern VALID_EMAIL_ADDRESS_REGEX =
+                Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
+        return matcher.find() || emailStr.equals("");
     }
 }

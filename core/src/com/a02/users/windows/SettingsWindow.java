@@ -1,7 +1,8 @@
-package com.a02.game.windows;
+package com.a02.users.windows;
 
-import com.a02.game.User;
-import com.a02.game.desktop.DesktopLauncher;
+import com.a02.game.MainGame;
+import com.a02.game.Settings;
+import com.a02.users.User;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
@@ -75,13 +76,13 @@ public class SettingsWindow extends JFrame {
 
         confirmButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                DesktopLauncher.gamemode = String.valueOf(modeCB.getSelectedItem());;
-                DesktopLauncher.diff = getDmgMult(diffSlider.getValue());
-                DesktopLauncher.musicCheck = musicCheck.isSelected();
-                DesktopLauncher.soundCheck = soundCheck.isSelected();
-                DesktopLauncher.tutorialCheck = tutorialCheck.isSelected();
-                DesktopLauncher.begin = true;
-                DesktopLauncher.username = user.getUsername();
+                Settings.s.setGamemode(String.valueOf(modeCB.getSelectedItem()));
+                Settings.s.setDiff(getDmgMult(diffSlider.getValue()));
+                Settings.s.setMusicCheck(musicCheck.isSelected());
+                Settings.s.setSoundCheck(soundCheck.isSelected());
+                Settings.s.setTutorialCheck(tutorialCheck.isSelected());
+                Settings.s.setUsername(user.getUsername());
+                MainGame.begin = true;
                 dispose();
             }
         });

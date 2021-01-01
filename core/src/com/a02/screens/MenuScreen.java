@@ -12,35 +12,36 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MenuScreen implements Screen {
-
     final MainGame game;
+
     public boolean tutorial;
+    private boolean introTimer; //Para poder hacer click en el botón de "Menu" en GameScreen sin tocar el de "Round 2"
+
     private UIButton round1Button;
     private UIButton round2Button;
     private UIButton quitButton;
 
-    private boolean introTimer; //Para poder hacer click en el botón de "Menu" en GameScreen sin tocar el de "Round 2"
+    private Texture backgroundTexture;
 
     private OrthographicCamera camera;
     private static Logger logger = Logger.getLogger(MenuScreen.class.getName());
 
     public MenuScreen(MainGame game, boolean tutorial) {
         this.game = game;
-        this.tutorial=tutorial;
+        this.tutorial = tutorial;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
 
         round1Button = new UIButton(123, 113, 74, 36, "Buttons/round1ButtonIdle.png");
         round2Button = new UIButton(123, 73, 74, 36, "Buttons/round2ButtonIdle.png");
         quitButton = new UIButton(123, 33, 74, 36, "Buttons/quitButtonIdle.png");
+        backgroundTexture = new Texture(Gdx.files.internal("wallpaperTest.png"));
 
         introTimer = false;
 
         Logger.getLogger("").setLevel(Level.INFO);
         Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
         logger.info("Inicio del MenuScreen");
-
-
     }
 
     @Override
@@ -61,7 +62,7 @@ public class MenuScreen implements Screen {
         }
 
         game.entityBatch.begin();
-        game.entityBatch.draw(new Texture(Gdx.files.internal("wallpaperTest.png")),0,0);
+        game.entityBatch.draw(backgroundTexture,0,0);
         game.entityBatch.draw(round1Button.getTexture(), round1Button.getX(),round1Button.getY());
         game.entityBatch.draw(round2Button.getTexture(), round2Button.getX(),round2Button.getY());
         game.entityBatch.draw(quitButton.getTexture(),quitButton.getX(),quitButton.getY());
@@ -96,6 +97,14 @@ public class MenuScreen implements Screen {
     }
 
     @Override
+    public void dispose() {
+        round1Button.getTexture().dispose();
+        round2Button.getTexture().dispose();
+        quitButton.getTexture().dispose();
+        backgroundTexture.dispose();
+    }
+
+    @Override
     public void resize(int width, int height) {
 
     }
@@ -112,11 +121,6 @@ public class MenuScreen implements Screen {
 
     @Override
     public void hide() {
-
-    }
-
-    @Override
-    public void dispose() {
 
     }
 }

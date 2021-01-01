@@ -1,6 +1,6 @@
-package com.a02.game.windows;
+package com.a02.users.windows;
 
-import com.a02.game.User;
+import com.a02.users.User;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
@@ -9,7 +9,7 @@ import java.awt.event.*;
 import java.io.*;
 import java.util.HashMap;
 
-import static com.a02.game.components.Utils.readSer;
+import static com.a02.game.Utils.readSer;
 
 public class LoginWindow extends JFrame{
     public LoginWindow() {

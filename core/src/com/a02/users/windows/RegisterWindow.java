@@ -1,8 +1,7 @@
-package com.a02.game.windows;
+package com.a02.users.windows;
 
-import com.a02.game.User;
+import com.a02.users.User;
 import com.formdev.flatlaf.FlatLightLaf;
-import jdk.nashorn.internal.scripts.JO;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +10,8 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.HashMap;
 
-import static com.a02.game.components.Utils.*;
+import static com.a02.game.Utils.*;
+
 
 public class RegisterWindow extends JFrame {
     public RegisterWindow() {

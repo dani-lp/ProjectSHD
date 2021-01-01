@@ -1,6 +1,6 @@
-package com.a02.game.windows;
+package com.a02.users.windows;
 
-import com.a02.game.User;
+import com.a02.users.User;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
@@ -13,7 +13,8 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.HashMap;
 
-import static com.a02.game.components.Utils.*;
+import static com.a02.game.Utils.*;
+
 
 public class UsersWindow extends JFrame {
     boolean isEditable = false;

@@ -71,9 +71,9 @@ public class GameScreen implements Screen {
     private static boolean LOGGING = true;
     public String msg1;
     public String msg2;
-    UIButton tutoBut= new UIButton(2,40,220,35,"textfield.png");
-    public int contEnt=0;
-    public int enough=0;
+    UIButton tutoBut = new UIButton(2,40,220,35,"textfield.png");
+    public int contEnt = 0;
+    public int enough = 0;
 
     private void log(Level level, String msg, Throwable exception) {
         if (!LOGGING) return;
@@ -110,9 +110,9 @@ public class GameScreen implements Screen {
         createObjects();
 
         drawing = fullInv.sortInventory();
-        rounda=round;
-        msg1="en este tutorial veras como jugar," ;
-        msg2="clicka el texto para seguir";
+        rounda = round;
+        msg1 = "en este tutorial veras como jugar," ;
+        msg2 = "clicka el texto para seguir";
 
         switch (round) {
             case 1:
@@ -260,8 +260,8 @@ public class GameScreen implements Screen {
         draw();
 
         if (objects.get(0).getHp()<=0) {
-            game.setScreen(new MenuScreen(game,false)); //TODO: cambiar a EndScreen
-            //game.setScreen(new EndScreen(Settings.s.getUsername(), points));
+            //game.setScreen(new MenuScreen(game,false));
+            game.setScreen(new EndScreen(Settings.s.getUsername(), points, game));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
     }
@@ -549,7 +549,7 @@ public class GameScreen implements Screen {
                 if (def.getId() == 0) {
                     def.setX(144);
                     def.setY(90);
-                    def.setHp(90000); //Temporal
+                    def.setHp(900); //Temporal
                 }
                 def.hpBar.setMaxHP(def.getHp());
                 def.loadTextures();
@@ -599,6 +599,27 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         game.entityBatch.dispose();
+
+        drawing.getTexture().dispose();
+        fullInv.getTexture().dispose();
+        attackInv.getTexture().dispose();
+        defInv.getTexture().dispose();
+        trapInv.getTexture().dispose();
+
+        map.getTexture().dispose();
+        font.dispose();
+
+        pauseButton.getTexture().dispose();
+        resumeButton.getTexture().dispose();
+        menuButton.getTexture().dispose();
+        quitButton.getTexture().dispose();
+
+        allObjectsButton.getTexture().dispose();
+        attackerButton.getTexture().dispose();
+        defenderButton.getTexture().dispose();
+        trapButton.getTexture().dispose();
+
+        tutoBut.getTexture().dispose();
 
         for (GameObject object: objects) {
             object.getTexture().dispose();

@@ -3,7 +3,6 @@ package com.a02.entity;
 import com.a02.component.HealthBar;
 import com.a02.component.Map;
 import com.a02.screens.GameScreen;
-import com.a02.screens.PauseScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
