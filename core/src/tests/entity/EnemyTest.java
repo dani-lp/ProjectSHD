@@ -40,21 +40,6 @@ public class EnemyTest {
     }
 
     @Test
-    public void getWalkpath() {
-        assertEquals("Wpath", enemyTest.getWalkpath());
-    }
-
-    @Test
-    public void getAttackpath() {
-        assertEquals("Apath", enemyTest.getAttackpath());
-    }
-
-    @Test
-    public void getDeathpath() {
-        assertEquals("Dpath", enemyTest.getDeathpath());
-    }
-
-    @Test
     public void getStartTime() {
         assertEquals(7, enemyTest.getStartTime());
     }

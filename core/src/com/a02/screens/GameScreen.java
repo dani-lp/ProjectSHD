@@ -17,16 +17,12 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector3;
 
-import java.awt.*;
 import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static com.a02.game.Utils.getRelativeMousePos;
 
 public class GameScreen implements Screen {
     final MainGame game;
@@ -440,31 +436,32 @@ public class GameScreen implements Screen {
         if (trapButton.isJustClicked()) drawing = trapInv.sortInventory();
     }
 
+    private void loadEnemy(Enemy larry, String[] fields) {
+        larry.setX(Integer.parseInt(fields[0]));
+        larry.setY(Integer.parseInt(fields[1]));
+        larry.setStartTime(Integer.parseInt(fields[2]));
+        larry.hpBar.setMaxHP(larry.getHp());
+        larry.setFocus(objects.get(0).getX(), objects.get(0).getY());
+        larry.loadAnimations();
+        enemies.add(larry);
+    }
+
     public void ronda1(){
         try {
             DBManager.dbManager.connect("Databases/base.db");
         } catch (DBException e) {
             log( Level.INFO, "Error en la conexion a la base de datos", null );
         }
-        Enemy larry = new Enemy();
+        Enemy larry;
         try {
             try {
                 Scanner sc = new Scanner(new FileInputStream("core/assets/ronda1.csv"));
                 while (sc.hasNext()) {
-                    String line= sc.next();
-                    String[] campos = line.split(";");
+                    String line = sc.next();
+                    String[] fields = line.split(";");
 
                     larry = DBManager.dbManager.getEnemy(0);
-                    larry.setX(Integer.parseInt(campos[0]));
-                    larry.setY(Integer.parseInt(campos[1]));
-                    larry.setStartTime(Integer.parseInt(campos[2]));
-                    larry.setWidth(16);
-                    larry.setHeight(16);
-                    larry.hpBar.setMaxHP(larry.getHp());
-                    larry.setFocus(objects.get(0).getX(), objects.get(0).getY());
-                    //larry.animations(3,1,2,2,2,2);
-                    larry.loadAnimations();
-                    enemies.add(larry);
+                    loadEnemy(larry, fields);
                 }
                 sc.close();
 
@@ -496,27 +493,16 @@ public class GameScreen implements Screen {
                 Scanner sc= new Scanner(new FileInputStream("core/assets/ronda1.csv"));
                 while (sc.hasNext()) {
                     String line = sc.next();
-                    String[] campos = line.split(";");
+                    String[] fields = line.split(";");
                     if (enemies.size()<6){
                         larry = DBManager.dbManager.getEnemy(0);
-                        //larry.animations(3,1,2,2,2,2);
                         larry.loadAnimations();
-                    }else{
+                    } else {
                         larry = DBManager.dbManager.getEnemy(1);
-                        larry.setDeathpath("e1-death.png");
-                        //larry.animations(2,2,5,1,2,2);
                         larry.loadAnimations();
                     }
 
-                    larry.setX(Integer.parseInt(campos[0]));
-                    larry.setY(Integer.parseInt(campos[1]));
-                    larry.setStartTime(Integer.parseInt(campos[2]));
-                    larry.setWidth(16);
-                    larry.setHeight(16);
-                    larry.hpBar.setMaxHP(larry.getHp());
-                    larry.setFocus(objects.get(0).getX(), objects.get(0).getY());
-                    larry.loadAnimations();
-                    enemies.add(larry);
+                    loadEnemy(larry, fields);
                 }
                 sc.close();
 

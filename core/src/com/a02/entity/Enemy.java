@@ -23,9 +23,6 @@ public class Enemy extends Entity {
     private int startTime;  //Tiempo de inicio de movimiento
     private int effectTimer;    //Timer de efectos de las trampas
     private int deathTimer; //Timer de animación de muerte
-    private String walkpath;
-    private String attackpath;
-    private String deathpath;
     private Vector2 focus;
     protected Animation<TextureRegion> walkAnimation;
     protected Animation<TextureRegion> attackAnimation;
@@ -70,12 +67,6 @@ public class Enemy extends Entity {
         this.hpBar = new HealthBar(this, 0);
         this.goldValue = 50;
         this.focus = new Vector2(0,0);
-    }
-
-    public void animations(int wcol, int wrow,int acol,int arow,int dcol,int drow){
-        this.walkAnimation = createAnimation(walkpath, wcol, wrow, 0.2f);
-        this.attackAnimation = createAnimation(attackpath, acol, arow, 0.2f);
-        this.deathAnimation = createAnimation(deathpath, dcol, drow, 0.25f);
     }
 
     public void loadAnimations() {
@@ -138,30 +129,6 @@ public class Enemy extends Entity {
 
     public void setGoldValue(int goldValue) {
         this.goldValue = goldValue;
-    }
-
-    public String getWalkpath() {
-        return walkpath;
-    }
-
-    public void setWalkpath(String walkpath) {
-        this.walkpath = walkpath;
-    }
-
-    public String getAttackpath() {
-        return attackpath;
-    }
-
-    public void setAttackpath(String attackpath) {
-        this.attackpath = attackpath;
-    }
-
-    public String getDeathpath() {
-        return deathpath;
-    }
-
-    public void setDeathpath(String deathpath) {
-        this.deathpath = deathpath;
     }
 
     public int getStartTime() {

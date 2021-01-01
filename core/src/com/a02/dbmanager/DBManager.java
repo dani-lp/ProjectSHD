@@ -61,12 +61,11 @@ public class DBManager {
                 Enemy enemy = new Enemy();
                 enemy.setId(rs.getInt("ID_E"));
                 enemy.setHp(rs.getInt("HP_E"));
+                enemy.setWidth(rs.getInt("WIDTH_E"));
+                enemy.setHeight(rs.getInt("HEIGHT_E"));
                 enemy.setAttackDamage((int) (rs.getInt("ATTACKDAMAGE_E") * Settings.s.getDiff()));
                 enemy.setSpeed(rs.getFloat("SPEED_E"));
                 enemy.setGoldValue(rs.getInt("GOLD_VALUE_E"));
-                enemy.setWalkpath(rs.getString("WALKPATH"));
-                enemy.setAttackpath(rs.getString("ATTACKPATH"));
-                enemy.setDeathpath(rs.getString("DEATHPATH"));
                 return enemy;
             } else {
                 return new Enemy();
