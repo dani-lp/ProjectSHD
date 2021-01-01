@@ -25,8 +25,8 @@ public class EndScreen implements Screen {
         saveMaxScore(username, points);
         this.game = game;
 
-        menuButton = new UIButton(73,70,74,36,"Buttons/menuButtonIdle.png");
-        quitButton = new UIButton(173,70,74,36,"Buttons/quitButtonIdle.png");
+        menuButton = new UIButton(73,-150,74,36,"Buttons/menuButtonIdle.png");
+        quitButton = new UIButton(173,-220,74,36,"Buttons/quitButtonIdle.png");
         endScreenTexture = new Texture("endScreen.png");
     }
 
@@ -34,6 +34,9 @@ public class EndScreen implements Screen {
     public void render(float delta) {
 
         updateButtonLogic();
+
+        menuButton.setY((float) (menuButton.getY() + (70 - menuButton.getY())*0.04));
+        quitButton.setY((float) (quitButton.getY() + (70 - quitButton.getY())*0.04));
 
         game.entityBatch.begin();
         game.entityBatch.draw(endScreenTexture,0,0);

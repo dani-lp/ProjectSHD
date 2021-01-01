@@ -221,7 +221,7 @@ public abstract class GameObject extends Entity {
      * @return Copia del objeto
      */
     public GameObject copyObject() {
-        if (this instanceof Attacker) { //TODO: Es posible que haya que crear constructores copia nuevos
+        if (this instanceof Attacker) {
             return new Attacker((Attacker) this);
         }
         else if (this instanceof Defender) {

@@ -32,9 +32,9 @@ public class MenuScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
 
-        round1Button = new UIButton(123, 113, 74, 36, "Buttons/round1ButtonIdle.png");
-        round2Button = new UIButton(123, 73, 74, 36, "Buttons/round2ButtonIdle.png");
-        quitButton = new UIButton(123, 33, 74, 36, "Buttons/quitButtonIdle.png");
+        round1Button = new UIButton(-74, 113, 74, 36, "Buttons/round1ButtonIdle.png");
+        round2Button = new UIButton(-132, 73, 74, 36, "Buttons/round2ButtonIdle.png");
+        quitButton = new UIButton(-190, 33, 74, 36, "Buttons/quitButtonIdle.png");
         backgroundTexture = new Texture(Gdx.files.internal("wallpaperTest.png"));
 
         introTimer = false;
@@ -45,14 +45,13 @@ public class MenuScreen implements Screen {
     }
 
     @Override
-    public void show() {
-
-    }
-
-    @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        round1Button.setX((float) (round1Button.getX() + (123 - round1Button.getX())*0.08));
+        round2Button.setX((float) (round2Button.getX() + (123 - round2Button.getX())*0.08));
+        quitButton.setX((float) (quitButton.getX() + (123 - quitButton.getX())*0.08));
 
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
@@ -121,6 +120,11 @@ public class MenuScreen implements Screen {
 
     @Override
     public void hide() {
+
+    }
+
+    @Override
+    public void show() {
 
     }
 }

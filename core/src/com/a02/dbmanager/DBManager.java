@@ -4,6 +4,7 @@ import com.a02.entity.Attacker;
 import com.a02.entity.Defender;
 import com.a02.entity.Enemy;
 import com.a02.entity.Trap;
+import com.a02.game.Settings;
 
 import java.sql.*;
 
@@ -60,7 +61,7 @@ public class DBManager {
                 Enemy enemy = new Enemy();
                 enemy.setId(rs.getInt("ID_E"));
                 enemy.setHp(rs.getInt("HP_E"));
-                enemy.setAttackDamage(rs.getInt("ATTACKDAMAGE_E"));
+                enemy.setAttackDamage((int) (rs.getInt("ATTACKDAMAGE_E") * Settings.s.getDiff()));
                 enemy.setSpeed(rs.getFloat("SPEED_E"));
                 enemy.setGoldValue(rs.getInt("GOLD_VALUE_E"));
                 enemy.setWalkpath(rs.getString("WALKPATH"));

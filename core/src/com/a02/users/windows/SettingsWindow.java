@@ -118,9 +118,6 @@ public class SettingsWindow extends JFrame {
                 if (key == KeyEvent.VK_ENTER) {
                     confirmButton.doClick();
                 }
-                else if (key == KeyEvent.VK_E) { //TODO: temporal para testeo
-                    System.out.println(user);
-                }
             }
         };
 

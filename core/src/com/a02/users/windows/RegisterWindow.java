@@ -72,7 +72,7 @@ public class RegisterWindow extends JFrame {
         SpinnerModel sm = new SpinnerNumberModel(0, 0, 130, 1);
         final JSpinner ageSpinner = new JSpinner(sm);
         final JTextField mailJTF = new JTextField();
-        JButton cancelButton = new JButton("Cancel"); //TODO: confirmar con un JOptionPane
+        JButton cancelButton = new JButton("Cancel");
         JButton acceptButton = new JButton("Accept");
 
         //3.- Interacción
@@ -101,7 +101,14 @@ public class RegisterWindow extends JFrame {
                                 tempUser.setPassword(String.valueOf(pwdJTF.getPassword()));
                                 tempUser.setName(nameJTF.getText());
 
-                                if (addUser("users.ser", tempUser)) dispose();
+                                if (JOptionPane.showConfirmDialog(null, "Register new user?\n\t" +
+                                                "       Username: " + tempUser.getUsername() + "\n" +
+                                                "       Name: " + tempUser.getName() + "\n" +
+                                                "       Age: " + tempUser.getAge() + "\n" +
+                                                "       Email: " + tempUser.getMail() + "\n",
+                                        "Register new user", JOptionPane.YES_NO_OPTION) == 0) {
+                                    if (addUser("users.ser", tempUser)) dispose();
+                                }
                             }
                             else {
                                 JOptionPane.showMessageDialog(null,

@@ -12,7 +12,7 @@ import com.badlogic.gdx.Game;
 
 public class MainGame extends Game {
 	public SpriteBatch entityBatch;
-	public static GameScreen mainGameScreen;
+	public static GameScreen mainGameScreen; //Sólo se utiliza para el método getRelativeMousePos(), es realmente necesario?
 	static boolean tutorial;
 
 	public static volatile boolean begin = false; //No cambiar "volatile", si no la CPU explota
@@ -23,6 +23,7 @@ public class MainGame extends Game {
 	public static boolean tutorial(){
 		return tutorial;
 	}
+
 	@Override
 	public void create () {
 		entityBatch = new SpriteBatch();
