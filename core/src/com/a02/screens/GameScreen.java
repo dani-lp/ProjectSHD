@@ -301,7 +301,7 @@ public class GameScreen implements Screen {
         while(enemyIterator.hasNext()){
             Enemy tempEnemy = enemyIterator.next();
             tempEnemy.update(this);
-            if(tempEnemy.getHp() <= 0) {
+            if(tempEnemy.getDeathTimer() < secTimer && tempEnemy.getDeathTimer() != 0) {
                 enemyIterator.remove();
             }
         }
@@ -356,19 +356,21 @@ public class GameScreen implements Screen {
             else game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
         }
         for (Enemy enemy:enemies) {
-            if (enemy.state != Enemy.State.DEAD) {
-                game.entityBatch.draw(enemy.getCurrentAnimation(animationTimer), enemy.getX(), enemy.getY());
-            }
+            game.entityBatch.draw(enemy.getCurrentAnimation(animationTimer), enemy.getX(), enemy.getY());
         }
 
         //Barras de vida y disparos
         for (GameObject object:objects) {
-            game.entityBatch.draw(object.hpBar.getBackground(), object.hpBar.getX(), object.hpBar.getY(), 14,2);
-            game.entityBatch.draw(object.hpBar.getForeground(), object.hpBar.getX(), object.hpBar.getY(), object.hpBar.getCurrentWidth(),2);
+            if (object.hpBar != null) {
+                game.entityBatch.draw(object.hpBar.getBackground(), object.hpBar.getX(), object.hpBar.getY(), 14, 2);
+                game.entityBatch.draw(object.hpBar.getForeground(), object.hpBar.getX(), object.hpBar.getY(), object.hpBar.getCurrentWidth(), 2);
+            }
         }
         for (Enemy enemy: enemies) {
-            game.entityBatch.draw(enemy.hpBar.getBackground(), enemy.hpBar.getX(), enemy.hpBar.getY(), 14,2);
-            game.entityBatch.draw(enemy.hpBar.getForeground(), enemy.hpBar.getX(), enemy.hpBar.getY(), enemy.hpBar.getCurrentWidth(),2);
+            if (enemy.hpBar != null) {
+                game.entityBatch.draw(enemy.hpBar.getBackground(), enemy.hpBar.getX(), enemy.hpBar.getY(), 14, 2);
+                game.entityBatch.draw(enemy.hpBar.getForeground(), enemy.hpBar.getX(), enemy.hpBar.getY(), enemy.hpBar.getCurrentWidth(), 2);
+            }
         }
         for(Shoot shoot: shoots){
             game.entityBatch.draw(new Texture(shoot.getSprite()),shoot.getX(),shoot.getY());
@@ -393,8 +395,8 @@ public class GameScreen implements Screen {
         //Oro
         if (rounda != 0){
             font.draw(game.entityBatch, "ORO : " + Integer.toString(gold), 5, 175);
-        } else{
-            gold=gold + 100000;
+        } else {
+            gold = gold + 100000;
             game.entityBatch.draw(tutoBut.getTexture(),tutoBut.getX(),tutoBut.getY());
             font.draw(game.entityBatch, "ORO INFINITY: " , 5, 175);
             font.draw(game.entityBatch, msg1 , 5, 68);
@@ -460,7 +462,8 @@ public class GameScreen implements Screen {
                     larry.setHeight(16);
                     larry.hpBar.setMaxHP(larry.getHp());
                     larry.setFocus(objects.get(0).getX(), objects.get(0).getY());
-                    larry.animations(3,1,2,2,2,2);
+                    //larry.animations(3,1,2,2,2,2);
+                    larry.loadAnimations();
                     enemies.add(larry);
                 }
                 sc.close();
@@ -496,11 +499,13 @@ public class GameScreen implements Screen {
                     String[] campos = line.split(";");
                     if (enemies.size()<6){
                         larry = DBManager.dbManager.getEnemy(0);
-                        larry.animations(3,1,2,2,2,2);
+                        //larry.animations(3,1,2,2,2,2);
+                        larry.loadAnimations();
                     }else{
                         larry = DBManager.dbManager.getEnemy(1);
                         larry.setDeathpath("e1-death.png");
-                        larry.animations(2,2,5,1,2,2);
+                        //larry.animations(2,2,5,1,2,2);
+                        larry.loadAnimations();
                     }
 
                     larry.setX(Integer.parseInt(campos[0]));
@@ -510,6 +515,7 @@ public class GameScreen implements Screen {
                     larry.setHeight(16);
                     larry.hpBar.setMaxHP(larry.getHp());
                     larry.setFocus(objects.get(0).getX(), objects.get(0).getY());
+                    larry.loadAnimations();
                     enemies.add(larry);
                 }
                 sc.close();

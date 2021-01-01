@@ -138,7 +138,7 @@ public class Attacker extends GameObject {
                         Vector3 mousePos = getRelativeMousePos();
                         if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched()) {
                             this.isSelected = true;
-                            selected=true;
+                            selected = true;
                             Pixmap pm = new Pixmap(Gdx.files.internal("mira-export.png"));
                             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                             pm.dispose();
@@ -151,16 +151,15 @@ public class Attacker extends GameObject {
                 }
                 else if (this.getId() == 3) {
                     if (!this.isInInventory(gs) && gs.secTimer % 120 == 0) {
-                        Shoot right = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"r");
-                        Shoot left = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"l");
-                        Shoot up = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"u");
-                        Shoot down = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"d");
+                        Shoot rightShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"r");
+                        Shoot leftShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"l");
+                        Shoot upShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"u");
+                        Shoot downShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"d");
 
-                        GameScreen.shoots.add(right);
-                        GameScreen.shoots.add(left);
-                        GameScreen.shoots.add(up);
-                        GameScreen.shoots.add(down);
-
+                        GameScreen.shoots.add(rightShot);
+                        GameScreen.shoots.add(leftShot);
+                        GameScreen.shoots.add(upShot);
+                        GameScreen.shoots.add(downShot);
                     }
                 }
                 break;

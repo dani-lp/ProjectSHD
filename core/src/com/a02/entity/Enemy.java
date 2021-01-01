@@ -22,6 +22,7 @@ public class Enemy extends Entity {
     private int goldValue;
     private int startTime;  //Tiempo de inicio de movimiento
     private int effectTimer;    //Timer de efectos de las trampas
+    private int deathTimer; //Timer de animación de muerte
     private String walkpath;
     private String attackpath;
     private String deathpath;
@@ -31,7 +32,7 @@ public class Enemy extends Entity {
     protected Animation<TextureRegion> deathAnimation; //TODO: implementar muerte
 
     public enum State {
-        IDLE, WALKING, ATTACKING, DYING, DEAD
+        IDLE, WALKING, ATTACKING, DYING
     }
     public enum TrapEffect {
         BURNING, FREEZE, CONFUSED, NEUTRAL
@@ -75,6 +76,20 @@ public class Enemy extends Entity {
         this.walkAnimation = createAnimation(walkpath, wcol, wrow, 0.2f);
         this.attackAnimation = createAnimation(attackpath, acol, arow, 0.2f);
         this.deathAnimation = createAnimation(deathpath, dcol, drow, 0.25f);
+    }
+
+    public void loadAnimations() {
+        switch (this.getId()){
+            case 0:
+                this.walkAnimation = createAnimation("e1-walk.png",3,1,0.2f);
+                this.attackAnimation = createAnimation("e1-attack.png",2,2,0.2f);
+                this.deathAnimation = createAnimation("e1-death.png",2,1, 0.2f);
+                break;
+            case 1:
+                this.walkAnimation = createAnimation("e2-walk.png",2,2,0.2f);
+                this.attackAnimation = createAnimation("e2-attack.png",5,1,0.2f);
+                this.deathAnimation = createAnimation("e2-walk.png",2,2, 0.25f);
+        }
     }
 
     public int getId() {
@@ -162,6 +177,10 @@ public class Enemy extends Entity {
         this.focus.y = y;
     }
 
+    public int getDeathTimer() {
+        return deathTimer;
+    }
+
     /**
      * Actualiza la posición, estado y efectos de un enemigo.
      * @param gs GameScreen utilizada
@@ -181,6 +200,7 @@ public class Enemy extends Entity {
 
                 if (this.getHp() <= 0) {
                     this.state = State.DYING;
+                    this.deathTimer = gs.secTimer + 60;
                 }
                 else if (this.overlappedObject(gs) != null || this.overlappedObject(gs) instanceof Trap) {
                     if (!this.overlappedObject(gs).isGrabbed()) this.state = State.ATTACKING;
@@ -194,7 +214,6 @@ public class Enemy extends Entity {
                     if (tempObj.getHp() > 0 && !tempObj.isGrabbed() && gs.secTimer % 60 == 0) { //Pegar 1 vez por segundo
                         tempObj.setHp(tempObj.getHp() - this.attackDamage);
                     } else if (tempObj.getHp() <= 0) {
-                        //target.delete()?
                         this.state = State.WALKING;
                     }
                 }
@@ -204,22 +223,17 @@ public class Enemy extends Entity {
 
                 if (this.getHp() <= 0) {
                     this.state = State.DYING;
+                    this.deathTimer = gs.secTimer + 60;
                 }
 
                 break;
 
             case DYING:
-                //playAnimation();
-                try {
-                    gs.enemies.remove(this);
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
+                this.hpBar = null;
+                if (gs.secTimer > this.deathTimer) {
+                    GameScreen.setGold(GameScreen.getGold() + this.goldValue);
+                    break;
                 }
-                this.state = State.DEAD;
-                GameScreen.setGold(GameScreen.getGold() + this.goldValue);
-                break;
-
-            case DEAD:
                 break;
         }
 
@@ -244,7 +258,7 @@ public class Enemy extends Entity {
             case NEUTRAL:
                 break;
         }
-        this.hpBar.update(this, this.getHp());
+        if (this.hpBar != null) this.hpBar.update(this, this.getHp());
     }
 
     protected void move() {
@@ -300,7 +314,7 @@ public class Enemy extends Entity {
             case ATTACKING:
                 return this.attackAnimation.getKeyFrame(animationTimer, true);
             case DYING:
-                return this.deathAnimation.getKeyFrame(animationTimer, false);
+                return this.deathAnimation.getKeyFrame(animationTimer, true);
         }
         return null;
     }

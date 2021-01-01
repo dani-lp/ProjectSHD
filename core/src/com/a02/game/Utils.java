@@ -107,10 +107,10 @@ public class Utils {
         }
     }
 
-    public static void printMap(Map mp) {
-        Iterator it = mp.entrySet().iterator();
+    public static void printMap(HashMap<String, User> mp) {
+        Iterator<Map.Entry<String, User>> it = mp.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
+            Map.Entry<String, User> pair = it.next();
             System.out.println(pair.getKey() + " = " + pair.getValue());
             it.remove();
         }
