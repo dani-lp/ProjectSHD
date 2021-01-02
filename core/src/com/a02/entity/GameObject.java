@@ -162,8 +162,7 @@ public abstract class GameObject extends Entity {
      */
     public void grabObject(Map map, List<GameObject> objects) {  //Agarra el objeto y lo suelta
         Vector3 touchPos = getRelativeMousePos();
-
-        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !GameScreen.isBuying() && !Attacker.selected) {
+        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !GameScreen.isBuying() && !Attacker.selected && !Defender.selected) {
             this.grabbed = true;
             GameScreen.setBuying(true);
             this.ogPos.x = this.getX();

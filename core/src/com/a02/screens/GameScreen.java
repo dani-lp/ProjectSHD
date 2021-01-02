@@ -49,6 +49,8 @@ public class GameScreen implements Screen {
 
     BitmapFont font; //Fuente para oro/tutorial/etc
 
+    private final UIButton deleteButton;
+
     //Botones del menú
     private final UIButton pauseButton;
     private final UIButton resumeButton;
@@ -64,6 +66,8 @@ public class GameScreen implements Screen {
     public int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones. Suma el tiempo transcurrido entre fotogramas.
     private final static boolean LOGGING = false;
+
+    // Para eventos del tutorial
     public String msg1;
     public String msg2;
     private final UIButton tutoBut = new UIButton(2,40,220,35,"textfield.png");
@@ -107,6 +111,7 @@ public class GameScreen implements Screen {
         map = new Map("map1.png");
 
         //Botones de pausa y inventario
+        deleteButton= new UIButton(280, 6, 16, 16, "pala.png");
         pauseButton = new UIButton(299, 6, 16, 16, "pause.png");
         resumeButton = new UIButton(123, 113, 74, 36, "Buttons/resumeButtonIdle.png");
         menuButton = new UIButton(123, 73, 74, 36, "Buttons/menuButtonIdle.png");
@@ -168,9 +173,13 @@ public class GameScreen implements Screen {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.E) || deselect){
+            Defender.selected = false;
             Attacker.selected = false;
             for (GameObject obj:objects) {
                 obj.setSelected(false);
+                if (obj instanceof Defender){
+                    ((Defender) obj).states(0);
+                }
             }
             Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
@@ -198,6 +207,11 @@ public class GameScreen implements Screen {
         if (objects.get(0).getHp() <= 0) {
             game.setScreen(new EndScreen(Settings.s.getUsername(), points, game));
         }
+
+        if (deleteButton.isJustClicked()){
+
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
     }
 
@@ -399,6 +413,7 @@ public class GameScreen implements Screen {
 
         //Botones
         game.entityBatch.draw(pauseButton.getTexture(), pauseButton.getX(), pauseButton.getY());
+        game.entityBatch.draw(deleteButton.getTexture(), deleteButton.getX(), deleteButton.getY());
 
         //Menu de pausa
         if (pauseFlag) {
@@ -602,6 +617,7 @@ public class GameScreen implements Screen {
         map.getTexture().dispose();
         font.dispose();
 
+        deleteButton.getTexture().dispose();
         pauseButton.getTexture().dispose();
         resumeButton.getTexture().dispose();
         menuButton.getTexture().dispose();

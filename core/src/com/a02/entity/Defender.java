@@ -21,6 +21,12 @@ public class Defender extends GameObject {
     private boolean isSelected;
     State state;
 
+    public void states(int i){
+        if (i==0){
+            this.state = State.IDLE;
+        }
+    }
+
     public Defender(float x, float y, int width, int height, int id, String type, int price,
                     boolean unlocked, int hp) {
         super(x, y, width, height, id, type, price, unlocked, hp);
@@ -65,7 +71,7 @@ public class Defender extends GameObject {
         this.state = other.state;
         this.setAnimation(other.getAnimation());
         this.hurt = other.hurt;
-        this.isSelected=other.isSelected;
+        this.isSelected=false;
         this.setTexture(other.getTexture());
     }
 
@@ -91,6 +97,8 @@ public class Defender extends GameObject {
                         Pixmap pm = new Pixmap(Gdx.files.internal("healcross.png"));
                         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                         pm.dispose();
+                        this.isSelected = true;
+                        selected=true;
                         this.state = State.HEALING;
                     }
                 }
@@ -111,9 +119,6 @@ public class Defender extends GameObject {
                     }
                     break;
                 } else if (this.getId() == 3){
-                    this.isSelected = true;
-                    selected=true;
-
                     if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
                         Vector3 focus = getRelativeMousePos();
                         GameObject obj = overlappedObject(gs,focus.x, focus.y);
