@@ -159,7 +159,7 @@ public class GameScreen implements Screen {
 
         updateTutorialMessages(contEnt);
 
-        if (contEnt == 12 && enough == 0){
+        if (contEnt == 13 && enough == 0){
             Enemy larry = new Enemy(-15,90,16,16,1,500,300,15,
                     this.secTimer+30,200,"e1-walk.png","e1-attack.png","e1-death.png");
             larry.hpBar.setMaxHP(larry.getHp());
@@ -246,49 +246,53 @@ public class GameScreen implements Screen {
         switch (contEnt){
             case 1:
                 msg1 = "El objeto colocado en el centro es";
-                msg2 = "el beacon, si se destruye pierdes";
+                msg2 = "el beacon, si se destruye pierdes.";
                 break;
             case 2:
                 msg1 = "usa los objetos del inventario para";
-                msg2 = "protegerlo, colocarlos costara oro";
+                msg2 = "protegerlo, colocarlos costara oro.";
                 break;
             case 3:
                 msg1 = "conseguiras oro periodicamente o";
-                msg2 = "acabando con enemigos";
+                msg2 = "acabando con enemigos.";
                 break;
             case 4:
                 msg1 = "puedes usar los botones en lo alto";
-                msg2 = "del inventario para navegar entre objetos";
+                msg2 = "del inventario para navegar ventanas.";
                 break;
             case 5:
                 msg1 = "tienes 3 tipos de objetos trampas,";
-                msg2 = "defensivos y ofensivos";
+                msg2 = "defensivos y ofensivos.";
                 break;
             case 6:
                 msg1 = "los defensivos curan objetos o";
-                msg2 = "ralentizan a los enemigos, prueba alguno";
+                msg2 = "ralentizan a los enemigos.";
                 break;
             case 7:
                 msg1 = "cada trampa tiene un efecto unico,";
-                msg2 = "pero ten cuidado son de un solo uso";
+                msg2 = "pero ten cuidado son de un solo uso.";
                 break;
             case 8:
-                msg1 = "los objetos de ataque ejercen daño";
-                msg2 = "a los enemigos a mele o a distancia";
+                msg1 = "los objetos de ataque atacan a";
+                msg2 = "los enemigos a mele o a distancia.";
                 break;
             case 9:
-                msg1 = "Por ultimo, puedes tomar control de";
-                msg2 = "algunos objetos y usarlos si les haces click";
+                msg1 = "Por ultimo, puedes controlar ciertos";
+                msg2 = "objetos y usarlos si les haces click.";
                 break;
             case 10:
                 msg1 = "pulsando ESPACIO podras disparar con el ";
-                msg2 = "leon o elegir a quien curar con el martillo";
+                msg2 = "leon o curar aliados con el martillo.";
                 break;
             case 11:
                 msg1 = "mientras controles un objeto no podras";
-                msg2 = "colocar otros, deja de controlarlo pulsando E";
+                msg2 = "colocar otros, pulsa E para dejarlo.";
                 break;
             case 12:
+                msg1 = "De la misma forma puedes utilizar";
+                msg2 = "la pala para vender objetos y ganar oro.";
+                break;
+            case 13:
                 msg1 = "ATENCION!!! se acerca un enemigo,";
                 msg2 = "veamos como te las arreglas...";
                 break;
