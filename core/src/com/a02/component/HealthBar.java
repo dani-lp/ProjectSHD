@@ -55,12 +55,8 @@ public class HealthBar {
         return currentHP;
     }
 
-    public void setCurrentHP(int currentHP) {
-        this.currentHP = currentHP;
-    }
-
     public int getCurrentWidth() {
-        return (int) ((this.currentHP * 14) / this.maxHP);
+        return (this.currentHP * 14) / this.maxHP;
     }
 
     public Texture getForeground() {

@@ -2,6 +2,7 @@ package com.a02.screens;
 
 import com.a02.entity.UIButton;
 import com.a02.game.MainGame;
+import com.a02.game.Settings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,21 +15,19 @@ import java.util.logging.Logger;
 public class MenuScreen implements Screen {
     final MainGame game;
 
-    public boolean tutorial;
     private boolean introTimer; //Para poder hacer click en el botón de "Menu" en GameScreen sin tocar el de "Round 2"
 
-    private UIButton round1Button;
-    private UIButton round2Button;
-    private UIButton quitButton;
+    private final UIButton round1Button;
+    private final UIButton round2Button;
+    private final UIButton quitButton;
 
-    private Texture backgroundTexture;
+    private final Texture backgroundTexture;
 
-    private OrthographicCamera camera;
-    private static Logger logger = Logger.getLogger(MenuScreen.class.getName());
+    private final OrthographicCamera camera;
+    private final static Logger logger = Logger.getLogger(MenuScreen.class.getName());
 
-    public MenuScreen(MainGame game, boolean tutorial) {
+    public MenuScreen(MainGame game) {
         this.game = game;
-        this.tutorial = tutorial;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
 
@@ -46,6 +45,8 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if (Settings.s.isTutorialCheck()) game.setScreen(new GameScreen(game, 0));
+
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -56,9 +57,12 @@ public class MenuScreen implements Screen {
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
 
+        /*
         if (this.tutorial){
             game.setScreen(new GameScreen(game, 0));
         }
+
+         */
 
         game.entityBatch.begin();
         game.entityBatch.draw(backgroundTexture,0,0);

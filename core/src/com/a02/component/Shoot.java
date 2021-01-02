@@ -6,17 +6,14 @@ import com.a02.entity.GameObject;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import sun.jvm.hotspot.gc.shared.Space;
 
-import javax.annotation.processing.SupportedSourceVersion;
 import java.util.logging.Logger;
 
 import static com.a02.game.Utils.getRelativeMousePos;
 
 public class Shoot {
-    private double angle=0;
+    private double angle = 0;
     private float x;
     private float y;
     private float speed;
@@ -40,8 +37,8 @@ public class Shoot {
         this.state = State.IDLE;
         this.height = height;
         this.width = width;
-        this.att_id=att_id;
-        this.dir=dir;
+        this.att_id = att_id;
+        this.dir = dir;
     }
     private enum State {
         ATTACKING,IMPACT,IDLE
@@ -66,17 +63,9 @@ public class Shoot {
         return speed;
     }
 
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
     public float getAttackdamage() { return attackdamage; }
 
-    public void setAttackdamage(float attackdamage) { this.attackdamage = attackdamage; }
-
     public String getSprite() { return sprite; }
-
-    public void setSprite(String sprite) { this.sprite = sprite; }
 
     public int getWidth() {
         return width;
@@ -106,10 +95,6 @@ public class Shoot {
         return dir;
     }
 
-    public void setDir(String dir) {
-        this.dir = dir;
-    }
-
     @Override
     public String toString() {
         return "Shoot{" +
@@ -122,18 +107,19 @@ public class Shoot {
     Vector3 focus = new Vector3();
 
     public void update(GameScreen gs) {
+        label:
         switch (this.state) {
             case IDLE:
                 if (this.att_id == 2){
                     Attacker boss=null;
                     for (GameObject att:gs.objects) {
-                        if (att instanceof Attacker && ((Attacker) att).isSelected()){
+                        if (att instanceof Attacker && att.isSelected()){
                             boss= (Attacker) att;
                         }
                     }
                     if (Attacker.selected && boss.getX() == this.getX() && boss.getY() == this.getY()){
                         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-                            focus = getRelativeMousePos();
+                            this.focus = getRelativeMousePos();
                             angle = ((Math.atan2(this.getY() - focus.y, this.getX() - focus.x)*180) / Math.PI + 90);
                             this.state = State.ATTACKING;
                             break;
@@ -149,25 +135,23 @@ public class Shoot {
                     }
                 }
                 if (this.att_id == 3){
-                    if (this.getDir().equals("r")){
-                        angle = ((Math.atan2(this.getY() - this.getY(), this.getX() - 350)*180) / Math.PI + 90);
-                        this.state = State.ATTACKING;
-                        break;
-                    }
-                    else if (this.getDir().equals("l")) {
-                        angle = ((Math.atan2(this.getY() - this.getY(), this.getX() - -100)*180) / Math.PI + 90);
-                        this.state = State.ATTACKING;
-                        break;
-                    }
-                    else if (this.getDir().equals("u")) {
-                        angle = ((Math.atan2(this.getY() - 180, this.getX() - this.getX())*180) / Math.PI + 90);
-                        this.state = State.ATTACKING;
-                        break;
-                    }
-                    else if (this.getDir().equals("d")) {
-                        angle = ((Math.atan2(this.getY() - -50, this.getX() - this.getX())*180) / Math.PI + 90);
-                        this.state = State.ATTACKING;
-                        break;
+                    switch (this.getDir()) {
+                        case "r":
+                            angle = ((Math.atan2(0.0f, this.getX() - 350) * 180) / Math.PI + 90);
+                            this.state = State.ATTACKING;
+                            break label;
+                        case "l":
+                            angle = ((Math.atan2(0.0f, this.getX() - -100) * 180) / Math.PI + 90);
+                            this.state = State.ATTACKING;
+                            break label;
+                        case "u":
+                            angle = ((Math.atan2(this.getY() - 180, 0.0f) * 180) / Math.PI + 90);
+                            this.state = State.ATTACKING;
+                            break label;
+                        case "d":
+                            angle = ((Math.atan2(this.getY() - -50, 0.0f) * 180) / Math.PI + 90);
+                            this.state = State.ATTACKING;
+                            break label;
                     }
                 }
                 break;
@@ -188,8 +172,8 @@ public class Shoot {
                     tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackdamage));
                     if (this.getDir().equals("n")){
                         this.setHp(0);
-                    } else{
-                        this.state=State.ATTACKING;
+                    } else {
+                        this.state = State.ATTACKING;
                     }
                     logger.info("Enemigo impactado por disparo");
                 }

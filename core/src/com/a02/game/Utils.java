@@ -25,6 +25,10 @@ public class Utils {
         return new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
     }
 
+    /**
+     * Devuelve la posición relativa a una cámara (320 * 180 píxeles en todos los casos) en un Vector3.
+     * @return Vector3 posición
+     */
     public static Vector3 getRelativeMousePos() {
         return MainGame.mainGameScreen.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(),0));
     }
@@ -56,10 +60,10 @@ public class Utils {
         }
 
         //Crea y devuelve la animación
-        return new Animation<TextureRegion>(frameDuration, animationFrames);
+        return new Animation<>(frameDuration, animationFrames);
     }
 
-    public static void takeScreenshot() {   //NO FUNCIONA CORRECTAMENTE
+    public static void takeScreenshot() {   //TODO: NO FUNCIONA CORRECTAMENTE. Probablemente se puede eliminar
         byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
         for (int i = 4; i < pixels.length; i += 4) {
             pixels[i - 1] = (byte) 255;

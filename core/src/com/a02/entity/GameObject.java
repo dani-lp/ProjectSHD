@@ -123,10 +123,6 @@ public abstract class GameObject extends Entity {
         return maxHp;
     }
 
-    public void setMaxHp(int maxHp) {
-        this.maxHp = maxHp;
-    }
-
     public Animation<TextureRegion> getAnimation() {
         return animation;
     }
@@ -237,12 +233,12 @@ public abstract class GameObject extends Entity {
 
     /**
      * Comprueba si el objeto está en algún inventario.
-     * @param gs
-     * @return
+     * @param gs Screen de juego
+     * @return True si el objeto pertenece a algún inventario
      */
     public boolean isInInventory(GameScreen gs){
         return gs.defInv.contains(this) ||
-                gs.drawing.contains(this) ||
+                gs.drawingInv.contains(this) ||
                 gs.trapInv.contains(this) ||
                 gs.attackInv.contains(this) ||
                 gs.fullInv.contains(this);
@@ -251,10 +247,9 @@ public abstract class GameObject extends Entity {
     /**
      * Devuelve las coordenadas de la casilla en la que está el objeto que realiza la llamada.
      * @param map Objeto Map
-     * @return
+     * @return Vector2 con las coordenadas
      */
     protected Vector2 mapGridCollision(Map map) {
-        int x, y;
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 10; j++) {
                 if (this.overlaps( map.getCoordGrid()[i][j] , 18, 16)) {

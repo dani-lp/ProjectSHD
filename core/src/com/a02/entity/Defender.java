@@ -1,6 +1,5 @@
 package com.a02.entity;
 
-import com.a02.component.Shoot;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -30,7 +29,7 @@ public class Defender extends GameObject {
         loadTextures();
     }
 
-    private ArrayList<GameObject> hurt = new ArrayList<GameObject>();
+    private ArrayList<GameObject> hurt = new ArrayList<>();
 
     public void loadTextures() {
         switch (this.getId()) {
@@ -154,7 +153,7 @@ public class Defender extends GameObject {
      * @return ArrayList de GameObject en un área
      */
     protected ArrayList<GameObject> overlappedArea(GameScreen gs) {
-        ArrayList<GameObject> inArea = new ArrayList<GameObject>();
+        ArrayList<GameObject> inArea = new ArrayList<>();
         for (GameObject obj : gs.objects) {
             if ((obj.getX() < this.getX() + 50 && obj.getX() > this.getX() - 50) && (obj.getY() < this.getY() + 50 && obj.getY() > this.getY() - 50) && !(obj.getX() == this.getX() && obj.getY() == this.getY()) && obj.getHp() < obj.getMaxHp()) {
                 inArea.add(obj);

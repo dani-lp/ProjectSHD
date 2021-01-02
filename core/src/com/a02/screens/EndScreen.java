@@ -4,7 +4,6 @@ import com.a02.entity.UIButton;
 import com.a02.game.MainGame;
 import com.a02.users.User;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 
@@ -19,10 +18,19 @@ public class EndScreen implements Screen {
 
     private UIButton menuButton;
     private UIButton quitButton;
-    private Texture endScreenTexture;
+    private final Texture endScreenTexture;
 
-    public EndScreen(String username, int points, MainGame game) {
-        saveMaxScore(username, points);
+    public EndScreen(final String username, final int points, MainGame game) {
+        //Guarda los datos desde un hilo
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                saveMaxScore(username, points);
+
+            }
+        });
+        t.start();
+
         this.game = game;
 
         menuButton = new UIButton(73,-150,74,36,"Buttons/menuButtonIdle.png");
@@ -53,7 +61,7 @@ public class EndScreen implements Screen {
         else quitButton.setTexture(new Texture("Buttons/quitButtonIdle.png"));
 
         if (menuButton.isJustClicked()) {
-            game.setScreen(new MenuScreen(game,false));
+            game.setScreen(new MenuScreen(game));
         }
         else if (quitButton.isJustClicked()) {
             Gdx.app.exit();

@@ -48,8 +48,8 @@ public class DBManager {
     /**
      * Devuelve un objeto Enemy.
      * @param id ID del objeto Enemy
-     * @return
-     * @throws DBException
+     * @return Enemy con ID parámetro
+     * @throws DBException Error de SQL
      */
     public Enemy getEnemy(int id) throws DBException {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM enemy WHERE ID_E=?")) {
@@ -78,8 +78,8 @@ public class DBManager {
     /**
      * Devuelve un objeto Trap.
      * @param id ID del objeto Trap
-     * @return
-     * @throws DBException
+     * @return Trap con ID parámetro
+     * @throws DBException Error de SQL
      */
     public Trap getTrap(int id) throws DBException {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM trap WHERE ID_T=?")) {
@@ -113,8 +113,8 @@ public class DBManager {
     /**
      * Devuelve un objeto Defender.
      * @param id ID del objeto Defender
-     * @return
-     * @throws DBException
+     * @return Defender con ID parámetro
+     * @throws DBException Error de SQL
      */
     public Defender getDefender(int id) throws DBException {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM defender WHERE ID_D=?")) {
@@ -144,8 +144,8 @@ public class DBManager {
     /**
      * Devuelve un objeto Attacker.
      * @param id ID del objeto Attacker
-     * @return
-     * @throws DBException
+     * @return Attacker con ID parámetro
+     * @throws DBException Error de SQL
      */
     public Attacker getAttacker(int id) throws DBException {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM attacker WHERE ID_A=?")) {

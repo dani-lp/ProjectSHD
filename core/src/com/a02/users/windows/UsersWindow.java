@@ -106,7 +106,7 @@ public class UsersWindow extends JFrame {
         deleteButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int row = table.getSelectedRow();
-                String key = null;
+                String key;
                 if (row >= 0) {
                     key = table.getModel().getValueAt(row, 0).toString();
                     if (JOptionPane.showConfirmDialog(null, "Delete user '" + key + "'?",

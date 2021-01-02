@@ -162,14 +162,14 @@ public class SettingsWindow extends JFrame {
      * @return Valor transformado
      */
     public static double getDmgMult(double ogValue) {
-        return round(((double) ogValue + 5) * 0.1,1);
+        return round((ogValue + 5) * 0.1,1);
     }
 
     /**
      * Redondea con n decimales.
      * @param value Valor a redondear
      * @param precision Número de decimales
-     * @return
+     * @return Número redondeado
      */
     private static double round(double value, int precision) {
         int scale = (int) Math.pow(10, precision);

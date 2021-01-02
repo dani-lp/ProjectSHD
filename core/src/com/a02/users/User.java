@@ -27,8 +27,8 @@ public class User implements Serializable {
     }
 
     /**
-     * Sólo usado para administradores
-     * @param admin
+     * Sólo usado para administradores.
+     * @param admin Nombre de administrador ("admin")
      */
     public User(String admin) {
         this.username = admin;

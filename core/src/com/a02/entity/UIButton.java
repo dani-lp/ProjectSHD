@@ -26,7 +26,7 @@ public class UIButton extends Entity {
 
     /**
      * Comprueba si el botón está tocado pero no pulsado.
-     * @return
+     * @return True si se cumple la condición
      */
     public boolean isTouched() {
         Vector3 mousePos = getRelativeMousePos();
@@ -35,7 +35,7 @@ public class UIButton extends Entity {
 
     /**
      * Comprueba si el botón está tocado y pulsado.
-     * @return
+     * @return True si se cumple la condición
      */
     public boolean isBeingClicked() {
         Vector3 mousePos = getRelativeMousePos();

@@ -12,18 +12,16 @@ import java.util.ArrayList;
  * unidimensional, y se lee/escribe de derecha a izquierda, en vez de de arriba a abajo.
  */
 public class Inventory {
-    private final int x = 256;
-    private final int y = 0;
     protected ArrayList<GameObject> objects;
     protected Vector2[] positions;
     private final String sprite = "inventory.png";
     private final Texture texture = new Texture(Gdx.files.internal(sprite));
 
     public int getX() {
-        return x;
+        return 256;
     }
     public int getY() {
-        return y;
+        return 0;
     }
     public Texture getTexture() {
         return texture;
@@ -73,11 +71,4 @@ public class Inventory {
     public boolean contains(GameObject obj) {
         return objects.contains(obj);
     }
-
-    /*
-    public void takeOut(GameObject gameObject ){
-        this.objects.remove(gameObject);
-    }
-
-    */
 }

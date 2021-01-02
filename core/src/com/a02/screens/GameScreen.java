@@ -16,7 +16,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.io.*;
 import java.util.*;
@@ -25,73 +24,59 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GameScreen implements Screen {
-    final MainGame game;
+    final MainGame game; //Clase MainGame base (utilizada para cambiar de Screens de forma global)
 
     private static Logger logger = Logger.getLogger(GameScreen.class.getName());
 
-    private static boolean buying, pauseFlag;
-    private static int gold;
-    private static int rounda;
+    private static boolean buying, pauseFlag; //Flags de compra y pausa
+    private static int gold; //Oro para comprar objetos
+    private static int rounda; //Ronda de juego actual
     private static int points; //Puntos que consigue el usuario
 
     public List<GameObject> objects = new ArrayList<>(); //Objetos en el juego
     public List<Enemy> enemies = new ArrayList<>(); // Enemigos del juego
-    public static List<Shoot> shoots= new ArrayList<>();
-    public boolean deselect=false;
+    public static List<Shoot> shoots= new ArrayList<>(); //Disparos de juego
+    public boolean deselect = false;
 
-    public Inventory drawing;
-    public Inventory fullInv; //Inventario full
+    public Inventory drawingInv; //Inventario actual
+    public Inventory fullInv; //Inventario con todos los objetos
     public Inventory attackInv; //Objetos de ataque
     public Inventory defInv; //Objetos de defensa
     public Inventory trapInv; //Objetos trampa
 
-    Map map;
-    OrthographicCamera camera;
+    Map map; //Mapa donde se colocan los objetos
+    OrthographicCamera camera; //Cámara reescalada
 
-    BitmapFont font;
+    BitmapFont font; //Fuente para oro/tutorial/etc
 
     //Botones del menú
-    private UIButton pauseButton;
-    private UIButton resumeButton;
-    private UIButton menuButton;
-    private UIButton quitButton;
+    private final UIButton pauseButton;
+    private final UIButton resumeButton;
+    private final UIButton menuButton;
+    private final UIButton quitButton;
 
-    //Botones del inventario
-    private UIButton allObjectsButton;
-    private UIButton attackerButton;
-    private UIButton defenderButton;
-    private UIButton trapButton;
+    //Botones del inventario (para cambiar entre selecciones de objetos)
+    private final UIButton allObjectsButton;
+    private final UIButton attackerButton;
+    private final UIButton defenderButton;
+    private final UIButton trapButton;
 
     public int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
-    float animationTimer;   //Contador para animaciones
-    private static boolean LOGGING = true;
+    float animationTimer;   //Contador para animaciones. Suma el tiempo transcurrido entre fotogramas.
+    private final static boolean LOGGING = false;
     public String msg1;
     public String msg2;
-    UIButton tutoBut = new UIButton(2,40,220,35,"textfield.png");
+    private final UIButton tutoBut = new UIButton(2,40,220,35,"textfield.png");
     public int contEnt = 0;
     public int enough = 0;
 
-    private void log(Level level, String msg, Throwable exception) {
-        if (!LOGGING) return;
-        if (logger==null) {  // Logger por defecto local:
-            logger = Logger.getLogger("GameScreen");  // Nombre del logger - el de la clase
-            logger.setLevel( Level.ALL );  // Loguea todos los niveles
-        }
-        if (exception == null)
-            logger.log( level, msg );
-        else
-            logger.log( level, msg, exception );
-    }
-
     public GameScreen(MainGame game, int round) {
-        Logger.getLogger("").setLevel(Level.INFO);
-        Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
-        logger.info("Inicio del GameScreen");
+        log(Level.INFO, "Inicio del GameScreen", null);
 
         this.game = game;
         buying = false;
         pauseFlag = false;
-        gold = 6000;
+        gold = 6000; //Oro por defecto
 
         font = new BitmapFont(Gdx.files.internal("Fonts/test.fnt"));
 
@@ -105,7 +90,7 @@ public class GameScreen implements Screen {
 
         createObjects();
 
-        drawing = fullInv.sortInventory();
+        drawingInv = fullInv.sortInventory();
         rounda = round;
         msg1 = "en este tutorial veras como jugar," ;
         msg2 = "clicka el texto para seguir";
@@ -121,6 +106,7 @@ public class GameScreen implements Screen {
 
         map = new Map("map1.png");
 
+        //Botones de pausa y inventario
         pauseButton = new UIButton(299, 6, 16, 16, "pause.png");
         resumeButton = new UIButton(123, 113, 74, 36, "Buttons/resumeButtonIdle.png");
         menuButton = new UIButton(123, 73, 74, 36, "Buttons/menuButtonIdle.png");
@@ -132,8 +118,7 @@ public class GameScreen implements Screen {
         trapButton = new UIButton(302,162,15,15,"Buttons/Inventory/trapButtonIdle.png");
 
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 320, 180);
-        game.entityBatch = new SpriteBatch();
+        camera.setToOrtho(false, 320, 180); //Ajusta la proporción de la cámara
     }
 
     /**
@@ -149,10 +134,12 @@ public class GameScreen implements Screen {
         //Actualiza cámara
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
-        int id = 0;
+
         for (GameObject obj:objects) {
-            if (((obj instanceof Attacker && obj.getHp() <= 0 && obj.getId() == 2) || (obj instanceof Defender && obj.getHp() <= 0 && obj.getId() == 3)) && obj.isSelected()){
+            if (((obj instanceof Attacker && obj.getHp() <= 0 && obj.getId() == 2)
+                    || (obj instanceof Defender && obj.getHp() <= 0 && obj.getId() == 3)) && obj.isSelected()) {
                 deselect = true;
+                break;
             }
         }
 
@@ -160,59 +147,11 @@ public class GameScreen implements Screen {
             contEnt++;
         }
 
-        switch (contEnt){
-            case 1:
-                msg1="El objeto colocado en el centro es";
-                msg2="el beacon, si se destruye pierdes";
-                break;
-            case 2:
-                msg1="usa los objetos del inventario para";
-                msg2="protegerlo, colocarlos costara oro";
-                break;
-            case 3:
-                msg1="conseguiras oro periodicamente o";
-                msg2="acabando con enemigos";
-                break;
-            case 4:
-                msg1="puedes usar los botones en lo alto";
-                msg2="del inventario para navegar entre objetos";
-                break;
-            case 5:
-                msg1="tienes 3 tipos de objetos trampas,";
-                msg2="defensivos y ofensivos";
-                break;
-            case 6:
-                msg1="los defensivos curan objetos o";
-                msg2="ralentizan a los enemigos, prueba alguno";
-                break;
-            case 7:
-                msg1="cada trampa tiene un efecto unico,";
-                msg2="pero ten cuidado son de un solo uso";
-                break;
-            case 8:
-                msg1="los objetos de ataque ejercen daño";
-                msg2="a los enemigos a mele o a distancia";
-                break;
-            case 9:
-                msg1="Por ultimo, puedes tomar control de";
-                msg2="algunos objetos y usarlos si les haces click";
-                break;
-            case 10:
-                msg1="pulsando ESPACIO podras disparar con el ";
-                msg2="leon o elegir a quien curar con el martillo";
-                break;
-            case 11:
-                msg1="mientras controles un objeto no podras";
-                msg2="colocar otros, deja de controlarlo pulsando E";
-                break;
-            case 12:
-                msg1="ATENCION!!! se acerca un enemigo,";
-                msg2="veamos como te las arreglas...";
-                break;
-        }
+        updateTutorialMessages(contEnt);
 
         if (contEnt == 12 && enough == 0){
-            Enemy larry = new Enemy(-15,90,16,16,1,500,300,15,(int) this.secTimer+30,200,"e1-walk.png","e1-attack.png","e1-death.png");
+            Enemy larry = new Enemy(-15,90,16,16,1,500,300,15,
+                    this.secTimer+30,200,"e1-walk.png","e1-attack.png","e1-death.png");
             larry.hpBar.setMaxHP(larry.getHp());
             larry.setFocus(objects.get(0).getX(), objects.get(0).getY());
             enemies.add(larry);
@@ -220,16 +159,16 @@ public class GameScreen implements Screen {
         }
 
         if (enough == 1 && enemies.size() == 0){
-            msg1="Felicidades, estas listo para el desafio";
-            msg2="pulsa click una ultima vez para ir al menu";
+            msg1 = "Felicidades, estas listo para el desafio";
+            msg2 = "pulsa click una ultima vez para ir al menu";
             if (contEnt == 13){
-                game.setScreen(new MenuScreen(this.game,false));
+                game.setScreen(new MenuScreen(this.game));
             }
 
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.E) || deselect){
-            Attacker.selected=false;
+            Attacker.selected = false;
             for (GameObject obj:objects) {
                 obj.setSelected(false);
             }
@@ -240,12 +179,12 @@ public class GameScreen implements Screen {
 
         deselect = false;
 
-        //Actualiza lógica sólo si el juego no está en pausa, pero sí realiza el dibujado.
+        //Actualiza lógica de juego sólo si el juego no está en pausa, pero sí realiza el dibujado.
         if (pauseFlag) {
             updateMenuLogic();
         }
         else {
-            //Actualiza lógica
+            //Actualiza lógica de juego
             updateGameLogic();
 
             //Cambios de inventario
@@ -255,11 +194,68 @@ public class GameScreen implements Screen {
         //Dibujado
         draw();
 
-        if (objects.get(0).getHp()<=0) {
-            //game.setScreen(new MenuScreen(game,false));
+        //Salida del juego (el jugador pierde)
+        if (objects.get(0).getHp() <= 0) {
             game.setScreen(new EndScreen(Settings.s.getUsername(), points, game));
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
+    }
+
+    /**
+     * Actualiza el texto en las variables String del tutorial (msg1 y msg2)
+     * @param contEnt Contador de "partes" del tutorial
+     */
+    private void updateTutorialMessages(int contEnt) {
+        switch (contEnt){
+            case 1:
+                msg1 = "El objeto colocado en el centro es";
+                msg2 = "el beacon, si se destruye pierdes";
+                break;
+            case 2:
+                msg1 = "usa los objetos del inventario para";
+                msg2 = "protegerlo, colocarlos costara oro";
+                break;
+            case 3:
+                msg1 = "conseguiras oro periodicamente o";
+                msg2 = "acabando con enemigos";
+                break;
+            case 4:
+                msg1 = "puedes usar los botones en lo alto";
+                msg2 = "del inventario para navegar entre objetos";
+                break;
+            case 5:
+                msg1 = "tienes 3 tipos de objetos trampas,";
+                msg2 = "defensivos y ofensivos";
+                break;
+            case 6:
+                msg1 = "los defensivos curan objetos o";
+                msg2 = "ralentizan a los enemigos, prueba alguno";
+                break;
+            case 7:
+                msg1 = "cada trampa tiene un efecto unico,";
+                msg2 = "pero ten cuidado son de un solo uso";
+                break;
+            case 8:
+                msg1 = "los objetos de ataque ejercen daño";
+                msg2 = "a los enemigos a mele o a distancia";
+                break;
+            case 9:
+                msg1 = "Por ultimo, puedes tomar control de";
+                msg2 = "algunos objetos y usarlos si les haces click";
+                break;
+            case 10:
+                msg1 = "pulsando ESPACIO podras disparar con el ";
+                msg2 = "leon o elegir a quien curar con el martillo";
+                break;
+            case 11:
+                msg1 = "mientras controles un objeto no podras";
+                msg2 = "colocar otros, deja de controlarlo pulsando E";
+                break;
+            case 12:
+                msg1 = "ATENCION!!! se acerca un enemigo,";
+                msg2 = "veamos como te las arreglas...";
+                break;
+        }
     }
 
     /**
@@ -274,7 +270,7 @@ public class GameScreen implements Screen {
         points += 1;
 
         //Actualiza estado de objetos del inventario
-        for (GameObject object : drawing.getObjects()) {
+        for (GameObject object : drawingInv.getObjects()) {
             object.grabObject(map, objects);
         }
 
@@ -286,8 +282,8 @@ public class GameScreen implements Screen {
             if(tempObj.getHp() <= 0) {
                 try {
                     map.getOccGrid()[(int) tempObj.getX() / 16][(int) tempObj.getY() / 18] = false;
-                } catch (IndexOutOfBoundsException e) {
-                    //TODO: arreglar fallos ocasionales
+                } catch (IndexOutOfBoundsException ignored) {
+
                 }
                 objectIterator.remove();
             }
@@ -297,6 +293,7 @@ public class GameScreen implements Screen {
         while(enemyIterator.hasNext()){
             Enemy tempEnemy = enemyIterator.next();
             tempEnemy.update(this);
+            //Es necesario borrar desde aquí a los enemigos, para evitar un ConcurrentModificationException.
             if(tempEnemy.getDeathTimer() < secTimer && tempEnemy.getDeathTimer() != 0) {
                 enemyIterator.remove();
             }
@@ -331,7 +328,7 @@ public class GameScreen implements Screen {
             pauseFlag = !pauseFlag;
         }
         else if (menuButton.isJustClicked()) {
-            game.setScreen(new MenuScreen(game,false));
+            game.setScreen(new MenuScreen(game));
         }
         else if (quitButton.isJustClicked()) {
             Gdx.app.exit();
@@ -373,7 +370,7 @@ public class GameScreen implements Screen {
         }
 
         //Inventario
-        game.entityBatch.draw(drawing.getTexture(), drawing.getX(), drawing.getY());
+        game.entityBatch.draw(drawingInv.getTexture(), drawingInv.getX(), drawingInv.getY());
         game.entityBatch.draw(allObjectsButton.getTexture(), allObjectsButton.getX(), allObjectsButton.getY());
         game.entityBatch.draw(attackerButton.getTexture(), attackerButton.getX(), attackerButton.getY());
         game.entityBatch.draw(defenderButton.getTexture(), defenderButton.getX(), defenderButton.getY());
@@ -381,7 +378,7 @@ public class GameScreen implements Screen {
 
 
         //Objetos del inventario
-        for (GameObject object:drawing.getObjects()) {
+        for (GameObject object:drawingInv.getObjects()) {
             if (object != null) {
                 if (object.getAnimation() == null) game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
                 else game.entityBatch.draw(object.getCurrentAnimation(animationTimer), object.getX(), object.getY());
@@ -390,7 +387,7 @@ public class GameScreen implements Screen {
 
         //Oro
         if (rounda != 0){
-            font.draw(game.entityBatch, "ORO : " + Integer.toString(gold), 5, 175);
+            font.draw(game.entityBatch, "ORO : " + gold, 5, 175);
         } else {
             gold = gold + 100000;
             game.entityBatch.draw(tutoBut.getTexture(),tutoBut.getX(),tutoBut.getY());
@@ -430,12 +427,17 @@ public class GameScreen implements Screen {
         if (trapButton.isTouched()) trapButton.setTexture(new Texture("Buttons/Inventory/trapButtonTouched.png"));
         else trapButton.setTexture(new Texture("Buttons/Inventory/trapButtonIdle.png"));
 
-        if (allObjectsButton.isJustClicked()) drawing = fullInv.sortInventory();
-        if (attackerButton.isJustClicked()) drawing = attackInv.sortInventory();
-        if (defenderButton.isJustClicked()) drawing = defInv.sortInventory();
-        if (trapButton.isJustClicked()) drawing = trapInv.sortInventory();
+        if (allObjectsButton.isJustClicked()) drawingInv = fullInv.sortInventory();
+        if (attackerButton.isJustClicked()) drawingInv = attackInv.sortInventory();
+        if (defenderButton.isJustClicked()) drawingInv = defInv.sortInventory();
+        if (trapButton.isJustClicked()) drawingInv = trapInv.sortInventory();
     }
 
+    /**
+     * Asigna a un objeto Enemy de tipo 1 los valores comunes y posicionales, y lo carga al ArrayList de juego.
+     * @param larry Enemy a cargar
+     * @param fields Array de parámetros posicionales
+     */
     private void loadEnemy(Enemy larry, String[] fields) {
         larry.setX(Integer.parseInt(fields[0]));
         larry.setY(Integer.parseInt(fields[1]));
@@ -487,7 +489,7 @@ public class GameScreen implements Screen {
         } catch (DBException e) {
             log( Level.INFO, "Error en la conexion a la base de datos", null );
         }
-        Enemy larry = new Enemy();
+        Enemy larry;
         try {
             try {
                 Scanner sc= new Scanner(new FileInputStream("core/assets/ronda1.csv"));
@@ -496,11 +498,10 @@ public class GameScreen implements Screen {
                     String[] fields = line.split(";");
                     if (enemies.size()<6){
                         larry = DBManager.dbManager.getEnemy(0);
-                        larry.loadAnimations();
                     } else {
                         larry = DBManager.dbManager.getEnemy(1);
-                        larry.loadAnimations();
                     }
+                    larry.loadAnimations();
 
                     loadEnemy(larry, fields);
                 }
@@ -592,7 +593,7 @@ public class GameScreen implements Screen {
     public void dispose() {
         game.entityBatch.dispose();
 
-        drawing.getTexture().dispose();
+        drawingInv.getTexture().dispose();
         fullInv.getTexture().dispose();
         attackInv.getTexture().dispose();
         defInv.getTexture().dispose();
@@ -636,6 +637,18 @@ public class GameScreen implements Screen {
 
     public static void setBuying(boolean buying) {
         GameScreen.buying = buying;
+    }
+
+    private void log(Level level, String msg, Throwable exception) {
+        if (!LOGGING) return;
+        if (logger == null) {  // Logger por defecto local:
+            logger = Logger.getLogger("GameScreen");  // Nombre del logger - el de la clase
+            logger.setLevel(Level.ALL);  // Loguea todos los niveles
+        }
+        if (exception == null)
+            logger.log(level, msg);
+        else
+            logger.log(level, msg, exception);
     }
 
     @Override

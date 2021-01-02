@@ -9,7 +9,7 @@ import java.util.ArrayList;
  *En esta clase organizaremos las rondas
  *
  */
-public class Round {
+public class Round { //TODO: es seguro borrarla?
     protected int n;
     protected ArrayList<Enemy> enemies;
     protected ArrayList<GameObject> objects;

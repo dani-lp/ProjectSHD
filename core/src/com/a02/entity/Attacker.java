@@ -13,10 +13,10 @@ import static com.a02.game.Utils.*;
 
 public class Attacker extends GameObject {
     public static boolean selected;
+    private boolean isSelected;
     private float attackDamage;
     private String attackType;
-    private static Logger logger = Logger.getLogger(GameObject.class.getName());
-    private boolean isSelected;
+    private final static Logger logger = Logger.getLogger(GameObject.class.getName());
     private enum State {
         IDLE, ATTACKING
     }

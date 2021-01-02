@@ -1,6 +1,5 @@
 package com.a02.entity;
 
-import com.a02.component.Inventory;
 import com.a02.screens.GameScreen;
 import com.a02.component.HealthBar;
 import com.badlogic.gdx.Gdx;
@@ -26,7 +25,7 @@ public class Enemy extends Entity {
     private Vector2 focus;
     protected Animation<TextureRegion> walkAnimation;
     protected Animation<TextureRegion> attackAnimation;
-    protected Animation<TextureRegion> deathAnimation; //TODO: implementar muerte
+    protected Animation<TextureRegion> deathAnimation;
 
     public enum State {
         IDLE, WALKING, ATTACKING, DYING
@@ -97,10 +96,6 @@ public class Enemy extends Entity {
 
     public void setHp(int hp) {
         this.hp = hp;
-    }
-
-    public int getEffectTimer() {
-        return effectTimer;
     }
 
     public void setEffectTimer(int effectTimer) {

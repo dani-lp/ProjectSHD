@@ -12,11 +12,10 @@ import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 public class Trap extends GameObject {
-    private static Logger logger = Logger.getLogger(GameObject.class.getName());
+    private final static Logger logger = Logger.getLogger(GameObject.class.getName());
     private int attackDamage;
     private String effect;
     public enum Effect {
