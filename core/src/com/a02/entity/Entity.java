@@ -75,7 +75,7 @@ public abstract class Entity {
         return x < entity.x + entity.width && x + width > entity.x && y < entity.y + entity.height && y + height > entity.y;
     }
 
-    protected boolean overlapsPoint(float x, float y) {
+    public boolean overlapsPoint(float x, float y) {
         return this.x <= x && this.x + this.width >= x && this.y <= y && this.y + this.height >= y;
     }
 

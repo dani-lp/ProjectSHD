@@ -16,12 +16,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Vector3;
 
 import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.a02.game.Utils.getRelativeMousePos;
 
 public class GameScreen implements Screen {
     final MainGame game; //Clase MainGame base (utilizada para cambiar de Screens de forma global)
@@ -74,6 +77,8 @@ public class GameScreen implements Screen {
     public int contEnt = 0;
     public int enough = 0;
 
+    boolean deleting;
+
     public GameScreen(MainGame game, int round) {
         log(Level.INFO, "Inicio del GameScreen", null);
 
@@ -93,7 +98,7 @@ public class GameScreen implements Screen {
         trapInv = new Inventory();
 
         createObjects();
-
+        deleting=false;
         drawingInv = fullInv.sortInventory();
         rounda = round;
         msg1 = "en este tutorial veras como jugar," ;
@@ -175,6 +180,7 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.E) || deselect){
             Defender.selected = false;
             Attacker.selected = false;
+            deleting = false;
             for (GameObject obj:objects) {
                 obj.setSelected(false);
                 if (obj instanceof Defender){
@@ -205,11 +211,28 @@ public class GameScreen implements Screen {
 
         //Salida del juego (el jugador pierde)
         if (objects.get(0).getHp() <= 0) {
+            Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
+            Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+            pm.dispose();
             game.setScreen(new EndScreen(Settings.s.getUsername(), points, game));
         }
 
         if (deleteButton.isJustClicked()){
-
+            Pixmap pm = new Pixmap(Gdx.files.internal("x.png"));
+            Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+            pm.dispose();
+            deleting=true;
+        }
+        if (deleting){
+            if (Gdx.input.isTouched()){
+                Vector3 mousePos = getRelativeMousePos();
+                for (GameObject obj:objects) {
+                    if (obj.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched()){
+                        gold += obj.getPrice()*0.8;
+                        obj.setHp(0);
+                    }
+                }
+            }
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
