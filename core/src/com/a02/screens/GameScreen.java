@@ -110,28 +110,35 @@ public class GameScreen implements Screen {
         switch (round) {
             case 1:
                 loadRound1();
-                map = new Map("map1.png");
+                map = new Map("map1.png"); //Mapa de río
                 gold = 60000; //TODO Oro por defecto
                 break;
             case 2:
                 loadRound2();
-                map = new Map("riverMap.png");
+                map = new Map("riverMap.png"); //Mapa de bosque
                 gold = 60000;
                 break;
             case 3:
                 loadRound3();
-                map = new Map("map1.png");
+                map = new Map("map1.png"); //?
                 gold = 60000;
                 break;
             case 4:
                 loadRound4();
-                map = new Map("map1.png");
+                map = new Map("map1.png"); //Mapa abierto
                 gold = 60000;
                 break;
             case 5:
                 loadRound5();
-                map = new Map("map1.png");
+                map = new Map("map1.png"); //3 lados bloqueados, boss final
                 gold = 60000;
+                break;
+            case -2:
+                map = new Map("map1.png");
+                gold = 0;
+                for (GameObject obj:objects) {
+                    obj.setPrice(0);
+                }
                 break;
             default:
                 map = new Map("map1.png");
@@ -315,7 +322,7 @@ public class GameScreen implements Screen {
         secTimer += 1;
         animationTimer += Gdx.graphics.getDeltaTime();
 
-        if (secTimer % 20 == 0) gold++;
+        if (secTimer % 20 == 0 && currentRound != -2) gold++;
         points += 1;
 
         //Actualiza estado de objetos del inventario
@@ -324,7 +331,7 @@ public class GameScreen implements Screen {
         }
 
         //Botón de eliminar objetos
-        if (deleteButton.isJustClicked()){
+        if (deleteButton.isJustClicked()){ //TODO: problemas con objetos controlables
             if (!deleting) {
                 Pixmap pm = new Pixmap(Gdx.files.internal("x.png"));
                 Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));

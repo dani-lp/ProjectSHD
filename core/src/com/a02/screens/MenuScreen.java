@@ -129,10 +129,10 @@ public class MenuScreen implements Screen {
             game.setScreen(new GameScreen(game, 1));
         }
         if (infiniteButton.isJustClicked() && introTimer) {
-            game.setScreen(new GameScreen(game, 1)); //Modo infinito (ronda -1)
+            game.setScreen(new GameScreen(game, -1)); //Modo infinito (ronda -1)
         }
         if (testingButton.isJustClicked() && introTimer) {
-            game.setScreen(new GameScreen(game, 1)); //Modo testing (ronda -2)
+            game.setScreen(new GameScreen(game, -2)); //Modo testing (ronda -2)
         }
         else if (quitButton.isJustClicked() && introTimer) {
             Gdx.app.exit();
