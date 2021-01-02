@@ -521,6 +521,13 @@ public class GameScreen implements Screen {
         }
     }
 
+    public void rondaInfinita(){ // TODO Metodo recursivo pasarle vida beacon y enemigos
+        Enemy larry;
+
+
+
+    }
+
     /**
      * Extrae los objetos de la Base de Datos y los introduce en los inventarios.
      */
