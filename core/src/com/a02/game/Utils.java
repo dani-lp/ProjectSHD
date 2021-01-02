@@ -34,6 +34,22 @@ public class Utils {
         return MainGame.mainGameScreen.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(),0));
     }
 
+    private static boolean isPressed;
+
+    public static boolean mouseJustClicked() {
+        if (Gdx.input.isTouched() && !isPressed) {
+            isPressed = true;
+            return true;
+        }
+        else if (!Gdx.input.isTouched() && isPressed) {
+            isPressed = false;
+            return false;
+        }
+        else {
+            return false;
+        }
+    }
+
     /**
      * Crea una animación a partir de una sprite sheet.
      * @param path Ruta del archivo.
@@ -78,13 +94,20 @@ public class Utils {
 
     public static HashMap<String, User> readSer(String path) throws IOException, ClassNotFoundException {
         HashMap<String, User> map;
-        FileInputStream fs = new FileInputStream(path);
         try{
+            FileInputStream fs = new FileInputStream(path);
             ObjectInputStream os = new ObjectInputStream(fs);
             map = (HashMap<String, User>) os.readObject();
             return map;
         } catch (EOFException e) {
-            return new HashMap<String, User>();
+            map = new HashMap<>();
+            writeSer(path, map);
+            return map;
+        } catch (FileNotFoundException e) {
+            PrintWriter writer = new PrintWriter(path, "UTF-8");
+            map = new HashMap<>();
+            writeSer(path, map);
+            return map;
         }
     }
 

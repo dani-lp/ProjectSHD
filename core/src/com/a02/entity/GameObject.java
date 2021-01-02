@@ -157,12 +157,12 @@ public abstract class GameObject extends Entity {
 
     /**
      * Comprueba y gestiona el agarre y colocación de los objetos.
-     * @param map mapa en el que colocar el objeto
-     * @param objects lista de objetos en las que guardar el objeto colocado
+     * @param gs Screen de juego
      */
-    public void grabObject(Map map, List<GameObject> objects) {  //Agarra el objeto y lo suelta
+    public void grabObject(GameScreen gs) {  //Agarra el objeto y lo suelta
         Vector3 touchPos = getRelativeMousePos();
-        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !GameScreen.isBuying() && !Attacker.selected && !Defender.selected) {
+        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !GameScreen.isBuying()
+                && !Attacker.selected && !Defender.selected && !gs.isDeleting()) {
             this.grabbed = true;
             GameScreen.setBuying(true);
             this.ogPos.x = this.getX();
@@ -183,7 +183,7 @@ public abstract class GameObject extends Entity {
                 GameScreen.setBuying(false);
 
                 if (GameScreen.getGold() >= this.price)
-                    this.setObjectInGrid(map, objects);
+                    this.setObjectInGrid(gs.map, gs.objects);
                 else
                     logger.warning("No hay suficiente oro");
             }

@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.a02.game.Utils.getRelativeMousePos;
+import static com.a02.game.Utils.*;
 
 public class GameScreen implements Screen {
     final MainGame game; //Clase MainGame base (utilizada para cambiar de Screens de forma global)
@@ -47,12 +47,12 @@ public class GameScreen implements Screen {
     public Inventory defInv; //Objetos de defensa
     public Inventory trapInv; //Objetos trampa
 
-    Map map; //Mapa donde se colocan los objetos
+    public Map map; //Mapa donde se colocan los objetos
     OrthographicCamera camera; //Cámara reescalada
 
     BitmapFont font; //Fuente para oro/tutorial/etc
 
-    private final UIButton deleteButton;
+    private final UIButton deleteButton; //Utilizado para quitar objetos ya colocados y recuperar parte de su coste
 
     //Botones del menú
     private final UIButton pauseButton;
@@ -77,7 +77,7 @@ public class GameScreen implements Screen {
     public int contEnt = 0;
     public int enough = 0;
 
-    boolean deleting;
+    private boolean deleting;
 
     public GameScreen(MainGame game, int round) {
         log(Level.INFO, "Inicio del GameScreen", null);
@@ -85,7 +85,6 @@ public class GameScreen implements Screen {
         this.game = game;
         buying = false;
         pauseFlag = false;
-        gold = 60000; //TODO Oro por defecto
 
         font = new BitmapFont(Gdx.files.internal("Fonts/test.fnt"));
 
@@ -108,29 +107,34 @@ public class GameScreen implements Screen {
         //Setup por rondas
         switch (round) {
             case 1:
-                ronda1();
+                loadRound1();
                 map = new Map("map1.png");
+                gold = 60000; //TODO Oro por defecto
                 break;
             case 2:
-                ronda2();
+                loadRound2();
                 map = new Map("riverMap.png");
+                gold = 60000;
                 break;
             case 3:
-                ronda3();
+                loadRound3();
                 map = new Map("map1.png");
+                gold = 60000;
                 break;
             case 4:
-                ronda4();
+                loadRound4();
                 map = new Map("map1.png");
+                gold = 60000;
                 break;
             case 5:
-                ronda5();
+                loadRound5();
                 map = new Map("map1.png");
+                gold = 60000;
                 break;
         }
 
         //Botones de pausa y inventario
-        deleteButton= new UIButton(280, 6, 16, 16, "pala.png");
+        deleteButton= new UIButton(280, 6, 10, 20, "pala.png");
         pauseButton = new UIButton(301, 3, 16, 16, "pause.png");
         resumeButton = new UIButton(123, 113, 74, 36, "Buttons/resumeButtonIdle.png");
         menuButton = new UIButton(123, 73, 74, 36, "Buttons/menuButtonIdle.png");
@@ -231,24 +235,6 @@ public class GameScreen implements Screen {
             game.setScreen(new EndScreen(Settings.s.getUsername(), points, game));
         }
 
-        if (deleteButton.isJustClicked()){
-            Pixmap pm = new Pixmap(Gdx.files.internal("x.png"));
-            Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
-            pm.dispose();
-            deleting=true;
-        }
-        if (deleting){
-            if (Gdx.input.isTouched()){
-                Vector3 mousePos = getRelativeMousePos();
-                for (GameObject obj:objects) {
-                    if (obj.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched()){
-                        gold += obj.getPrice()*0.8;
-                        obj.setHp(0);
-                    }
-                }
-            }
-        }
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
     }
 
@@ -326,7 +312,42 @@ public class GameScreen implements Screen {
 
         //Actualiza estado de objetos del inventario
         for (GameObject object : drawingInv.getObjects()) {
-            object.grabObject(map, objects);
+            object.grabObject(this);
+        }
+
+        //Botón de eliminar objetos
+        if (deleteButton.isJustClicked()){
+            if (!deleting) {
+                Pixmap pm = new Pixmap(Gdx.files.internal("x.png"));
+                Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+                pm.dispose();
+                deleting = true;
+            }
+            else {
+                Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
+                Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+                pm.dispose();
+                deleting = false;
+            }
+        }
+
+        if (deleting) {
+            if (mouseJustClicked()){
+                Vector3 mousePos = getRelativeMousePos();
+                for (GameObject obj:objects) {
+                    if (obj.overlapsPoint(mousePos.x, mousePos.y) && obj.getId() != 0
+                            && !obj.isInInventory(this)){
+                        gold += obj.getPrice() * 0.8;
+                        obj.setHp(0);
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
+            Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+            pm.dispose();
         }
 
         //Actualiza "presencia" y estado de enemigos y objetos
@@ -504,7 +525,7 @@ public class GameScreen implements Screen {
         enemies.add(larry);
     }
 
-    private void ronda1(){
+    private void loadRound1(){
         try {
             DBManager.dbManager.connect("Databases/base.db");
         } catch (DBException e) {
@@ -539,7 +560,7 @@ public class GameScreen implements Screen {
         }
     }
 
-    private void ronda2(){
+    private void loadRound2(){
         try {
             DBManager.dbManager.connect("Databases/base.db");
         } catch (DBException e) {
@@ -577,9 +598,15 @@ public class GameScreen implements Screen {
         }
     }
 
-    private void ronda3() {};
-    private void ronda4() {};
-    private void ronda5() {};
+    private void loadRound3() {
+
+    }
+    private void loadRound4() {
+
+    }
+    private void loadRound5() {
+
+    }
 
     /**
      * Extrae los objetos de la Base de Datos y los introduce en los inventarios.
@@ -698,6 +725,10 @@ public class GameScreen implements Screen {
 
     public static void setBuying(boolean buying) {
         GameScreen.buying = buying;
+    }
+
+    public boolean isDeleting() {
+        return deleting;
     }
 
     private void log(Level level, String msg, Throwable exception) {

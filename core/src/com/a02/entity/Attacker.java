@@ -12,8 +12,15 @@ import java.util.logging.Logger;
 import static com.a02.game.Utils.*;
 
 public class Attacker extends GameObject {
+    /**
+     * Indica si hay algún objeto seleccionado para control manual
+     */
     public static boolean selected;
+    /**
+     * Indica si el objeto concreto está seleccionado
+     */
     private boolean isSelected;
+
     private float attackDamage;
     private String attackType;
     private final static Logger logger = Logger.getLogger(GameObject.class.getName());
