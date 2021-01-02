@@ -33,7 +33,7 @@ public class GameScreen implements Screen {
 
     private static boolean buying, pauseFlag; //Flags de compra y pausa
     private static int gold; //Oro para comprar objetos
-    private static int rounda; //Ronda de juego actual
+    private static int currentRound; //Ronda de juego actual
     private static int points; //Puntos que consigue el usuario
 
     public List<GameObject> objects = new ArrayList<>(); //Objetos en el juego
@@ -68,7 +68,7 @@ public class GameScreen implements Screen {
 
     public int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones. Suma el tiempo transcurrido entre fotogramas.
-    private final static boolean LOGGING = false;
+    private final static boolean LOGGING = false; //Cambiar para activar/desactivar el logging
 
     // Para eventos del tutorial
     public String msg1;
@@ -85,7 +85,7 @@ public class GameScreen implements Screen {
         this.game = game;
         buying = false;
         pauseFlag = false;
-        gold = 6000; //Oro por defecto
+        gold = 60000; //TODO Oro por defecto
 
         font = new BitmapFont(Gdx.files.internal("Fonts/test.fnt"));
 
@@ -98,26 +98,40 @@ public class GameScreen implements Screen {
         trapInv = new Inventory();
 
         createObjects();
-        deleting=false;
+
+        deleting = false;
         drawingInv = fullInv.sortInventory();
-        rounda = round;
+        currentRound = round;
         msg1 = "en este tutorial veras como jugar," ;
         msg2 = "clicka el texto para seguir";
 
+        //Setup por rondas
         switch (round) {
             case 1:
                 ronda1();
+                map = new Map("map1.png");
                 break;
             case 2:
                 ronda2();
+                map = new Map("riverMap.png");
+                break;
+            case 3:
+                ronda3();
+                map = new Map("map1.png");
+                break;
+            case 4:
+                ronda4();
+                map = new Map("map1.png");
+                break;
+            case 5:
+                ronda5();
+                map = new Map("map1.png");
                 break;
         }
 
-        map = new Map("map1.png");
-
         //Botones de pausa y inventario
         deleteButton= new UIButton(280, 6, 16, 16, "pala.png");
-        pauseButton = new UIButton(299, 6, 16, 16, "pause.png");
+        pauseButton = new UIButton(301, 3, 16, 16, "pause.png");
         resumeButton = new UIButton(123, 113, 74, 36, "Buttons/resumeButtonIdle.png");
         menuButton = new UIButton(123, 73, 74, 36, "Buttons/menuButtonIdle.png");
         quitButton = new UIButton(123, 33, 74, 36, "Buttons/quitButtonIdle.png");
@@ -427,7 +441,7 @@ public class GameScreen implements Screen {
         }
 
         //Oro
-        if (rounda != 0){
+        if (currentRound != 0){
             font.draw(game.entityBatch, "ORO : " + gold, 5, 175);
         } else {
             gold = gold + 100000;
@@ -490,7 +504,7 @@ public class GameScreen implements Screen {
         enemies.add(larry);
     }
 
-    public void ronda1(){
+    private void ronda1(){
         try {
             DBManager.dbManager.connect("Databases/base.db");
         } catch (DBException e) {
@@ -525,7 +539,7 @@ public class GameScreen implements Screen {
         }
     }
 
-    public void ronda2(){
+    private void ronda2(){
         try {
             DBManager.dbManager.connect("Databases/base.db");
         } catch (DBException e) {
@@ -562,6 +576,10 @@ public class GameScreen implements Screen {
 
         }
     }
+
+    private void ronda3() {};
+    private void ronda4() {};
+    private void ronda5() {};
 
     /**
      * Extrae los objetos de la Base de Datos y los introduce en los inventarios.

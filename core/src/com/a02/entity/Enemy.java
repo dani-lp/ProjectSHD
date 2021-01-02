@@ -78,7 +78,7 @@ public class Enemy extends Entity {
             case 1:
                 this.walkAnimation = createAnimation("e2-walk.png",2,2,0.2f);
                 this.attackAnimation = createAnimation("e2-attack.png",5,1,0.2f);
-                this.deathAnimation = createAnimation("e2-walk.png",2,2, 0.25f);
+                this.deathAnimation = createAnimation("e2-death.png",2,1, 0.2f);
         }
     }
 

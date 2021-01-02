@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 
+import java.awt.*;
+import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +22,8 @@ public class MenuScreen implements Screen {
     private final UIButton round1Button;
     private final UIButton round2Button;
     private final UIButton quitButton;
+
+    private final UIButton githubButton;
 
     private final Texture backgroundTexture;
 
@@ -34,6 +38,9 @@ public class MenuScreen implements Screen {
         round1Button = new UIButton(-74, 113, 74, 36, "Buttons/round1ButtonIdle.png");
         round2Button = new UIButton(-132, 73, 74, 36, "Buttons/round2ButtonIdle.png");
         quitButton = new UIButton(-190, 33, 74, 36, "Buttons/quitButtonIdle.png");
+
+        githubButton = new UIButton(1, 1, 26, 29, "Buttons/github.png");
+
         backgroundTexture = new Texture(Gdx.files.internal("wallpaperTest.png"));
 
         introTimer = false;
@@ -69,6 +76,7 @@ public class MenuScreen implements Screen {
         game.entityBatch.draw(round1Button.getTexture(), round1Button.getX(),round1Button.getY());
         game.entityBatch.draw(round2Button.getTexture(), round2Button.getX(),round2Button.getY());
         game.entityBatch.draw(quitButton.getTexture(),quitButton.getX(),quitButton.getY());
+        game.entityBatch.draw(githubButton.getTexture(), githubButton.getX(), githubButton.getY());
         game.entityBatch.end();
 
         updateButtonLogic();
@@ -86,6 +94,9 @@ public class MenuScreen implements Screen {
         if (quitButton.isTouched()) quitButton.setTexture(new Texture("Buttons/quitButtonPressed.png"));
         else quitButton.setTexture(new Texture("Buttons/quitButtonIdle.png"));
 
+        if (githubButton.isTouched()) githubButton.setTexture(new Texture("Buttons/githubTouched.png"));
+        else githubButton.setTexture(new Texture("Buttons/github.png"));
+
         //Lógica
         if (round1Button.isJustClicked() && introTimer) {
             game.setScreen(new GameScreen(game, 1));
@@ -96,6 +107,16 @@ public class MenuScreen implements Screen {
         else if (quitButton.isJustClicked() && introTimer) {
             Gdx.app.exit();
             System.exit(0);
+        }
+        else if (githubButton.isJustClicked() && introTimer) {
+            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    desktop.browse(new URI("https://github.com/Dzl17/ProjectSHD.git"));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

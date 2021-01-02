@@ -37,6 +37,7 @@ public class Attacker extends GameObject {
         switch (this.getId()){
             case 0: //Electricidad
                 this.setTexture(new Texture(Gdx.files.internal("electricity.png")));
+                this.setAnimation(createAnimation("electricity-Sheet.png", 2, 1, 0.1f));
                 break;
             case 1:
                 this.setTexture(new Texture(Gdx.files.internal("maquinaDeMatar.png")));

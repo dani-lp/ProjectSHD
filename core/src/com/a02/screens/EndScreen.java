@@ -16,8 +16,8 @@ import static com.a02.game.Utils.writeSer;
 public class EndScreen implements Screen {
     MainGame game;
 
-    private UIButton menuButton;
-    private UIButton quitButton;
+    private final UIButton menuButton;
+    private final UIButton quitButton;
     private final Texture endScreenTexture;
 
     public EndScreen(final String username, final int points, MainGame game) {
