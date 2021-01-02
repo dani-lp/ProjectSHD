@@ -43,7 +43,7 @@ public class SettingsWindow extends JFrame {
         buttonsPanel.setLayout(new FlowLayout());
 
         JLabel modeLabel = new JLabel("Gamemode:");
-        String[] cbEntries = {"Rondas", "Infinito", "Pacifico"};
+        String[] cbEntries = {"Rounds", "Infinite", "Testing"};
         final JComboBox<String> modeCB = new JComboBox<>(cbEntries);
         JLabel diffLabel = new JLabel("Difficulty:");
         final JSlider diffSlider = new JSlider(JSlider.HORIZONTAL, 0, 10, 0);

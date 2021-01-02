@@ -22,7 +22,7 @@ public class Defender extends GameObject {
     State state;
 
     public void states(int i){
-        if (i==0){
+        if (i == 0){
             this.state = State.IDLE;
         }
     }
@@ -31,7 +31,7 @@ public class Defender extends GameObject {
                     boolean unlocked, int hp) {
         super(x, y, width, height, id, type, price, unlocked, hp);
         this.state = State.IDLE;
-        this.isSelected=false;
+        this.isSelected = false;
         loadTextures();
     }
 
@@ -39,8 +39,12 @@ public class Defender extends GameObject {
 
     public void loadTextures() {
         switch (this.getId()) {
-            case 0: //Beacon
+            case -1: //Beacon
                 this.setTexture(new Texture(Gdx.files.internal("beacon.png")));
+                break;
+            case 0: //Health
+                this.setTexture(new Texture(Gdx.files.internal("healer.png")));
+                this.setAnimation(createAnimation("mercy-Sheet.png", 5, 1, 0.1f));
                 break;
             case 1: //Wall
                 this.setTexture(new Texture(Gdx.files.internal("wall.png")));
@@ -48,12 +52,8 @@ public class Defender extends GameObject {
             case 2: //Valla
                 this.setTexture(new Texture(Gdx.files.internal("valla.png")));
                 break;
-            case 3:
+            case 3: //Repair
                 this.setTexture(new Texture(Gdx.files.internal("martillo.png")));
-                break;
-            case 4:
-                this.setTexture(new Texture(Gdx.files.internal("healer.png")));
-                this.setAnimation(createAnimation("mercy-Sheet.png", 5, 1, 0.1f));
                 break;
         }
     }
@@ -86,7 +86,7 @@ public class Defender extends GameObject {
     public void update(GameScreen gs) {
         switch (this.state) {
             case IDLE:
-                if (this.getId() == 4 && !this.isInInventory(gs)) {
+                if (this.getId() == 0 && !this.isInInventory(gs)) {
                     hurt = overlappedArea(gs);
                     if (hurt.size() > 0) {
                         this.state = State.HEALING;
@@ -105,7 +105,7 @@ public class Defender extends GameObject {
                 break;
             case HEALING:
                 boolean healed=false;
-                if (this.getId() == 4){
+                if (this.getId() == 0){
                     if (gs.secTimer % 120 == 0) {
                         for (GameObject obj : hurt) {
                             if (obj.getHp() < obj.getMaxHp()) {

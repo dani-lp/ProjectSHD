@@ -41,6 +41,8 @@ public class GameScreen implements Screen {
     public static List<Shoot> shoots= new ArrayList<>(); //Disparos de juego
     public boolean deselect = false;
 
+    public Defender beacon; //Punto central que deben destruir los enemigos
+
     public Inventory drawingInv; //Inventario actual
     public Inventory fullInv; //Inventario con todos los objetos
     public Inventory attackInv; //Objetos de ataque
@@ -131,7 +133,13 @@ public class GameScreen implements Screen {
                 map = new Map("map1.png");
                 gold = 60000;
                 break;
+            default:
+                map = new Map("map1.png");
+                gold = 60000;
+                break;
         }
+
+        map.getOccGrid()[(int) beacon.getX() / 16][(int) beacon.getY() / 18] = true; //Casilla del beacon
 
         //Botones de pausa y inventario
         deleteButton= new UIButton(280, 6, 10, 20, "pala.png");
@@ -181,7 +189,7 @@ public class GameScreen implements Screen {
             Enemy larry = new Enemy(-15,90,16,16,1,500,300,15,
                     this.secTimer+30,200,"e1-walk.png","e1-attack.png","e1-death.png");
             larry.hpBar.setMaxHP(larry.getHp());
-            larry.setFocus(objects.get(0).getX(), objects.get(0).getY());
+            larry.setFocus(beacon.getX(), beacon.getY());
             enemies.add(larry);
             enough++;
         }
@@ -228,7 +236,7 @@ public class GameScreen implements Screen {
         draw();
 
         //Salida del juego (el jugador pierde)
-        if (objects.get(0).getHp() <= 0) {
+        if (beacon.getHp() <= 0) {
             Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
             pm.dispose();
@@ -335,8 +343,7 @@ public class GameScreen implements Screen {
             if (mouseJustClicked()){
                 Vector3 mousePos = getRelativeMousePos();
                 for (GameObject obj:objects) {
-                    if (obj.overlapsPoint(mousePos.x, mousePos.y) && obj.getId() != 0
-                            && !obj.isInInventory(this)){
+                    if (obj.overlapsPoint(mousePos.x, mousePos.y) && !obj.isInInventory(this) && obj.getId() != -1){
                         gold += obj.getPrice() * 0.8;
                         obj.setHp(0);
                         break;
@@ -520,7 +527,7 @@ public class GameScreen implements Screen {
         larry.setY(Integer.parseInt(fields[1]));
         larry.setStartTime(Integer.parseInt(fields[2]));
         larry.hpBar.setMaxHP(larry.getHp());
-        larry.setFocus(objects.get(0).getX(), objects.get(0).getY());
+        larry.setFocus(beacon.getX(), beacon.getY());
         larry.loadAnimations();
         enemies.add(larry);
     }
@@ -553,7 +560,7 @@ public class GameScreen implements Screen {
         } catch (DBException e) {
             log( Level.INFO, "No se ha podido obtener el enemigo", null );
         }
-        try{
+        try {
             DBManager.dbManager.disconnect();
         } catch (DBException ignored) {
 
@@ -591,7 +598,7 @@ public class GameScreen implements Screen {
         } catch (DBException e) {
             log( Level.INFO, "No se ha podido obtener el enemigo", null );
         }
-        try{
+        try {
             DBManager.dbManager.disconnect();
         } catch (DBException ignored) {
 
@@ -623,21 +630,14 @@ public class GameScreen implements Screen {
             log( Level.INFO, "Error en la conexion a la base de datos", null );
         }
 
-        for (int i = 0; i < 5; i++){
+        for (int i = 0; i < 4; i++){
             try {
                 Defender def = DBManager.dbManager.getDefender(i);
-                if (def.getId() == 0) {
-                    def.setX(144);
-                    def.setY(90);
-                    def.setHp(900); //Temporal
-                }
                 def.hpBar.setMaxHP(def.getHp());
                 def.loadTextures();
                 objects.add(def);
-                if (def.getId() != 0) {
-                    fullInv.insert(def);
-                    defInv.insert(def);
-                }
+                fullInv.insert(def);
+                defInv.insert(def);
             } catch (DBException e) {
                 log( Level.INFO, "No se ha podido obtener el defender", null );
             }
@@ -674,6 +674,11 @@ public class GameScreen implements Screen {
         } catch (DBException ignored) {
 
         }
+
+        beacon = new Defender(144, 90, 16, 18, -1, "Beacon", -1, false, 900);
+        beacon.hpBar.setMaxHP(beacon.getHp());
+        beacon.loadTextures();
+        objects.add(beacon);
     }
 
     @Override

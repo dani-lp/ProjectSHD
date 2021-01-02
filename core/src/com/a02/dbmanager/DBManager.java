@@ -92,10 +92,8 @@ public class DBManager {
                 trap.setId(rs.getInt("ID_T"));
                 trap.setHp(rs.getInt("HP_T"));
                 trap.setAttackDamage(rs.getInt("ATTACKDAMAGE_T"));
-                int bool=rs.getInt("UNLOCKED_T");
-                if (bool==1){
-                    trap.setUnlocked(true);
-                }
+                int bool = rs.getInt("UNLOCKED_T");
+                if (bool == 1) trap.setUnlocked(true); //TODO: pasar a boolean
                 trap.setPrice(rs.getInt("PRICE_T"));
                 trap.setType(rs.getString("TYPE"));
                 trap.setEffect(Trap.Effect.valueOf(rs.getString("EFFECT")));
@@ -158,10 +156,8 @@ public class DBManager {
                 attacker.setId(rs.getInt("ID_A"));
                 attacker.setHp(rs.getInt("HP_A"));
                 attacker.setAttackDamage(rs.getInt("ATTACKDAMAGE_A"));
-                int bool=rs.getInt("UNLOCKED_A");
-                if (bool==1){
-                    attacker.setUnlocked(true);
-                }
+                int bool = rs.getInt("UNLOCKED_A");
+                if (bool == 1) attacker.setUnlocked(true);
                 attacker.setPrice(rs.getInt("PRICE_A"));
                 attacker.setType(rs.getString("TYPE_A"));
                 attacker.setAttackType(rs.getString("ATTACK_TYPE"));

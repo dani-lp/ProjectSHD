@@ -214,8 +214,8 @@ public class Enemy extends Entity {
                 }
                 if (gs.secTimer > this.effectTimer + 280) {
                     this.trapEffect = TrapEffect.NEUTRAL;
-                    this.focus.x = gs.objects.get(0).getX();
-                    this.focus.y = gs.objects.get(0).getY();
+                    this.focus.x = gs.beacon.getX();
+                    this.focus.y = gs.beacon.getY();
                 }
             case NEUTRAL:
                 break;

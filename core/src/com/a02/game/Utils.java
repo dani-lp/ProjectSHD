@@ -104,7 +104,7 @@ public class Utils {
             writeSer(path, map);
             return map;
         } catch (FileNotFoundException e) {
-            PrintWriter writer = new PrintWriter(path, "UTF-8");
+            PrintWriter writer = new PrintWriter(path, "UTF-8"); //Crea el archivo, aunque no se utilize después
             map = new HashMap<>();
             writeSer(path, map);
             return map;
