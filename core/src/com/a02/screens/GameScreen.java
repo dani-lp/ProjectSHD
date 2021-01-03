@@ -90,8 +90,8 @@ public class GameScreen implements Screen {
     public String msg1;
     public String msg2;
     private final UIButton tutoBut = new UIButton(2,40,220,35,"textfield.png");
-    public int contEnt = 0;
-    public int enough = 0;
+    private int contEnt = 0; //Contador de mensajes de tutorial
+    private boolean messagesEnded = false;
 
     public GameScreen(MainGame game, int round) {
         log(Level.INFO, "Inicio del GameScreen", null);
@@ -190,47 +190,8 @@ public class GameScreen implements Screen {
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
 
-        for (GameObject obj:objects) {
-            if (((obj instanceof Attacker && obj.getHp() <= 0 && obj.getId() == 2)
-                    || (obj instanceof Defender && obj.getHp() <= 0 && obj.getId() == 3)) && obj.isSelected()) {
-                this.state = State.PLAYING;
-                break;
-            }
-        }
-
-        if (tutoBut.isJustClicked()){
-            contEnt++;
-        }
-
-        updateTutorialMessages(contEnt);
-
-        if (contEnt == 13 && enough == 0){
-            Enemy larry = new Enemy(-15,90,16,16,1,500,300,15,
-                    this.secTimer+30,200,"e1-walk.png","e1-attack.png","e1-death.png");
-            larry.hpBar.setMaxHP(larry.getHp());
-            larry.setFocus(beacon.getX(), beacon.getY());
-            enemies.add(larry);
-            enough++;
-        }
-
-        if (enough == 1 && enemies.size() == 0){
-            msg1 = "Felicidades, estas listo para el desafio";
-            msg2 = "pulsa click una ultima vez para ir al menu";
-            if (contEnt == 13){
-                game.setScreen(new MenuScreen(this.game));
-            }
-
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.E)){
-            this.state = State.PLAYING;
-            for (GameObject obj:objects) {
-                obj.setSelected(false);
-                if (obj instanceof Defender){
-                    ((Defender) obj).states(0);
-                }
-            }
-        }
+        //Se actualiza el estado del tutorial
+        if (Settings.s.isTutorialCheck()) updateTutorial();
 
         //Actualiza lógica de juego sólo si el juego no está en pausa, pero sí realiza el dibujado.
         if (pauseFlag) {
@@ -247,10 +208,13 @@ public class GameScreen implements Screen {
         //Dibujado
         draw();
 
-        //Salida del juego (el jugador pierde)
-        if (beacon.getHp() <= 0) {
+        //Salida de la GameScreen
+        if (beacon.getHp() <= 0) { //Jugador pierde (beacon destruído)
             this.state = State.PLAYING;
             game.setScreen(new EndScreen(Settings.s.getUsername(), points, game));
+        }
+        else if (enemies.isEmpty()) { //Jugador gana ronda (todos los enemigos eliminados)
+            game.setScreen(new GameScreen(game, ++currentRound));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
@@ -319,6 +283,31 @@ public class GameScreen implements Screen {
         }
     }
 
+    private void updateTutorial() {
+        if (tutoBut.isJustClicked()){ //Pasar al siguiente texto
+            contEnt++;
+            if (messagesEnded && enemies.isEmpty()) {
+                Settings.s.setTutorialCheck(false);
+                game.setScreen(new MenuScreen(game));
+            }
+        }
+
+        updateTutorialMessages(contEnt); //Actualizar texto
+
+        if (contEnt == 13 && !messagesEnded){
+            Enemy larry = new Enemy(-15,90,16,16,1,500,300,15,
+                    this.secTimer + 30,200,"e1-walk.png","e1-attack.png","e1-death.png");
+            larry.setFocus(beacon.getX(), beacon.getY());
+            enemies.add(larry);
+            messagesEnded = true;
+        }
+
+        if (messagesEnded && enemies.isEmpty()){ //Después de eliminar al enemigo
+            msg1 = "Felicidades, estas listo para el desafio!";
+            msg2 = "Pulsa click una ultima vez para ir al menu";
+        }
+    }
+
     private void updateCursor() {
         switch (this.state) {
             case DELETING:
@@ -365,15 +354,23 @@ public class GameScreen implements Screen {
             }
         }
 
-        if (this.state == State.DELETING) {
-            if (mouseJustClicked()){
-                Vector3 mousePos = getRelativeMousePos();
-                for (GameObject obj:objects) {
-                    if (obj.overlapsPoint(mousePos.x, mousePos.y) && !obj.isInInventory(this) && obj.getId() != -1){
-                        gold += obj.getPrice() * 0.8;
-                        obj.setHp(0);
-                        break;
-                    }
+        if (Gdx.input.isKeyPressed(Input.Keys.E)){
+            this.state = State.PLAYING;
+            for (GameObject obj:objects) {
+                obj.setSelected(false);
+                if (obj instanceof Defender){
+                    ((Defender) obj).states(0);
+                }
+            }
+        }
+
+        if (this.state == State.DELETING && mouseJustClicked()) {
+            Vector3 mousePos = getRelativeMousePos();
+            for (GameObject obj:objects) {
+                if (obj.overlapsPoint(mousePos.x, mousePos.y) && !obj.isInInventory(this) && obj.getId() != -1){
+                    gold += obj.getPrice() * 0.8;
+                    obj.setHp(0);
+                    break;
                 }
             }
         }
@@ -384,6 +381,8 @@ public class GameScreen implements Screen {
             GameObject tempObj = objectIterator.next();
             tempObj.update(this);
             if(tempObj.getHp() <= 0) {
+                if ((tempObj instanceof Attacker && tempObj.getId() == 2) ||
+                        (tempObj instanceof Defender && tempObj.getId() == 3) && tempObj.isSelected()) this.state = State.PLAYING;
                 try {
                     map.getOccGrid()[(int) tempObj.getX() / 16][(int) tempObj.getY() / 18] = false;
                 } catch (IndexOutOfBoundsException ignored) {
