@@ -38,8 +38,10 @@ public class EndScreen implements Screen {
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
         pm.dispose();
 
-        menuButton = new UIButton(73,-150,74,36,"Buttons/menuButtonIdle.png");
-        quitButton = new UIButton(173,-220,74,36,"Buttons/quitButtonIdle.png");
+        menuButton = new UIButton(73,-150,74,36,
+                "Buttons/menuButtonIdle.png","Buttons/menuButtonPressed.png");
+        quitButton = new UIButton(173,-220,74,36,
+                "Buttons/quitButtonIdle.png","Buttons/quitButtonPressed.png");
         endScreenTexture = new Texture("endScreen.png");
     }
 
@@ -53,17 +55,14 @@ public class EndScreen implements Screen {
 
         game.entityBatch.begin();
         game.entityBatch.draw(endScreenTexture,0,0);
-        game.entityBatch.draw(menuButton.getTexture(), menuButton.getX(), menuButton.getY());
-        game.entityBatch.draw(quitButton.getTexture(), quitButton.getX(), quitButton.getY());
+        game.entityBatch.draw(menuButton.getCurrentTexture(), menuButton.getX(), menuButton.getY());
+        game.entityBatch.draw(quitButton.getCurrentTexture(), quitButton.getX(), quitButton.getY());
         game.entityBatch.end();
     }
 
     private void updateButtonLogic() {
-        if (menuButton.isTouched()) menuButton.setTexture(new Texture("Buttons/menuButtonPressed.png"));
-        else menuButton.setTexture(new Texture("Buttons/menuButtonIdle.png"));
-
-        if (quitButton.isTouched()) quitButton.setTexture(new Texture("Buttons/quitButtonPressed.png"));
-        else quitButton.setTexture(new Texture("Buttons/quitButtonIdle.png"));
+        menuButton.isTouched();
+        quitButton.isTouched();
 
         if (menuButton.isJustClicked()) {
             game.setScreen(new MenuScreen(game));
@@ -97,8 +96,8 @@ public class EndScreen implements Screen {
 
     @Override
     public void dispose() {
-        menuButton.getTexture().dispose();
-        quitButton.getTexture().dispose();
+        menuButton.disposeButton();
+        quitButton.disposeButton();
         endScreenTexture.dispose();
     }
 

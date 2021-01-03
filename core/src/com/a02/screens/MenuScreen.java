@@ -35,10 +35,14 @@ public class MenuScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180);
 
-        playButton = new UIButton(160, 194, 74, 36, "Buttons/playButtonIdle.png");
-        infiniteButton = new UIButton(340, 94, 74, 36, "Buttons/infiniteButtonIdle.png");
-        testingButton = new UIButton(160, -52, 74, 36, "Buttons/testingButtonIdle.png");
-        quitButton = new UIButton(340, 52, 74, 36, "Buttons/quitButtonIdle.png");
+        playButton = new UIButton(160, 194, 74, 36,
+                "Buttons/playButtonIdle.png", "Buttons/playButtonPressed.png");
+        infiniteButton = new UIButton(340, 94, 74, 36,
+                "Buttons/infiniteButtonIdle.png", "Buttons/infiniteButtonPressed.png");
+        testingButton = new UIButton(160, -52, 74, 36,
+                "Buttons/testingButtonIdle.png", "Buttons/testingButtonPressed.png");
+        quitButton = new UIButton(340, 52, 74, 36,
+                "Buttons/quitButtonIdle.png", "Buttons/quitButtonPressed.png");
 
         backgroundTexture = new Texture(Gdx.files.internal("wallpaperTest.png"));
 
@@ -70,10 +74,10 @@ public class MenuScreen implements Screen {
 
         game.entityBatch.begin();
         game.entityBatch.draw(backgroundTexture,0,0);
-        game.entityBatch.draw(playButton.getTexture(),playButton.getX(),playButton.getY());
-        game.entityBatch.draw(infiniteButton.getTexture(),infiniteButton.getX(),infiniteButton.getY());
-        game.entityBatch.draw(testingButton.getTexture(),testingButton.getX(),testingButton.getY());
-        game.entityBatch.draw(quitButton.getTexture(),quitButton.getX(),quitButton.getY());
+        game.entityBatch.draw(playButton.getCurrentTexture(),playButton.getX(),playButton.getY());
+        game.entityBatch.draw(infiniteButton.getCurrentTexture(),infiniteButton.getX(),infiniteButton.getY());
+        game.entityBatch.draw(testingButton.getCurrentTexture(),testingButton.getX(),testingButton.getY());
+        game.entityBatch.draw(quitButton.getCurrentTexture(),quitButton.getX(),quitButton.getY());
         game.entityBatch.end();
 
         updateButtonLogic();
@@ -82,17 +86,10 @@ public class MenuScreen implements Screen {
 
     private void updateButtonLogic() {
         //Aspecto
-        if (playButton.isTouched()) playButton.setTexture(new Texture("Buttons/playButtonPressed.png"));
-        else playButton.setTexture(new Texture("Buttons/playButtonIdle.png"));
-
-        if (infiniteButton.isTouched()) infiniteButton.setTexture(new Texture("Buttons/infiniteButtonPressed.png"));
-        else infiniteButton.setTexture(new Texture("Buttons/infiniteButtonIdle.png"));
-
-        if (testingButton.isTouched()) testingButton.setTexture(new Texture("Buttons/testingButtonPressed.png"));
-        else testingButton.setTexture(new Texture("Buttons/testingButtonIdle.png"));
-
-        if (quitButton.isTouched()) quitButton.setTexture(new Texture("Buttons/quitButtonPressed.png"));
-        else quitButton.setTexture(new Texture("Buttons/quitButtonIdle.png"));
+        playButton.isTouched();
+        infiniteButton.isTouched();
+        testingButton.isTouched();
+        quitButton.isTouched();
 
         //Lógica
         if (playButton.isJustClicked() && introTimer) {
@@ -124,10 +121,10 @@ public class MenuScreen implements Screen {
 
     @Override
     public void dispose() {
-        playButton.getTexture().dispose();
-        infiniteButton.getTexture().dispose();
-        testingButton.getTexture().dispose();
-        quitButton.getTexture().dispose();
+        playButton.disposeButton();
+        infiniteButton.disposeButton();
+        testingButton.disposeButton();
+        quitButton.disposeButton();
         backgroundTexture.dispose();
     }
 

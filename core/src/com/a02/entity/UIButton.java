@@ -11,17 +11,21 @@ import static com.a02.game.Utils.getRelativeMousePos;
  */
 public class UIButton extends Entity {
 
-    private Texture texture; //Aspecto del botón
+    private Texture idleTexture; //Aspecto del botón
+    private Texture pressedTexture;
+
+    private boolean touched = false;
     private boolean pressed;
 
-    public UIButton(float x, float y, int width, int height, String texturePath) {
+    public UIButton(float x, float y, int width, int height, String idleTexturePath, String pressedTexturePath) {
         super(x, y, width, height);
-        this.texture = new Texture(texturePath);
+        this.idleTexture = new Texture(idleTexturePath);
+        this.pressedTexture = new Texture(pressedTexturePath);
     }
 
     public UIButton() {
         super();
-        this.texture = null;
+        this.idleTexture = null;
     }
 
     /**
@@ -30,7 +34,14 @@ public class UIButton extends Entity {
      */
     public boolean isTouched() {
         Vector3 mousePos = getRelativeMousePos();
-        return this.overlapsPoint(mousePos.x, mousePos.y) && !Gdx.input.isTouched();
+        if (!(this.overlapsPoint(mousePos.x, mousePos.y) && !Gdx.input.isTouched())) {
+            this.touched = false;
+        }
+        else {
+            this.touched = true;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -61,15 +72,33 @@ public class UIButton extends Entity {
         }
     }
 
-    public Texture getTexture() {
-        return texture;
+    public Texture getCurrentTexture() {
+        if (this.touched) return this.getPressedTexture();
+        else return this.getIdleTexture();
+    }
+
+    public void disposeButton () {
+        this.idleTexture.dispose();
+        this.pressedTexture.dispose();
     }
 
     public boolean isPressed() {
         return pressed;
     }
 
-    public void setTexture(Texture texture) {
-        this.texture = texture;
+    public Texture getIdleTexture() {
+        return idleTexture;
+    }
+
+    public void setIdleTexture(Texture idleTexture) {
+        this.idleTexture = idleTexture;
+    }
+
+    public Texture getPressedTexture() {
+        return pressedTexture;
+    }
+
+    public void setPressedTexture(Texture pressedTexture) {
+        this.pressedTexture = pressedTexture;
     }
 }

@@ -163,18 +163,26 @@ public class GameScreen implements Screen {
         map.getOccGrid()[(int) beacon.getX() / 16][(int) beacon.getY() / 18] = true; //Casilla del beacon
 
         //Botones de pausa y inventario
-        deleteButton= new UIButton(280, 3, 10, 20, "pala.png");
-        pauseButton = new UIButton(301, 3, 16, 16, "pause.png");
-        resumeButton = new UIButton(123, 113, 74, 36, "Buttons/resumeButtonIdle.png");
-        menuButton = new UIButton(123, 73, 74, 36, "Buttons/menuButtonIdle.png");
-        quitButton = new UIButton(123, 33, 74, 36, "Buttons/quitButtonIdle.png");
+        deleteButton = new UIButton(280, 3, 10, 20, "pala.png", "pala.png");
+        pauseButton = new UIButton(301, 3, 16, 16, "pause.png", "pause.png");
+        resumeButton = new UIButton(123, 113, 74, 36,
+                "Buttons/resumeButtonIdle.png", "Buttons/resumeButtonPressed.png");
+        menuButton = new UIButton(123, 73, 74, 36,
+                "Buttons/menuButtonIdle.png","Buttons/menuButtonPressed.png");
+        quitButton = new UIButton(123, 33, 74, 36,
+                "Buttons/quitButtonIdle.png","Buttons/quitButtonPressed.png");
 
-        allObjectsButton = new UIButton(259,162,15,15,"Buttons/Inventory/allButtonIdle.png");
-        attackerButton = new UIButton(273,162,15,15,"Buttons/Inventory/attackerButtonIdle.png");
-        defenderButton = new UIButton(288,162,15,15,"Buttons/Inventory/defenderButtonIdle.png");
-        trapButton = new UIButton(302,162,15,15,"Buttons/Inventory/trapButtonIdle.png");
+        allObjectsButton = new UIButton(259,162,15,15,
+                "Buttons/Inventory/allButtonIdle.png","Buttons/Inventory/allButtonPressed.png");
+        attackerButton = new UIButton(273,162,15,15,
+                "Buttons/Inventory/attackerButtonIdle.png","Buttons/Inventory/attackerButtonPressed.png");
+        defenderButton = new UIButton(288,162,15,15,
+                "Buttons/Inventory/defenderButtonIdle.png","Buttons/Inventory/defenderButtonPressed.png");
+        trapButton = new UIButton(302,162,15,15,
+                "Buttons/Inventory/trapButtonIdle.png","Buttons/Inventory/trapButtonPressed.png");
 
-        if (Settings.s.isTutorialCheck()) tutoBut = new UIButton(2,40,220,35,"textfield.png");
+        if (Settings.s.isTutorialCheck()) tutoBut = new UIButton(2,40,220,35,
+                "textfield.png", "textfield.png");
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180); //Ajusta la proporción de la cámara
@@ -435,14 +443,9 @@ public class GameScreen implements Screen {
      */
     private void updateMenuLogic() {
         //Botones tocados
-        if (resumeButton.isTouched()) resumeButton.setTexture(new Texture("Buttons/resumeButtonPressed.png"));
-        else resumeButton.setTexture(new Texture("Buttons/resumeButtonIdle.png"));
-
-        if (menuButton.isTouched()) menuButton.setTexture(new Texture("Buttons/menuButtonPressed.png"));
-        else menuButton.setTexture(new Texture("Buttons/menuButtonIdle.png"));
-
-        if (quitButton.isTouched()) quitButton.setTexture(new Texture("Buttons/quitButtonPressed.png"));
-        else quitButton.setTexture(new Texture("Buttons/quitButtonIdle.png"));
+        resumeButton.isTouched();
+        menuButton.isTouched();
+        quitButton.isTouched();
 
         //Acciones
         if (resumeButton.isJustClicked()){
@@ -498,10 +501,10 @@ public class GameScreen implements Screen {
 
         //Inventario
         game.entityBatch.draw(drawingInv.getTexture(), drawingInv.getX(), drawingInv.getY());
-        game.entityBatch.draw(allObjectsButton.getTexture(), allObjectsButton.getX(), allObjectsButton.getY());
-        game.entityBatch.draw(attackerButton.getTexture(), attackerButton.getX(), attackerButton.getY());
-        game.entityBatch.draw(defenderButton.getTexture(), defenderButton.getX(), defenderButton.getY());
-        game.entityBatch.draw(trapButton.getTexture(), trapButton.getX(), trapButton.getY());
+        game.entityBatch.draw(allObjectsButton.getCurrentTexture(), allObjectsButton.getX(), allObjectsButton.getY());
+        game.entityBatch.draw(attackerButton.getCurrentTexture(), attackerButton.getX(), attackerButton.getY());
+        game.entityBatch.draw(defenderButton.getCurrentTexture(), defenderButton.getX(), defenderButton.getY());
+        game.entityBatch.draw(trapButton.getCurrentTexture(), trapButton.getX(), trapButton.getY());
 
 
         //Objetos del inventario
@@ -517,7 +520,7 @@ public class GameScreen implements Screen {
             font.draw(game.entityBatch, "ORO : " + gold, 5, 175);
         } else {
             gold = gold + 100000;
-            if (Settings.s.isTutorialCheck()) game.entityBatch.draw(tutoBut.getTexture(),tutoBut.getX(),tutoBut.getY());
+            if (Settings.s.isTutorialCheck()) game.entityBatch.draw(tutoBut.getCurrentTexture(),tutoBut.getX(),tutoBut.getY());
             font.draw(game.entityBatch, "ORO INFINITY: " , 5, 175);
             font.draw(game.entityBatch, msg1 , 5, 68);
             font.draw(game.entityBatch, msg2 , 5, 55);
@@ -525,15 +528,15 @@ public class GameScreen implements Screen {
 
 
         //Botones
-        game.entityBatch.draw(pauseButton.getTexture(), pauseButton.getX(), pauseButton.getY());
-        game.entityBatch.draw(deleteButton.getTexture(), deleteButton.getX(), deleteButton.getY());
+        game.entityBatch.draw(pauseButton.getCurrentTexture(), pauseButton.getX(), pauseButton.getY());
+        game.entityBatch.draw(deleteButton.getCurrentTexture(), deleteButton.getX(), deleteButton.getY());
 
         //Menu de pausa
         if (pauseFlag) {
             game.entityBatch.draw(new Texture("pauseMenu.png"), 50, 26);
-            game.entityBatch.draw(resumeButton.getTexture(), resumeButton.getX(), resumeButton.getY());
-            game.entityBatch.draw(menuButton.getTexture(), menuButton.getX(), menuButton.getY());
-            game.entityBatch.draw(quitButton.getTexture(), quitButton.getX(), quitButton.getY());
+            game.entityBatch.draw(resumeButton.getCurrentTexture(), resumeButton.getX(), resumeButton.getY());
+            game.entityBatch.draw(menuButton.getCurrentTexture(), menuButton.getX(), menuButton.getY());
+            game.entityBatch.draw(quitButton.getCurrentTexture(), quitButton.getX(), quitButton.getY());
         }
 
         game.entityBatch.end();
@@ -543,17 +546,10 @@ public class GameScreen implements Screen {
      * Cambia el inventario visible al que está en uso.
      */
     private void inventorySwap() {
-        if (allObjectsButton.isTouched()) allObjectsButton.setTexture(new Texture("Buttons/Inventory/allButtonTouched.png"));
-        else allObjectsButton.setTexture(new Texture("Buttons/Inventory/allButtonIdle.png"));
-
-        if (attackerButton.isTouched()) attackerButton.setTexture(new Texture("Buttons/Inventory/attackerButtonTouched.png"));
-        else attackerButton.setTexture(new Texture("Buttons/Inventory/attackerButtonIdle.png"));
-
-        if (defenderButton.isTouched()) defenderButton.setTexture(new Texture("Buttons/Inventory/defenderButtonTouched.png"));
-        else defenderButton.setTexture(new Texture("Buttons/Inventory/defenderButtonIdle.png"));
-
-        if (trapButton.isTouched()) trapButton.setTexture(new Texture("Buttons/Inventory/trapButtonTouched.png"));
-        else trapButton.setTexture(new Texture("Buttons/Inventory/trapButtonIdle.png"));
+        allObjectsButton.isTouched();
+        attackerButton.isTouched();
+        defenderButton.isTouched();
+        trapButton.isTouched();
 
         if (allObjectsButton.isJustClicked()) drawingInv = fullInv.sortInventory();
         if (attackerButton.isJustClicked()) drawingInv = attackInv.sortInventory();
@@ -738,18 +734,18 @@ public class GameScreen implements Screen {
         map.getTexture().dispose();
         font.dispose();
 
-        deleteButton.getTexture().dispose();
-        pauseButton.getTexture().dispose();
-        resumeButton.getTexture().dispose();
-        menuButton.getTexture().dispose();
-        quitButton.getTexture().dispose();
+        deleteButton.disposeButton();
+        pauseButton.disposeButton();
+        resumeButton.disposeButton();
+        menuButton.disposeButton();
+        quitButton.disposeButton();
 
-        allObjectsButton.getTexture().dispose();
-        attackerButton.getTexture().dispose();
-        defenderButton.getTexture().dispose();
-        trapButton.getTexture().dispose();
+        allObjectsButton.disposeButton();
+        attackerButton.disposeButton();
+        defenderButton.disposeButton();
+        trapButton.disposeButton();
 
-        tutoBut.getTexture().dispose();
+        tutoBut.disposeButton();
 
         for (GameObject object: objects) {
             object.getTexture().dispose();
