@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.awt.*;
@@ -24,8 +25,6 @@ public class MenuScreen implements Screen {
     private final UIButton testingButton;
     private final UIButton quitButton;
 
-    private final UIButton githubButton;
-
     private final Texture backgroundTexture;
 
     private final OrthographicCamera camera;
@@ -41,11 +40,13 @@ public class MenuScreen implements Screen {
         testingButton = new UIButton(160, -52, 74, 36, "Buttons/testingButtonIdle.png");
         quitButton = new UIButton(340, 52, 74, 36, "Buttons/quitButtonIdle.png");
 
-        githubButton = new UIButton(1, 1, 26, 29, "Buttons/github.png");
-
         backgroundTexture = new Texture(Gdx.files.internal("wallpaperTest.png"));
 
         introTimer = false;
+
+        Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
+        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+        pm.dispose();
 
         Logger.getLogger("").setLevel(Level.INFO);
         Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
@@ -73,7 +74,6 @@ public class MenuScreen implements Screen {
         game.entityBatch.draw(infiniteButton.getTexture(),infiniteButton.getX(),infiniteButton.getY());
         game.entityBatch.draw(testingButton.getTexture(),testingButton.getX(),testingButton.getY());
         game.entityBatch.draw(quitButton.getTexture(),quitButton.getX(),quitButton.getY());
-        game.entityBatch.draw(githubButton.getTexture(), githubButton.getX(), githubButton.getY());
         game.entityBatch.end();
 
         updateButtonLogic();
@@ -94,9 +94,6 @@ public class MenuScreen implements Screen {
         if (quitButton.isTouched()) quitButton.setTexture(new Texture("Buttons/quitButtonPressed.png"));
         else quitButton.setTexture(new Texture("Buttons/quitButtonIdle.png"));
 
-        if (githubButton.isTouched()) githubButton.setTexture(new Texture("Buttons/githubTouched.png"));
-        else githubButton.setTexture(new Texture("Buttons/github.png"));
-
         //Lógica
         if (playButton.isJustClicked() && introTimer) {
             game.setScreen(new GameScreen(game, 1));
@@ -111,6 +108,7 @@ public class MenuScreen implements Screen {
             Gdx.app.exit();
             System.exit(0);
         }
+        /*
         else if (githubButton.isJustClicked() && introTimer) {
             Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
             if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
@@ -121,6 +119,7 @@ public class MenuScreen implements Screen {
                 }
             }
         }
+         */
     }
 
     @Override
@@ -129,7 +128,6 @@ public class MenuScreen implements Screen {
         infiniteButton.getTexture().dispose();
         testingButton.getTexture().dispose();
         quitButton.getTexture().dispose();
-        githubButton.getTexture().dispose();
         backgroundTexture.dispose();
     }
 

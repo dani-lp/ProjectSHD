@@ -13,11 +13,6 @@ import static com.a02.game.Utils.*;
 
 public class Attacker extends GameObject {
     /**
-     * Indica si hay algún objeto seleccionado para control manual
-     */
-    //public static boolean selected;
-
-    /**
      * Indica si el objeto concreto está seleccionado
      */
     private boolean isSelected;
@@ -163,12 +158,6 @@ public class Attacker extends GameObject {
                         if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched() && !(gs.state == GameScreen.State.DELETING)) {
                             this.isSelected = true;
                             gs.state = GameScreen.State.SELECTING;
-                            /*
-                            Pixmap pm = new Pixmap(Gdx.files.internal("mira-export.png"));
-                            Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
-                            pm.dispose();
-
-                             */
                         }
                         Shoot shoot = new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 2,
                                 this.getAttackDamage(), "shoot.png", 5, this.getId(),"n", 0, this.angle);

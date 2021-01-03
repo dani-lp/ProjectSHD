@@ -91,7 +91,7 @@ public class GameScreen implements Screen {
     // Para eventos del tutorial
     public String msg1;
     public String msg2;
-    private final UIButton tutoBut = new UIButton(2,40,220,35,"textfield.png");
+    private UIButton tutoBut = null;
     private int contEnt = 0; //Contador de mensajes de tutorial
     private boolean messagesEnded = false;
 
@@ -174,6 +174,8 @@ public class GameScreen implements Screen {
         defenderButton = new UIButton(288,162,15,15,"Buttons/Inventory/defenderButtonIdle.png");
         trapButton = new UIButton(302,162,15,15,"Buttons/Inventory/trapButtonIdle.png");
 
+        if (Settings.s.isTutorialCheck()) tutoBut = new UIButton(2,40,220,35,"textfield.png");
+
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180); //Ajusta la proporción de la cámara
     }
@@ -215,7 +217,7 @@ public class GameScreen implements Screen {
             this.state = State.PLAYING;
             game.setScreen(new EndScreen(Settings.s.getUsername(), points, game));
         }
-        else if (enemies.isEmpty()) { //Jugador gana ronda (todos los enemigos eliminados)
+        else if (enemies.isEmpty() && currentRound > 0) { //Jugador gana ronda (todos los enemigos eliminados)
             game.setScreen(new GameScreen(game, ++currentRound));
         }
 
@@ -305,27 +307,41 @@ public class GameScreen implements Screen {
         }
 
         if (messagesEnded && enemies.isEmpty()){ //Después de eliminar al enemigo
-            msg1 = "Felicidades, estas listo para el desafio!";
-            msg2 = "Pulsa click una ultima vez para ir al menu";
+            msg1 = "Ahora estas listo para el desafio!";
+            msg2 = "Clicka una ultima vez para ir al menu";
         }
     }
+
+    private enum CurrentCursor { //Para optimización de cambio de cursores
+        DEFAULT, SELECT, DELETE
+    }
+    private CurrentCursor currentCursor = CurrentCursor.DEFAULT;
 
     private void updateCursor() {
         switch (this.state) {
             case DELETING:
-                Pixmap pm1 = new Pixmap(Gdx.files.internal("x.png"));
-                Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm1, 0, 0));
-                pm1.dispose();
+                if (this.currentCursor != CurrentCursor.DELETE) {
+                    Pixmap pm1 = new Pixmap(Gdx.files.internal("x.png"));
+                    Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm1, 0, 0));
+                    pm1.dispose();
+                    this.currentCursor = CurrentCursor.DELETE;
+                }
                 break;
             case SELECTING:
-                Pixmap pm2 = new Pixmap(Gdx.files.internal("mira-export.png"));
-                Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm2, 0, 0));
-                pm2.dispose();
+                if (this.currentCursor != CurrentCursor.SELECT) {
+                    Pixmap pm2 = new Pixmap(Gdx.files.internal("mira-export.png"));
+                    Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm2, 0, 0));
+                    pm2.dispose();
+                    this.currentCursor = CurrentCursor.SELECT;
+                }
                 break;
             default:
-                Pixmap pm3 = new Pixmap(Gdx.files.internal("cursor-export.png"));
-                Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm3, 0, 0));
-                pm3.dispose();
+                if (this.currentCursor != CurrentCursor.DEFAULT) {
+                    Pixmap pm3 = new Pixmap(Gdx.files.internal("cursor-export.png"));
+                    Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm3, 0, 0));
+                    pm3.dispose();
+                    this.currentCursor = CurrentCursor.DEFAULT;
+                }
                 break;
         }
     }
@@ -501,7 +517,7 @@ public class GameScreen implements Screen {
             font.draw(game.entityBatch, "ORO : " + gold, 5, 175);
         } else {
             gold = gold + 100000;
-            game.entityBatch.draw(tutoBut.getTexture(),tutoBut.getX(),tutoBut.getY());
+            if (Settings.s.isTutorialCheck()) game.entityBatch.draw(tutoBut.getTexture(),tutoBut.getX(),tutoBut.getY());
             font.draw(game.entityBatch, "ORO INFINITY: " , 5, 175);
             font.draw(game.entityBatch, msg1 , 5, 68);
             font.draw(game.entityBatch, msg2 , 5, 55);
@@ -652,11 +668,6 @@ public class GameScreen implements Screen {
      * Extrae los objetos de la Base de Datos y los introduce en los inventarios.
      */
     public void createObjects(){
-
-        Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
-        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
-        pm.dispose();
-
         try {
             DBManager.dbManager.connect("Databases/base.db");
         } catch (DBException e) {

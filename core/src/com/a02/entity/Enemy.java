@@ -54,7 +54,7 @@ public class Enemy extends Entity {
         this.goldValue = goldValue;
         this.hpBar = new HealthBar(this, hp);
         this.focus = new Vector2(0,0);
-        this.routing=false;
+        this.routing = false;
 
     }
 
@@ -83,6 +83,10 @@ public class Enemy extends Entity {
                 this.walkAnimation = createAnimation("e2-walk.png",2,2,0.2f);
                 this.attackAnimation = createAnimation("e2-attack.png",5,1,0.2f);
                 this.deathAnimation = createAnimation("e2-death.png",2,1, 0.2f);
+            case 3:
+                this.walkAnimation = createAnimation("e3-walk.png",2,2,0.2f);
+                this.attackAnimation = createAnimation("e3-attack.png",5,1,0.2f);
+                this.deathAnimation = createAnimation("e3-death.png",2,1, 0.2f);
         }
     }
 
@@ -302,7 +306,7 @@ public class Enemy extends Entity {
     public TextureRegion getCurrentAnimation(float animationTimer) {
         switch (this.state) {
             case IDLE:
-                return new TextureRegion(new Texture(Gdx.files.internal("e1-idle.png")));
+                return new TextureRegion(this.getIdleTexture());
             case WALKING:
                 return this.walkAnimation.getKeyFrame(animationTimer, true);
             case ATTACKING:
@@ -311,6 +315,19 @@ public class Enemy extends Entity {
                 return this.deathAnimation.getKeyFrame(animationTimer, true);
         }
         return null;
+    }
+
+    private Texture getIdleTexture() {
+        switch (this.getId()) {
+            case 0:
+                return new Texture(Gdx.files.internal("e1-idle.png"));
+            case 1:
+                return new Texture(Gdx.files.internal("e2-idle.png"));
+            case 2:
+                return new Texture(Gdx.files.internal("e3-idle.png"));
+            default:
+                return new Texture(Gdx.files.internal("empty.png"));
+        }
     }
 
     protected Obstacle overlappedObstacle(GameScreen gs) {
@@ -325,7 +342,7 @@ public class Enemy extends Entity {
 
     protected void route(GameScreen gs){
         this.setRouting(true);
-        switch (gs.map.getSprite()){
+        switch (gs.map.getSprite()){ //TODO: cambiar por currentRound una vez que estén creadas
             case "riverMap.png":
                 if (this.getY() >= 0 && this.getY() <= 54){
                     this.setFocus(35,30);

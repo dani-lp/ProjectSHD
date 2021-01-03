@@ -5,6 +5,7 @@ import com.a02.game.MainGame;
 import com.a02.users.User;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.io.IOException;
@@ -32,6 +33,10 @@ public class EndScreen implements Screen {
         t.start();
 
         this.game = game;
+
+        Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
+        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
+        pm.dispose();
 
         menuButton = new UIButton(73,-150,74,36,"Buttons/menuButtonIdle.png");
         quitButton = new UIButton(173,-220,74,36,"Buttons/quitButtonIdle.png");
