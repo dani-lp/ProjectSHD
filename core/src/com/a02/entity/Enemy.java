@@ -36,6 +36,7 @@ public class Enemy extends Entity {
 
     public State state;
     public TrapEffect trapEffect;
+    public boolean routing;
 
     public Enemy(float x, float y, int width, int height, int id, int hp, int attackDamage, float speed, int startTime, int goldValue, String walkpath, String attackpath, String deathpath) {  //Constructor de enemigos
         super(x, y, width, height);
@@ -53,6 +54,8 @@ public class Enemy extends Entity {
         this.goldValue = goldValue;
         this.hpBar = new HealthBar(this, hp);
         this.focus = new Vector2(0,0);
+        this.routing=false;
+
     }
 
     public Enemy() {        //Constructor vacio de enemigos
@@ -66,6 +69,7 @@ public class Enemy extends Entity {
         this.hpBar = new HealthBar(this, 0);
         this.goldValue = 50;
         this.focus = new Vector2(0,0);
+        this.routing=false;
     }
 
     public void loadAnimations() {
@@ -139,6 +143,22 @@ public class Enemy extends Entity {
         this.focus.y = y;
     }
 
+    public float getFocusX() {
+        return this.focus.x;
+    }
+
+    public float getFocusY() {
+        return this.focus.y;
+    }
+
+    public boolean isRouting() {
+        return routing;
+    }
+
+    public void setRouting(boolean routing) {
+        this.routing = routing;
+    }
+
     public int getDeathTimer() {
         return deathTimer;
     }
@@ -158,8 +178,20 @@ public class Enemy extends Entity {
                 break;
 
             case WALKING: //Movimiento a beacon
-                this.move();
 
+                if (this.overlappedObstacle(gs) != null && !this.isRouting()){
+                    this.route(gs);
+                }
+                else {
+                    this.move();
+                }
+                if (routing && this.getY() < this.getFocusY() + 5 && this.getY() > this.getFocusY() - 5){
+                    this.setFocus(110,this.getFocusY());
+                }
+                if (routing && this.getX() > 100){
+                    this.setFocus(gs.beacon.getX(),gs.beacon.getY());
+                    this.setRouting(false);
+                }
                 if (this.getHp() <= 0) {
                     this.state = State.DYING;
                     this.deathTimer = gs.secTimer + 60;
@@ -279,5 +311,35 @@ public class Enemy extends Entity {
                 return this.deathAnimation.getKeyFrame(animationTimer, true);
         }
         return null;
+    }
+
+    protected Obstacle overlappedObstacle(GameScreen gs) {
+        for (Obstacle obstacle: gs.obstacles) {
+            if (this.getX() < obstacle.getX() + obstacle.getWidth() && this.getX() + this.getWidth() > obstacle.getX() &&
+                    this.getY() < obstacle.getY() + obstacle.getHeight() && this.getY() + this.getHeight() > obstacle.getY() ) {
+                return obstacle;
+            }
+        }
+        return null;
+    }
+
+    protected void route(GameScreen gs){
+        this.setRouting(true);
+        switch (gs.map.getSprite()){
+            case "riverMap.png":
+                if (this.getY() >= 0 && this.getY() <= 54){
+                    this.setFocus(35,30);
+                    this.move();
+
+                } else if (this.getY() >= 55 && this.getY() <= 125){
+                    this.setFocus(35,90);
+                    this.move();
+
+                }  else {
+                    this.setFocus(35,140);
+                    this.move();
+                }
+        }
+
     }
 }

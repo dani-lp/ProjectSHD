@@ -41,6 +41,7 @@ public class GameScreen implements Screen {
     public List<GameObject> objects = new ArrayList<>(); //Objetos en el juego
     public List<Enemy> enemies = new ArrayList<>(); // Enemigos del juego
     public static List<Shoot> shoots= new ArrayList<>(); //Disparos de juego
+    public List<Obstacle> obstacles = new ArrayList<>(); //Obstaculos en los mapas
     public boolean deselect = false;
 
     public Defender beacon; //Punto central que deben destruir los enemigos
@@ -110,7 +111,7 @@ public class GameScreen implements Screen {
         switch (round) {
             case 1:
                 loadRound1();
-                map = new Map("map1.png"); //Mapa de río
+                map = new Map("riverMap.png"); //Mapa de río
                 gold = 60000; //TODO Oro por defecto
                 break;
             case 2:
@@ -208,6 +209,11 @@ public class GameScreen implements Screen {
                 game.setScreen(new MenuScreen(this.game));
             }
 
+        }
+
+        if (mouseJustClicked()) {
+            Vector3 mousePos = getRelativeMousePos();
+            System.out.println(mousePos.x + " " + mousePos.y);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.E) || deselect){
@@ -576,6 +582,11 @@ public class GameScreen implements Screen {
         } catch (DBException ignored) {
 
         }
+        obstacles.add(new Obstacle(63,0,32,18));
+        obstacles.add(new Obstacle(63,55,32,18));
+        obstacles.add(new Obstacle(63,108,32,18));
+        obstacles.add(new Obstacle(63,163,32,18));
+
     }
 
     private void loadRound2(){
@@ -686,7 +697,7 @@ public class GameScreen implements Screen {
 
         }
 
-        beacon = new Defender(144, 90, 16, 18, -1, "Beacon", -1, false, 900);
+        beacon = new Defender(144, 90, 16, 18, -1, "Beacon", -1, false, 90000);
         beacon.hpBar.setMaxHP(beacon.getHp());
         beacon.loadTextures();
         objects.add(beacon);
