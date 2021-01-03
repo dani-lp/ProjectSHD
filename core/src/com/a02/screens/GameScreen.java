@@ -34,6 +34,13 @@ public class GameScreen implements Screen {
 
     private static boolean pauseFlag; //Flags de compra y pausa
 
+    /**
+     * Estado del juego.
+     *  -BUYING: arrastrando un objeto.
+     *  -DELETING: en modo de borrado de objetos.
+     *  -SELECTING: controlando manualmente un objeto.
+     *  -PLAYING: estado "normal" de juego.
+     */
     public enum State {
         BUYING, DELETING, SELECTING, PLAYING
     }
@@ -111,15 +118,15 @@ public class GameScreen implements Screen {
         msg2 = "clicka el texto para seguir";
 
         //Setup por rondas
-        switch (round) {
+        switch (round) { //TODO: posiciones de beacon
             case 1:
                 loadRound1();
-                map = new Map("map1.png"); //Mapa de río
+                map = new Map("riverMap.png"); //Mapa de río
                 gold = 60000; //TODO Oro por defecto
                 break;
             case 2:
                 loadRound2();
-                map = new Map("riverMap.png"); //Mapa de bosque
+                map = new Map("map1.png"); //Mapa de bosque
                 gold = 60000;
                 break;
             case 3:
@@ -138,6 +145,7 @@ public class GameScreen implements Screen {
                 gold = 60000;
                 break;
             case -2:
+                if (!enemies.isEmpty()) enemies.clear();
                 map = new Map("map1.png");
                 gold = 0;
                 for (GameObject obj:objects) {
@@ -153,7 +161,7 @@ public class GameScreen implements Screen {
         map.getOccGrid()[(int) beacon.getX() / 16][(int) beacon.getY() / 18] = true; //Casilla del beacon
 
         //Botones de pausa y inventario
-        deleteButton= new UIButton(280, 6, 10, 20, "pala.png");
+        deleteButton= new UIButton(280, 3, 10, 20, "pala.png");
         pauseButton = new UIButton(301, 3, 16, 16, "pause.png");
         resumeButton = new UIButton(123, 113, 74, 36, "Buttons/resumeButtonIdle.png");
         menuButton = new UIButton(123, 73, 74, 36, "Buttons/menuButtonIdle.png");
@@ -222,12 +230,6 @@ public class GameScreen implements Screen {
                     ((Defender) obj).states(0);
                 }
             }
-            /*
-            Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
-            Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
-            pm.dispose();
-
-             */
         }
 
         //Actualiza lógica de juego sólo si el juego no está en pausa, pero sí realiza el dibujado.
@@ -245,21 +247,15 @@ public class GameScreen implements Screen {
         //Dibujado
         draw();
 
-        updateCursor();
-
         //Salida del juego (el jugador pierde)
         if (beacon.getHp() <= 0) {
-            /*
-            Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
-            Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
-            pm.dispose();
-
-             */
             this.state = State.PLAYING;
             game.setScreen(new EndScreen(Settings.s.getUsername(), points, game));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
+
+        updateCursor();
     }
 
     /**
@@ -362,21 +358,9 @@ public class GameScreen implements Screen {
         //Botón de eliminar objetos
         if (deleteButton.isJustClicked()){
             if (this.state != State.DELETING) {
-                /*
-                Pixmap pm = new Pixmap(Gdx.files.internal("x.png"));
-                Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
-                pm.dispose();
-
-                 */
                 this.state = State.DELETING;
             }
             else {
-                /*
-                Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
-                Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
-                pm.dispose();
-
-                 */
                 this.state = State.PLAYING;
             }
         }
@@ -392,14 +376,6 @@ public class GameScreen implements Screen {
                     }
                 }
             }
-        }
-        else {
-            /*
-            Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
-            Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
-            pm.dispose();
-
-             */
         }
 
         //Actualiza "presencia" y estado de enemigos y objetos

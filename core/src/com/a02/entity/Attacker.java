@@ -2,6 +2,7 @@ package com.a02.entity;
 
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
@@ -242,7 +243,7 @@ public class Attacker extends GameObject {
                     this.angle = ((Math.atan2(this.getY() - focus.y,
                             this.getX() - focus.x) * 180) / Math.PI + 90);;
 
-                    if (Gdx.input.isTouched() && this.timer > 60) {
+                    if ((Gdx.input.isTouched() || Gdx.input.isKeyPressed(Input.Keys.SPACE)) && this.timer > 60) {
                         double angle = ((Math.atan2(this.getY() - focus.y, this.getX() - focus.x) * 180) / Math.PI + 90);
 
                         gs.shots.add(new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 2,
@@ -284,8 +285,8 @@ public class Attacker extends GameObject {
 
     protected Enemy overlappedArea(GameScreen gs) { //TODO: no selecciona por proximidad, sino por primer enemigo encontrado
         for (Enemy enemy : gs.enemies) {
-            if ((enemy.getX() < this.getX() + 50 && enemy.getX() > this.getX() - 50) && (enemy.getY() < this.getY() + 50
-                    && enemy.getY() > this.getY() - 50)) {
+            if ((enemy.getX() < this.getX() + 50 && enemy.getX() > this.getX() - 50)
+                    && (enemy.getY() < this.getY() + 50 && enemy.getY() > this.getY() - 50)) {
                 return enemy;
             }
         }

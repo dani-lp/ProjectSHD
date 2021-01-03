@@ -3,22 +3,21 @@ package com.a02.entity;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
 
-import static com.a02.game.Utils.createAnimation;
-import static com.a02.game.Utils.getRelativeMousePos;
+import static com.a02.game.Utils.*;
 
 public class Defender extends GameObject {
 
     private enum State {
         IDLE, HEALING
     }
-    //public static boolean selected;
+
     private boolean isSelected;
+    private ArrayList<GameObject> hurt = new ArrayList<>();
     State state;
 
     public void states(int i){
@@ -34,8 +33,6 @@ public class Defender extends GameObject {
         this.isSelected = false;
         loadTextures();
     }
-
-    private ArrayList<GameObject> hurt = new ArrayList<>();
 
     public void loadTextures() {
         switch (this.getId()) {
@@ -83,7 +80,7 @@ public class Defender extends GameObject {
         isSelected = selected;
     }
 
-    public void update(GameScreen gs) {
+    public void update2(GameScreen gs) {
         switch (this.state) {
             case IDLE:
                 if (this.getId() == 0 && !this.isInInventory(gs)) {
@@ -94,12 +91,6 @@ public class Defender extends GameObject {
                 } else if (this.getId() == 3 && !this.isInInventory(gs)){
                     Vector3 mousePos = getRelativeMousePos();
                     if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched() && !(gs.state == GameScreen.State.DELETING)) {
-                        /*
-                        Pixmap pm = new Pixmap(Gdx.files.internal("healcross.png"));
-                        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
-                        pm.dispose();
-
-                         */
                         this.isSelected = true;
                         gs.state = GameScreen.State.SELECTING;
                         this.state = State.HEALING;
@@ -125,20 +116,60 @@ public class Defender extends GameObject {
                     if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
                         Vector3 focus = getRelativeMousePos();
                         GameObject obj = overlappedObject(gs,focus.x, focus.y);
-                        if (obj != null && obj.getHp() < obj.getMaxHp()){
+                        if (obj != null && obj.getHp() < obj.getMaxHp()) {
                             obj.setHp(obj.getMaxHp());
                             this.setHp(0);
-                            /*
-                            Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
-                            Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
-                            pm.dispose();
-
-                             */
                             this.state = State.IDLE;
                         }
                         break;
                     }
                 }
+        }
+        this.hpBar.update(this, this.getHp());
+    }
+
+    public void update (GameScreen gs) {
+        switch (this.getId()) {
+            case 0: //Health: cura en área, perdiendo vida cuando lo hace
+                if (gs.secTimer % 30 == 0) {
+                    hurt = overlappedArea(gs);
+                    int healedObjectCounter = 0;
+                    for (GameObject obj : hurt) {
+                        if (obj.getHp() < obj.getMaxHp()) {
+                            obj.setHp(obj.getHp() + 20); //Cura 20 de vida a otros objetos
+                            healedObjectCounter++;
+                        }
+                    }
+                    this.setHp(this.getHp() - healedObjectCounter * 20); //Recibe 20 de daño por cada cura
+                }
+                break;
+            case 3: //Repair: cura a un objeto en concreto
+                Vector3 focus = getRelativeMousePos();
+
+                if (this.isSelected && overlappedObject(gs,focus.x, focus.y) != null &&
+                        (mouseJustClicked() || Gdx.input.isKeyPressed(Input.Keys.SPACE))) {
+                    GameObject obj = overlappedObject(gs,focus.x, focus.y);
+                    if (obj != null && obj.getHp() < obj.getMaxHp() && obj.getId() != -1) {
+                        obj.setHp(obj.getMaxHp());
+                        this.setHp(0);
+                        gs.state = GameScreen.State.PLAYING; }
+                }
+
+                //Selección
+                if (this.overlapsPoint(focus.x, focus.y) && mouseJustClicked()) {
+                    //Sólo se puede tomar control si no se está comprando ni eliminando
+                    if (gs.state == GameScreen.State.PLAYING && !this.isSelected) {
+                        gs.state = GameScreen.State.SELECTING;
+                        this.isSelected = true;
+                    }
+                    else if (gs.state == GameScreen.State.SELECTING && this.isSelected) {
+                        gs.state = GameScreen.State.PLAYING;
+                        this.isSelected = false;
+                    }
+                }
+                break;
+            default: //Valla y muro (objetos estáticos, sólo bloquean)
+                break;
         }
         this.hpBar.update(this, this.getHp());
     }
@@ -166,7 +197,9 @@ public class Defender extends GameObject {
     protected ArrayList<GameObject> overlappedArea(GameScreen gs) {
         ArrayList<GameObject> inArea = new ArrayList<>();
         for (GameObject obj : gs.objects) {
-            if ((obj.getX() < this.getX() + 50 && obj.getX() > this.getX() - 50) && (obj.getY() < this.getY() + 50 && obj.getY() > this.getY() - 50) && !(obj.getX() == this.getX() && obj.getY() == this.getY()) && obj.getHp() < obj.getMaxHp()) {
+            if ((obj.getX() < this.getX() + 50 && obj.getX() > this.getX() - 50) && (obj.getY() < this.getY() + 50
+                    && obj.getY() > this.getY() - 50) && !(obj.getX() == this.getX() && obj.getY() == this.getY())
+                    && obj.getHp() < obj.getMaxHp()) {
                 inArea.add(obj);
             }
         }
