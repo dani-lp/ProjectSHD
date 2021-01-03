@@ -34,7 +34,7 @@ public class EndScreen implements Screen {
 
         this.game = game;
 
-        Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
+        Pixmap pm = new Pixmap(Gdx.files.internal("defaultCursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
         pm.dispose();
 

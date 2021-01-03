@@ -38,7 +38,7 @@ public class Enemy extends Entity {
     public TrapEffect trapEffect;
     public boolean routing;
 
-    public Enemy(float x, float y, int width, int height, int id, int hp, int attackDamage, float speed, int startTime, int goldValue, String walkpath, String attackpath, String deathpath) {  //Constructor de enemigos
+    public Enemy(float x, float y, int width, int height, int id, int hp, int attackDamage, float speed, int startTime, int goldValue) {  //Constructor de enemigos
         super(x, y, width, height);
         this.id = id;
         this.hp = hp;
@@ -46,10 +46,7 @@ public class Enemy extends Entity {
         this.speed = speed;
         this.state = State.IDLE;
         this.trapEffect = TrapEffect.NEUTRAL;
-
-        this.walkAnimation = createAnimation(walkpath, 3, 1, 0.2f);
-        this.attackAnimation = createAnimation(attackpath, 2, 2, 0.2f);
-        this.deathAnimation = createAnimation(deathpath, 2, 2, 0.25f);
+        this.loadAnimations();
         this.startTime = startTime;
         this.goldValue = goldValue;
         this.hpBar = new HealthBar(this, hp);
@@ -58,7 +55,7 @@ public class Enemy extends Entity {
 
     }
 
-    public Enemy() {        //Constructor vacio de enemigos
+    public Enemy() {    //Constructor vacio de enemigos
         super();
         this.id = -1;
         this.hp = 0;
@@ -69,24 +66,25 @@ public class Enemy extends Entity {
         this.hpBar = new HealthBar(this, 0);
         this.goldValue = 50;
         this.focus = new Vector2(0,0);
-        this.routing=false;
+        this.routing = false;
+        this.loadAnimations();
     }
 
     public void loadAnimations() {
         switch (this.getId()){
             case 0:
-                this.walkAnimation = createAnimation("e1-walk.png",3,1,0.2f);
-                this.attackAnimation = createAnimation("e1-attack.png",2,2,0.2f);
-                this.deathAnimation = createAnimation("e1-death.png",2,1, 0.2f);
+                this.walkAnimation = createAnimation("Enemies/e1-walk.png",3,1,0.2f);
+                this.attackAnimation = createAnimation("Enemies/e1-attack.png",2,2,0.2f);
+                this.deathAnimation = createAnimation("Enemies/e1-death.png",2,1, 0.2f);
                 break;
             case 1:
-                this.walkAnimation = createAnimation("e2-walk.png",2,2,0.2f);
-                this.attackAnimation = createAnimation("e2-attack.png",5,1,0.2f);
-                this.deathAnimation = createAnimation("e2-death.png",2,1, 0.2f);
+                this.walkAnimation = createAnimation("Enemies/e2-walk.png",2,2,0.2f);
+                this.attackAnimation = createAnimation("Enemies/e2-attack.png",5,1,0.2f);
+                this.deathAnimation = createAnimation("Enemies/e2-death.png",2,1, 0.2f);
             case 3:
-                this.walkAnimation = createAnimation("e3-walk.png",2,2,0.2f);
-                this.attackAnimation = createAnimation("e3-attack.png",5,1,0.2f);
-                this.deathAnimation = createAnimation("e3-death.png",2,1, 0.2f);
+                this.walkAnimation = createAnimation("Enemies/e3-walk.png",2,2,0.2f);
+                this.attackAnimation = createAnimation("Enemies/e3-attack.png",5,1,0.2f);
+                this.deathAnimation = createAnimation("Enemies/e3-death.png",2,1, 0.2f);
         }
     }
 
@@ -320,11 +318,11 @@ public class Enemy extends Entity {
     private Texture getIdleTexture() {
         switch (this.getId()) {
             case 0:
-                return new Texture(Gdx.files.internal("e1-idle.png"));
+                return new Texture(Gdx.files.internal("Enemies/e1-idle.png"));
             case 1:
-                return new Texture(Gdx.files.internal("e2-idle.png"));
+                return new Texture(Gdx.files.internal("Enemies/e2-idle.png"));
             case 2:
-                return new Texture(Gdx.files.internal("e3-idle.png"));
+                return new Texture(Gdx.files.internal("Enemies/e3-idle.png"));
             default:
                 return new Texture(Gdx.files.internal("empty.png"));
         }

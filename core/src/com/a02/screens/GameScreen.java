@@ -128,34 +128,34 @@ public class GameScreen implements Screen {
                 break;
             case 2:
                 loadRound2();
-                map = new Map("map1.png"); //Mapa de bosque
+                map = new Map("emptyMap.png"); //Mapa de bosque
                 gold = 60000;
                 break;
             case 3:
                 loadRound3();
-                map = new Map("map1.png"); //?
+                map = new Map("emptyMap.png"); //?
                 gold = 60000;
                 break;
             case 4:
                 loadRound4();
-                map = new Map("map1.png"); //Mapa abierto
+                map = new Map("emptyMap.png"); //Mapa abierto
                 gold = 60000;
                 break;
             case 5:
                 loadRound5();
-                map = new Map("map1.png"); //3 lados bloqueados, boss final
+                map = new Map("emptyMap.png"); //3 lados bloqueados, boss final
                 gold = 60000;
                 break;
             case -2:
                 if (!enemies.isEmpty()) enemies.clear();
-                map = new Map("map1.png");
+                map = new Map("emptyMap.png");
                 gold = 0;
                 for (GameObject obj:objects) {
                     obj.setPrice(0);
                 }
                 break;
             default:
-                map = new Map("map1.png");
+                map = new Map("emptyMap.png");
                 gold = 60000;
                 break;
         }
@@ -308,7 +308,7 @@ public class GameScreen implements Screen {
 
         if (contEnt == 13 && !messagesEnded){
             Enemy larry = new Enemy(-15,90,16,16,1,500,300,15,
-                    this.secTimer + 30,200,"e1-walk.png","e1-attack.png","e1-death.png");
+                    this.secTimer + 30,200);
             larry.setFocus(beacon.getX(), beacon.getY());
             enemies.add(larry);
             messagesEnded = true;
@@ -329,7 +329,7 @@ public class GameScreen implements Screen {
         switch (this.state) {
             case DELETING:
                 if (this.currentCursor != CurrentCursor.DELETE) {
-                    Pixmap pm1 = new Pixmap(Gdx.files.internal("x.png"));
+                    Pixmap pm1 = new Pixmap(Gdx.files.internal("deletingCursor.png"));
                     Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm1, 0, 0));
                     pm1.dispose();
                     this.currentCursor = CurrentCursor.DELETE;
@@ -337,7 +337,7 @@ public class GameScreen implements Screen {
                 break;
             case SELECTING:
                 if (this.currentCursor != CurrentCursor.SELECT) {
-                    Pixmap pm2 = new Pixmap(Gdx.files.internal("mira-export.png"));
+                    Pixmap pm2 = new Pixmap(Gdx.files.internal("selectingCursor.png"));
                     Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm2, 0, 0));
                     pm2.dispose();
                     this.currentCursor = CurrentCursor.SELECT;
@@ -345,7 +345,7 @@ public class GameScreen implements Screen {
                 break;
             default:
                 if (this.currentCursor != CurrentCursor.DEFAULT) {
-                    Pixmap pm3 = new Pixmap(Gdx.files.internal("cursor-export.png"));
+                    Pixmap pm3 = new Pixmap(Gdx.files.internal("defaultCursor.png"));
                     Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm3, 0, 0));
                     pm3.dispose();
                     this.currentCursor = CurrentCursor.DEFAULT;
