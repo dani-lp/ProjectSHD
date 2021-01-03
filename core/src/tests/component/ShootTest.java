@@ -1,13 +1,13 @@
 package tests.component;
 
-import com.a02.component.Shoot;
+import com.a02.entity.Shoot;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class ShootTest {
 
-    Shoot shootTest = new Shoot(1,2,50,100,3,20,"TestSprite",4,1,"");
+    Shoot shootTest = new Shoot(1,2,50,100,3,20,"TestSprite",4,1,"", 0);
     @Test
     public void getX() {
         assertEquals(1,shootTest.getX(), 0.0f);
@@ -26,11 +26,6 @@ public class ShootTest {
     @Test
     public void getAttackdamage() {
         assertEquals(20,shootTest.getAttackdamage(), 0.0f);
-    }
-
-    @Test
-    public void getSprite() {
-        assertEquals("TestSprite",shootTest.getSprite());
     }
 
     @Test

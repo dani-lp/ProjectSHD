@@ -161,10 +161,9 @@ public abstract class GameObject extends Entity {
      */
     public void grabObject(GameScreen gs) {  //Agarra el objeto y lo suelta
         Vector3 touchPos = getRelativeMousePos();
-        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && !GameScreen.isBuying()
-                && !Attacker.selected && !Defender.selected && !gs.isDeleting()) {
+        if (Gdx.input.isTouched() && this.overlapsPoint(touchPos.x, touchPos.y) && (gs.state == GameScreen.State.PLAYING)) {
             this.grabbed = true;
-            GameScreen.setBuying(true);
+            gs.state = GameScreen.State.BUYING;
             this.ogPos.x = this.getX();
             this.ogPos.y = this.getY();
             Logger.getLogger("").setLevel(Level.INFO);
@@ -180,7 +179,7 @@ public abstract class GameObject extends Entity {
                 this.setX(ogPos.x);
                 this.setY(ogPos.y);
 
-                GameScreen.setBuying(false);
+                gs.state = GameScreen.State.PLAYING;
 
                 if (GameScreen.getGold() >= this.price)
                     this.setObjectInGrid(gs.map, gs.objects);
