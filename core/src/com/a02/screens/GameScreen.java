@@ -1,6 +1,6 @@
 package com.a02.screens;
 
-import com.a02.component.Shoot;
+import com.a02.entity.Shoot;
 import com.a02.dbmanager.DBException;
 import com.a02.dbmanager.DBManager;
 import com.a02.entity.*;
@@ -32,7 +32,13 @@ public class GameScreen implements Screen {
 
     private static Logger logger = Logger.getLogger(GameScreen.class.getName());
 
-    private static boolean buying, pauseFlag, deleting; //Flags de compra y pausa
+    private static boolean pauseFlag; //Flags de compra y pausa
+
+    public enum State {
+        BUYING, DELETING, SELECTING, PLAYING
+    }
+
+    public State state;
 
     private static int gold; //Oro para comprar objetos
     private static int currentRound; //Ronda de juego actual
@@ -40,8 +46,7 @@ public class GameScreen implements Screen {
 
     public List<GameObject> objects = new ArrayList<>(); //Objetos en el juego
     public List<Enemy> enemies = new ArrayList<>(); // Enemigos del juego
-    public static List<Shoot> shoots= new ArrayList<>(); //Disparos de juego
-    public boolean deselect = false;
+    public List<Shoot> shots = new ArrayList<>(); //Disparos de juego
 
     public Defender beacon; //Punto central que deben destruir los enemigos
 
@@ -85,7 +90,7 @@ public class GameScreen implements Screen {
         log(Level.INFO, "Inicio del GameScreen", null);
 
         this.game = game;
-        buying = false;
+        this.state = State.PLAYING;
         pauseFlag = false;
 
         font = new BitmapFont(Gdx.files.internal("Fonts/test.fnt"));
@@ -100,7 +105,6 @@ public class GameScreen implements Screen {
 
         createObjects();
 
-        deleting = false;
         drawingInv = fullInv.sortInventory();
         currentRound = round;
         msg1 = "en este tutorial veras como jugar," ;
@@ -181,7 +185,7 @@ public class GameScreen implements Screen {
         for (GameObject obj:objects) {
             if (((obj instanceof Attacker && obj.getHp() <= 0 && obj.getId() == 2)
                     || (obj instanceof Defender && obj.getHp() <= 0 && obj.getId() == 3)) && obj.isSelected()) {
-                deselect = true;
+                this.state = State.PLAYING;
                 break;
             }
         }
@@ -210,22 +214,21 @@ public class GameScreen implements Screen {
 
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.E) || deselect){
-            Defender.selected = false;
-            Attacker.selected = false;
-            deleting = false;
+        if (Gdx.input.isKeyPressed(Input.Keys.E)){
+            this.state = State.PLAYING;
             for (GameObject obj:objects) {
                 obj.setSelected(false);
                 if (obj instanceof Defender){
                     ((Defender) obj).states(0);
                 }
             }
+            /*
             Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
             pm.dispose();
-        }
 
-        deselect = false;
+             */
+        }
 
         //Actualiza lógica de juego sólo si el juego no está en pausa, pero sí realiza el dibujado.
         if (pauseFlag) {
@@ -242,11 +245,17 @@ public class GameScreen implements Screen {
         //Dibujado
         draw();
 
+        updateCursor();
+
         //Salida del juego (el jugador pierde)
         if (beacon.getHp() <= 0) {
+            /*
             Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
             pm.dispose();
+
+             */
+            this.state = State.PLAYING;
             game.setScreen(new EndScreen(Settings.s.getUsername(), points, game));
         }
 
@@ -314,6 +323,26 @@ public class GameScreen implements Screen {
         }
     }
 
+    private void updateCursor() {
+        switch (this.state) {
+            case DELETING:
+                Pixmap pm1 = new Pixmap(Gdx.files.internal("x.png"));
+                Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm1, 0, 0));
+                pm1.dispose();
+                break;
+            case SELECTING:
+                Pixmap pm2 = new Pixmap(Gdx.files.internal("mira-export.png"));
+                Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm2, 0, 0));
+                pm2.dispose();
+                break;
+            default:
+                Pixmap pm3 = new Pixmap(Gdx.files.internal("cursor-export.png"));
+                Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm3, 0, 0));
+                pm3.dispose();
+                break;
+        }
+    }
+
     /**
      * Actualiza la lógica de las entidades.
      */
@@ -331,22 +360,28 @@ public class GameScreen implements Screen {
         }
 
         //Botón de eliminar objetos
-        if (deleteButton.isJustClicked()){ //TODO: problemas con objetos controlables
-            if (!deleting) {
+        if (deleteButton.isJustClicked()){
+            if (this.state != State.DELETING) {
+                /*
                 Pixmap pm = new Pixmap(Gdx.files.internal("x.png"));
                 Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                 pm.dispose();
-                deleting = true;
+
+                 */
+                this.state = State.DELETING;
             }
             else {
+                /*
                 Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
                 Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                 pm.dispose();
-                deleting = false;
+
+                 */
+                this.state = State.PLAYING;
             }
         }
 
-        if (deleting) {
+        if (this.state == State.DELETING) {
             if (mouseJustClicked()){
                 Vector3 mousePos = getRelativeMousePos();
                 for (GameObject obj:objects) {
@@ -359,9 +394,12 @@ public class GameScreen implements Screen {
             }
         }
         else {
+            /*
             Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
             pm.dispose();
+
+             */
         }
 
         //Actualiza "presencia" y estado de enemigos y objetos
@@ -389,7 +427,7 @@ public class GameScreen implements Screen {
             }
         }
 
-        ListIterator<Shoot> shootIterator = shoots.listIterator();
+        ListIterator<Shoot> shootIterator = shots.listIterator();
         while(shootIterator.hasNext()){
             Shoot tempSh = shootIterator.next();
             tempSh.update(this);
@@ -436,10 +474,12 @@ public class GameScreen implements Screen {
         //Objetos y enemigos
         for (GameObject object:objects) {
             if (object.getAnimation() != null) game.entityBatch.draw(object.getCurrentAnimation(animationTimer), object.getX(), object.getY());
+
             else if (object.getType().equals("Shoot") && !object.isInInventory(this)) {
                 game.entityBatch.draw(new TextureRegion(object.getTexture()), object.getX(), object.getY(),
-                        8, 9,18, 16, 1, 1, secTimer, true);
+                        8, 9,18, 16, 1, 1, (int)((Attacker) object).getAngle() - 45, true);
             }
+
             else game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
         }
         for (Enemy enemy:enemies) {
@@ -459,8 +499,8 @@ public class GameScreen implements Screen {
                 game.entityBatch.draw(enemy.hpBar.getForeground(), enemy.hpBar.getX(), enemy.hpBar.getY(), enemy.hpBar.getCurrentWidth(), 2);
             }
         }
-        for(Shoot shoot: shoots){
-            game.entityBatch.draw(new Texture(shoot.getSprite()),shoot.getX(),shoot.getY());
+        for(Shoot shoot: shots){
+            game.entityBatch.draw(shoot.getTexture(),shoot.getX(),shoot.getY());
         }
 
         //Inventario
@@ -686,7 +726,7 @@ public class GameScreen implements Screen {
 
         }
 
-        beacon = new Defender(144, 90, 16, 18, -1, "Beacon", -1, false, 900);
+        beacon = new Defender(144, 90, 16, 18, -1, "Beacon", -1, false, 9000);
         beacon.hpBar.setMaxHP(beacon.getHp());
         beacon.loadTextures();
         objects.add(beacon);
@@ -733,18 +773,6 @@ public class GameScreen implements Screen {
 
     public static void setGold(int gold) {
         GameScreen.gold = gold;
-    }
-
-    public static boolean isBuying() {
-        return buying;
-    }
-
-    public static void setBuying(boolean buying) {
-        GameScreen.buying = buying;
-    }
-
-    public boolean isDeleting() {
-        return deleting;
     }
 
     private void log(Level level, String msg, Throwable exception) {

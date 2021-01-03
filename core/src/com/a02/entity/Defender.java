@@ -17,7 +17,7 @@ public class Defender extends GameObject {
     private enum State {
         IDLE, HEALING
     }
-    public static boolean selected;
+    //public static boolean selected;
     private boolean isSelected;
     State state;
 
@@ -61,7 +61,7 @@ public class Defender extends GameObject {
     public Defender() {
         super();
         this.state = State.IDLE;
-        this.isSelected=false;
+        this.isSelected = false;
         loadTextures();
     }
 
@@ -71,7 +71,7 @@ public class Defender extends GameObject {
         this.state = other.state;
         this.setAnimation(other.getAnimation());
         this.hurt = other.hurt;
-        this.isSelected=false;
+        this.isSelected = false;
         this.setTexture(other.getTexture());
     }
 
@@ -93,12 +93,15 @@ public class Defender extends GameObject {
                     }
                 } else if (this.getId() == 3 && !this.isInInventory(gs)){
                     Vector3 mousePos = getRelativeMousePos();
-                    if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched() && !gs.isDeleting()) {
+                    if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched() && !(gs.state == GameScreen.State.DELETING)) {
+                        /*
                         Pixmap pm = new Pixmap(Gdx.files.internal("healcross.png"));
                         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                         pm.dispose();
+
+                         */
                         this.isSelected = true;
-                        selected=true;
+                        gs.state = GameScreen.State.SELECTING;
                         this.state = State.HEALING;
                     }
                 }
@@ -125,9 +128,12 @@ public class Defender extends GameObject {
                         if (obj != null && obj.getHp() < obj.getMaxHp()){
                             obj.setHp(obj.getMaxHp());
                             this.setHp(0);
+                            /*
                             Pixmap pm = new Pixmap(Gdx.files.internal("cursor-export.png"));
                             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                             pm.dispose();
+
+                             */
                             this.state = State.IDLE;
                         }
                         break;
