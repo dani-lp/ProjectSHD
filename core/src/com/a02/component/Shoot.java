@@ -111,16 +111,16 @@ public class Shoot {
         switch (this.state) {
             case IDLE:
                 if (this.att_id == 2){
-                    Attacker boss=null;
+                    Attacker boss = null;
                     for (GameObject att:gs.objects) {
                         if (att instanceof Attacker && att.isSelected()){
-                            boss= (Attacker) att;
+                            boss = (Attacker) att;
                         }
                     }
                     if (Attacker.selected && boss.getX() == this.getX() && boss.getY() == this.getY()){
                         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
                             this.focus = getRelativeMousePos();
-                            angle = ((Math.atan2(this.getY() - focus.y, this.getX() - focus.x)*180) / Math.PI + 90);
+                            angle = ((Math.atan2(this.getY() - focus.y, this.getX() - focus.x) * 180) / Math.PI + 90);
                             this.state = State.ATTACKING;
                             break;
                         }
@@ -161,7 +161,7 @@ public class Shoot {
                 if (this.overlappedEnemy(gs) != null) {
                     this.state = State.IMPACT;
                 }
-                if (this.getX()<0 || this.getY()<0 || this.getX()>300 || this.getY()>180){
+                if (this.getX() < 0 || this.getY() < 0 || this.getX() > 320 || this.getY() > 180){
                     this.setHp(0);
                 }
                 break;
@@ -186,7 +186,7 @@ public class Shoot {
         this.setY((float) (this.getY() + Math.sin(Math.toRadians(angle + 90)) *  this.speed));
     }
 
-    protected Enemy overlappedEnemy(GameScreen gs) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
+    protected Enemy overlappedEnemy(GameScreen gs) {
         for (Enemy enemy : gs.enemies) {
             if (this.getX() < enemy.getX() + enemy.getWidth() && this.getX() + this.getWidth() > enemy.getX() &&
                     this.getY() < enemy.getY() + enemy.getHeight() && this.getY() + this.getHeight() > enemy.getY()) {
@@ -196,7 +196,7 @@ public class Shoot {
         return null;
     }
 
-    protected Enemy overlappedArea(GameScreen gs) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
+    protected Enemy overlappedArea(GameScreen gs) {
         for (Enemy enemy : gs.enemies) {
             if ((enemy.getX() < this.getX() + 50 && enemy.getX() > this.getX() - 50) && (enemy.getY() < this.getY() + 50 && enemy.getY() > this.getY() - 50)) {
                 return enemy;

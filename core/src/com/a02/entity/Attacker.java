@@ -36,7 +36,7 @@ public class Attacker extends GameObject {
         this.attackType = attackType;
         this.attackDamage = attackDamage;
         this.state = State.IDLE;
-        this.isSelected=false;
+        this.isSelected = false;
         loadTextures();
     }
 
@@ -46,14 +46,14 @@ public class Attacker extends GameObject {
                 this.setTexture(new Texture(Gdx.files.internal("electricity.png")));
                 this.setAnimation(createAnimation("electricity-Sheet.png", 2, 1, 0.1f));
                 break;
-            case 1:
+            case 1: //Thwomp
                 this.setTexture(new Texture(Gdx.files.internal("maquinaDeMatar.png")));
                 this.setAnimation(createAnimation("willy-Sheet.png", 2, 2, 0.1f));
                 break;
-            case 2:
-                this.setTexture(new Texture(Gdx.files.internal("boredlion.png")));
+            case 2: //Ballesta/disparos
+                this.setTexture(new Texture(Gdx.files.internal("crossbow.png")));
                 break;
-            case 3:
+            case 3: //Waves
                 this.setTexture(new Texture(Gdx.files.internal("waves.png")));
                 this.setAnimation(createAnimation("wifi-Sheet.png", 3, 1, 0.2f));
                 break;
@@ -144,14 +144,14 @@ public class Attacker extends GameObject {
                 else if (this.getId() == 2) {
                     if (!this.isInInventory(gs) && gs.secTimer % 60 == 0) {
                         Vector3 mousePos = getRelativeMousePos();
-                        if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched()) {
+                        if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched() && !gs.isDeleting()) {
                             this.isSelected = true;
                             selected = true;
                             Pixmap pm = new Pixmap(Gdx.files.internal("mira-export.png"));
                             Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                             pm.dispose();
                         }
-                        Shoot shoot = new Shoot(this.getX(), this.getY(), 2, 2, 2, this.getAttackDamage(), "shoot.png", 5, this.getId(),"n");
+                        Shoot shoot = new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 2, this.getAttackDamage(), "shoot.png", 5, this.getId(),"n");
 
                         GameScreen.shoots.add(shoot);
 

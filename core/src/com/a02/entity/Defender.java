@@ -93,7 +93,7 @@ public class Defender extends GameObject {
                     }
                 } else if (this.getId() == 3 && !this.isInInventory(gs)){
                     Vector3 mousePos = getRelativeMousePos();
-                    if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched()) {
+                    if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched() && !gs.isDeleting()) {
                         Pixmap pm = new Pixmap(Gdx.files.internal("healcross.png"));
                         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
                         pm.dispose();
@@ -104,13 +104,13 @@ public class Defender extends GameObject {
                 }
                 break;
             case HEALING:
-                boolean healed=false;
+                boolean healed = false;
                 if (this.getId() == 0){
                     if (gs.secTimer % 120 == 0) {
                         for (GameObject obj : hurt) {
                             if (obj.getHp() < obj.getMaxHp()) {
                                 obj.setHp(obj.getHp() + 75);
-                                healed=true;
+                                healed = true;
                             }
                         }
                         if (healed){

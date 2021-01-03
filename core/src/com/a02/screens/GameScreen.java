@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 
 import java.io.*;
@@ -31,7 +32,8 @@ public class GameScreen implements Screen {
 
     private static Logger logger = Logger.getLogger(GameScreen.class.getName());
 
-    private static boolean buying, pauseFlag; //Flags de compra y pausa
+    private static boolean buying, pauseFlag, deleting; //Flags de compra y pausa
+
     private static int gold; //Oro para comprar objetos
     private static int currentRound; //Ronda de juego actual
     private static int points; //Puntos que consigue el usuario
@@ -78,8 +80,6 @@ public class GameScreen implements Screen {
     private final UIButton tutoBut = new UIButton(2,40,220,35,"textfield.png");
     public int contEnt = 0;
     public int enough = 0;
-
-    private boolean deleting;
 
     public GameScreen(MainGame game, int round) {
         log(Level.INFO, "Inicio del GameScreen", null);
@@ -436,6 +436,10 @@ public class GameScreen implements Screen {
         //Objetos y enemigos
         for (GameObject object:objects) {
             if (object.getAnimation() != null) game.entityBatch.draw(object.getCurrentAnimation(animationTimer), object.getX(), object.getY());
+            else if (object.getType().equals("Shoot") && !object.isInInventory(this)) {
+                game.entityBatch.draw(new TextureRegion(object.getTexture()), object.getX(), object.getY(),
+                        8, 9,18, 16, 1, 1, secTimer, true);
+            }
             else game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
         }
         for (Enemy enemy:enemies) {
