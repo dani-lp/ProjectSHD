@@ -262,7 +262,7 @@ public class Enemy extends Entity {
             case DYING:
                 this.hpBar = null;
                 if (gs.secTimer > this.deathTimer) {
-                    GameScreen.setGold(GameScreen.getGold() + this.goldValue);
+                    gs.setGold(gs.getGold() + this.goldValue);
                     break;
                 }
                 break;

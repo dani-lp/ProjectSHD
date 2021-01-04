@@ -59,7 +59,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if (Settings.s.isTutorialCheck()) game.setScreen(new GameScreen(game, 0));
+        if (Settings.s.isTutorialCheck()) game.setScreen(new GameScreen(game, 0, 0));
 
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -93,13 +93,13 @@ public class MenuScreen implements Screen {
 
         //Lógica
         if (playButton.isJustClicked() && introTimer) {
-            game.setScreen(new GameScreen(game, 1));
+            game.setScreen(new GameScreen(game, 1, 0));
         }
         if (infiniteButton.isJustClicked() && introTimer) {
-            game.setScreen(new GameScreen(game, -1)); //Modo infinito (ronda -1)
+            game.setScreen(new GameScreen(game, -1, 0)); //Modo infinito (ronda -1)
         }
         if (testingButton.isJustClicked() && introTimer) {
-            game.setScreen(new GameScreen(game, -2)); //Modo testing (ronda -2)
+            game.setScreen(new GameScreen(game, -2, 0)); //Modo testing (ronda -2)
         }
         else if (quitButton.isJustClicked() && introTimer) {
             Gdx.app.exit();

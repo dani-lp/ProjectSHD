@@ -181,8 +181,8 @@ public abstract class GameObject extends Entity {
 
                 gs.state = GameScreen.State.PLAYING;
 
-                if (GameScreen.getGold() >= this.price)
-                    this.setObjectInGrid(gs.map, gs.objects);
+                if (gs.getGold() >= this.price)
+                    this.setObjectInGrid(gs);
                 else
                     logger.warning("No hay suficiente oro");
             }
@@ -191,20 +191,19 @@ public abstract class GameObject extends Entity {
 
     /**
      * Coloca el objeto en su posición asignada, si ésta está libre
-     * @param map Mapa en el que colocar el objeto
-     * @param objects Lista de objetos a la que añadir el objeto colocado
+     * @param gs Screen de juego
      */
-    public void setObjectInGrid(Map map, List<GameObject> objects) {
+    public void setObjectInGrid(GameScreen gs) {
         Vector3 touchPos = getRelativeMousePos();
         if (touchPos.x < 255) {
-            Vector2 tempPos = this.mapGridCollisionMouse(map);
-            if (!map.getOccGrid()[(int) tempPos.x / 16][(int) tempPos.y / 18]) {
+            Vector2 tempPos = this.mapGridCollisionMouse(gs.map);
+            if (!gs.map.getOccGrid()[(int) tempPos.x / 16][(int) tempPos.y / 18]) {
                 GameObject copy = this.copyObject();
                 copy.setX(tempPos.x);
                 copy.setY(tempPos.y);
-                map.getOccGrid()[(int) tempPos.x / 16][(int) tempPos.y / 18] = true;
-                objects.add(copy);
-                GameScreen.setGold(GameScreen.getGold() - this.price);
+                gs.map.getOccGrid()[(int) tempPos.x / 16][(int) tempPos.y / 18] = true;
+                gs.objects.add(copy);
+                gs.setGold(gs.getGold() - this.price);
                 logger.info("Objeto colocado");
             }
         }
