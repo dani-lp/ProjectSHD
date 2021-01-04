@@ -224,8 +224,8 @@ public class Enemy extends Entity {
                     this.move();
                 }
 
-                switch (gs.map.getSprite()){ //TODO: cambiar por currentRound una vez que estén creadas
-                    case "riverMap.png":
+                switch (gs.getCurrentRound()){
+                    case 1:
                         if (routing && this.getY() < this.getFocusY() + 5 && this.getY() > this.getFocusY() - 5){
                             this.setFocus(125,this.getFocusY());
                         }
@@ -233,7 +233,7 @@ public class Enemy extends Entity {
                             this.setFocus(gs.beacon.getX(),gs.beacon.getY());
                             this.setRouting(false);
                         }
-                    case "forestMap.png":
+                    case 3:
                         if (routing && this.overlapsPointArea(this.getFocusX(),this.getFocusY())){
                             this.setFocus(gs.beacon.getX(),gs.beacon.getY());
                             this.move();
@@ -280,6 +280,21 @@ public class Enemy extends Entity {
                 break;
         }
 
+        this.updateEffect(gs);
+
+        if (this.hpBar != null) this.hpBar.update(this, this.getHp());
+    }
+
+    public boolean flipped = false; //Usado para saber si un objeto debe estar dado la vuelta al animarlo
+
+    protected void move() {
+        double angle = Math.toDegrees(-Math.atan((this.getY() - this.focus.y) / (this.getX() - this.focus.x)));
+        this.flipped = Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed < 0;
+        this.setX((float) (this.getX() + Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed));
+        this.setY((float) (this.getY() + Math.cos(angle) * Gdx.graphics.getDeltaTime() * this.speed));
+    }
+
+    private void updateEffect(GameScreen gs) {
         switch (this.trapEffect) {
             case BURNING:
                 if ((gs.secTimer % 30 == 0) && (gs.secTimer < this.effectTimer + 180)){
@@ -312,16 +327,6 @@ public class Enemy extends Entity {
             case NEUTRAL:
                 break;
         }
-        if (this.hpBar != null) this.hpBar.update(this, this.getHp());
-    }
-
-    public boolean flipped = false; //TODO temporal?
-
-    protected void move() {
-        double angle = Math.toDegrees(-Math.atan((this.getY() - this.focus.y) / (this.getX() - this.focus.x)));
-        this.flipped = Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed < 0;
-        this.setX((float) (this.getX() + Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed));
-        this.setY((float) (this.getY() + Math.cos(angle) * Gdx.graphics.getDeltaTime() * this.speed));
     }
 
     /**

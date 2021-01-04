@@ -116,6 +116,7 @@ public class GameScreen implements Screen {
         trapInv = new Inventory();
 
         createObjects();
+        loadBeacon();
 
         drawingInv = fullInv.sortInventory();
         currentRound = round;
@@ -123,52 +124,7 @@ public class GameScreen implements Screen {
         msg2 = "clicka el texto para seguir";
 
         //Setup por rondas
-        switch (round) { //TODO: posiciones de beacon
-            case 1:
-                beacon.setX(192);
-                loadRound1();
-                map = new Map("riverMap.png"); //Mapa de río
-                gold = 60000; //TODO Oro por defecto
-                break;
-            case 2:
-                loadRound2();
-                map = new Map("emptyMap.png"); //Mapa de barranco
-                gold = 60000;
-                break;
-            case 3:
-                beacon.setX(beacon.getX()-16);
-                beacon.setY(beacon.getY()-18);
-                loadRound3();
-                map = new Map("forestMap.png"); //Mapa de bosque
-                gold = 60000;
-                break;
-            case 4:
-                loadRound4();
-                map = new Map("emptyMap.png"); //Mapa abierto
-                gold = 60000;
-                break;
-            case 5:
-                loadRound5();
-                map = new Map("bossMap.png"); //3 lados bloqueados, boss final
-                gold = 60000;
-                break;
-            case -2: //TESTING
-                if (!enemies.isEmpty()) enemies.clear();
-                map = new Map("emptyMap.png");
-                gold = 0;
-                for (GameObject obj:objects) {
-                    obj.setPrice(0);
-                }
-                break;
-            case -1: //INFINITO
-                map = new Map("emptyMap.png");
-                gold = 60000;
-                break;
-            default:
-                map = new Map("emptyMap.png");
-                gold = 60000;
-                break;
-        }
+        loadSetup();
 
         map.getOccGrid()[(int) beacon.getX() / 16][(int) beacon.getY() / 18] = true; //Casilla del beacon
 
@@ -753,7 +709,69 @@ public class GameScreen implements Screen {
         } catch (DBException ignored) {
 
         }
+    }
 
+    private void loadSetup() {
+        switch (this.currentRound) {
+            case 1:
+                beacon.setX(208);
+                beacon.setY(90);
+                loadRound1();
+                map = new Map("riverMap.png"); //Mapa de río
+                gold = 60000; //TODO Oro por defecto
+                break;
+            case 2:
+                beacon.setX(128);
+                beacon.setY(90);
+                loadRound2();
+                map = new Map("cliffMap.png"); //Mapa de barranco
+                gold = 60000;
+                break;
+            case 3:
+                beacon.setX(128);
+                beacon.setY(72);
+                loadRound3();
+                map = new Map("forestMap.png"); //Mapa de bosque
+                gold = 60000;
+                break;
+            case 4:
+                beacon.setX(128);
+                beacon.setY(90);
+                loadRound3();
+                map = new Map("emptyMap.png"); //Mapa abierto
+                gold = 60000;
+                break;
+            case 5:
+                beacon.setX(208);
+                beacon.setY(90);
+                loadRound5();
+                map = new Map("bossMap.png"); //3 lados bloqueados, boss final
+                gold = 60000;
+                break;
+            case -2: //TESTING
+                beacon.setX(144);
+                beacon.setY(90);
+                if (!enemies.isEmpty()) enemies.clear();
+                map = new Map("emptyMap.png");
+                gold = 0;
+                for (GameObject obj:objects) {
+                    obj.setPrice(0);
+                }
+                break;
+            case -1: //INFINITO
+                beacon.setX(208);
+                beacon.setY(90);
+                map = new Map("emptyMap.png");
+                gold = 60000;
+                break;
+            default:
+                map = new Map("emptyMap.png");
+                gold = 60000;
+                break;
+        }
+    }
+
+    private void loadBeacon() {
         beacon = new Defender(144, 90, 16, 18, -1, "Beacon", -1, false, 9000);
         beacon.hpBar.setMaxHP(beacon.getHp());
         beacon.loadTextures();
