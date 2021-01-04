@@ -223,12 +223,25 @@ public class Enemy extends Entity {
                 else {
                     this.move();
                 }
-                if (routing && this.getY() < this.getFocusY() + 5 && this.getY() > this.getFocusY() - 5){
-                    this.setFocus(125,this.getFocusY());
+
+                switch (gs.map.getSprite()){ //TODO: cambiar por currentRound una vez que estén creadas
+                    case "riverMap.png":
+                        if (routing && this.getY() < this.getFocusY() + 5 && this.getY() > this.getFocusY() - 5){
+                            this.setFocus(125,this.getFocusY());
+                        }
+                        if (routing && this.getX() > 110){
+                            this.setFocus(gs.beacon.getX(),gs.beacon.getY());
+                            this.setRouting(false);
+                        }
+                    case "forestMap.png":
+                        if (routing && this.overlapsPointArea(this.getFocusX(),this.getFocusY())){
+                            this.setFocus(gs.beacon.getX(),gs.beacon.getY());
+                            this.move();
+                            this.setRouting(false);
+                        }
+
                 }
-                if (routing && this.getX() > 110){
-                    this.setFocus(gs.beacon.getX(),gs.beacon.getY());
-                }
+
                 if (this.getHp() <= 0) {
                     this.state = State.DYING;
                     this.deathTimer = gs.secTimer + 60;
@@ -239,7 +252,6 @@ public class Enemy extends Entity {
                 break;
 
             case ATTACKING:
-                System.out.println("Ey");
                 if (this.overlappedObject(gs) != null) {
                     GameObject tempObj = this.overlappedObject(gs);    //Objeto siendo colisionado
                     if (tempObj.getHp() > 0 && !tempObj.isGrabbed() && gs.secTimer % 60 == 0) { //Pegar 1 vez por segundo
@@ -284,13 +296,18 @@ public class Enemy extends Entity {
                 break;
             case CONFUSED:
                 if (gs.secTimer == this.effectTimer) {
+                    this.setRouting(false);
                     this.focus.x = (float)(Math.random() * 3200 - 1600); //Posición X máxima
                     this.focus.y = (float)(Math.random() * 1800 - 900); //Posición Y máxima
+                    this.state = State.WALKING;
                 }
                 if (gs.secTimer > this.effectTimer + 280) {
                     this.trapEffect = TrapEffect.NEUTRAL;
                     this.focus.x = gs.beacon.getX();
                     this.focus.y = gs.beacon.getY();
+                    this.setRouting(true);
+                    this.move();
+                    this.state = State.WALKING;
                 }
             case NEUTRAL:
                 break;
@@ -382,6 +399,27 @@ public class Enemy extends Entity {
                     this.setFocus(30,135);
                     this.move();
                 }
+            case "forestMap.png":
+                if (this.getX() <= 31){
+                    this.setFocus(5,70);
+                    this.move();
+                } else if (this.getX() > 31 && this.getX() < 221){
+                    if (this.getY() >= 0 && this.getY() <= 54){
+                        this.setFocus(135,4);
+                        this.move();
+                    } else if (this.getY() >= 108){
+                        this.setFocus(130,160);
+                        this.move();
+                    }
+
+                } else if (this.getX() >= 222){
+                    this.setFocus(234,70);
+                    this.move();
+                }
+
+        }
+        if (this.trapEffect == TrapEffect.CONFUSED){
+            this.setFocus(this.getX(),this.getY());
         }
 
     }

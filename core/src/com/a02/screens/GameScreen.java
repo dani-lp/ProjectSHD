@@ -120,15 +120,17 @@ public class GameScreen implements Screen {
 
         //Setup por rondas
         switch (round) { //TODO: posiciones de beacon
-            case 1:
+            case 2:
                 beacon.setX(192);
                 loadRound1();
                 map = new Map("riverMap.png"); //Mapa de río
                 gold = 60000; //TODO Oro por defecto
                 break;
-            case 2:
+            case 1:
+                beacon.setX(beacon.getX()-16);
+                beacon.setY(beacon.getY()-18);
                 loadRound2();
-                map = new Map("emptyMap.png"); //Mapa de bosque
+                map = new Map("forestMap.png"); //Mapa de bosque
                 gold = 60000;
                 break;
             case 3:
@@ -219,6 +221,11 @@ public class GameScreen implements Screen {
 
         //Dibujado
         draw();
+
+        if (Gdx.input.isTouched()){
+            Vector3 mousePos = getRelativeMousePos();
+            System.out.println(mousePos.x + " " + mousePos.y);
+        }
 
         //Salida de la GameScreen
         if (beacon.getHp() <= 0) { //Jugador pierde (beacon destruído)
@@ -614,10 +621,10 @@ public class GameScreen implements Screen {
         } catch (DBException ignored) {
 
         }
-        obstacles.add(new Obstacle(63,0,32,18));
-        obstacles.add(new Obstacle(63,55,32,18));
-        obstacles.add(new Obstacle(63,108,32,18));
-        obstacles.add(new Obstacle(63,163,32,18));
+        obstacles.add(new Obstacle(63,0,30,18));
+        obstacles.add(new Obstacle(63,55,30,18));
+        obstacles.add(new Obstacle(63,108,30,18));
+        obstacles.add(new Obstacle(63,163,30,18));
 
     }
 
@@ -630,7 +637,7 @@ public class GameScreen implements Screen {
         Enemy larry;
         try {
             try {
-                Scanner sc= new Scanner(new FileInputStream("core/assets/ronda1.csv"));
+                Scanner sc= new Scanner(new FileInputStream("core/assets/ronda2.csv"));
                 while (sc.hasNext()) {
                     String line = sc.next();
                     String[] fields = line.split(";");
@@ -657,6 +664,10 @@ public class GameScreen implements Screen {
         } catch (DBException ignored) {
 
         }
+        obstacles.add(new Obstacle(32,108,64,36));
+        obstacles.add(new Obstacle(160,108,64,36));
+        obstacles.add(new Obstacle(32,18,64,36));
+        obstacles.add(new Obstacle(160,18,64,36));
     }
 
     private void loadRound3() {
