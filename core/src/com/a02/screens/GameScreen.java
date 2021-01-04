@@ -142,7 +142,7 @@ public class GameScreen implements Screen {
                 break;
             case 5:
                 loadRound5();
-                map = new Map("emptyMap.png"); //3 lados bloqueados, boss final
+                map = new Map("bossMap.png"); //3 lados bloqueados, boss final
                 gold = 60000;
                 break;
             case -2:
@@ -478,7 +478,8 @@ public class GameScreen implements Screen {
             else game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
         }
         for (Enemy enemy:enemies) {
-            game.entityBatch.draw(enemy.getCurrentAnimation(animationTimer), enemy.getX(), enemy.getY());
+            game.entityBatch.draw(enemy.getCurrentAnimation(animationTimer), enemy.flipped ? enemy.getX() + enemy.getWidth() : enemy.getX(),
+                     enemy.getY(), enemy.flipped ? -enemy.getWidth() : enemy.getWidth(), enemy.getHeight());
         }
 
         //Barras de vida y disparos
@@ -620,7 +621,7 @@ public class GameScreen implements Screen {
         Enemy larry;
         try {
             try {
-                Scanner sc= new Scanner(new FileInputStream("core/assets/ronda1.csv"));
+                Scanner sc = new Scanner(new FileInputStream("core/assets/ronda1.csv"));
                 while (sc.hasNext()) {
                     String line = sc.next();
                     String[] fields = line.split(";");

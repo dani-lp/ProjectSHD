@@ -298,8 +298,11 @@ public class Enemy extends Entity {
         if (this.hpBar != null) this.hpBar.update(this, this.getHp());
     }
 
+    public boolean flipped = false; //TODO temporal?
+
     protected void move() {
         double angle = Math.toDegrees(-Math.atan((this.getY() - this.focus.y) / (this.getX() - this.focus.x)));
+        this.flipped = Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed < 0;
         this.setX((float) (this.getX() + Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed));
         this.setY((float) (this.getY() + Math.cos(angle) * Gdx.graphics.getDeltaTime() * this.speed));
     }
