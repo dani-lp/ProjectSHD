@@ -55,7 +55,6 @@ public class GameScreen implements Screen {
     public List<Enemy> enemies = new ArrayList<>(); // Enemigos del juego
     public List<Shoot> shots = new ArrayList<>(); //Disparos de juego
     public List<Obstacle> obstacles = new ArrayList<>(); //Obstaculos en los mapas
-    public boolean deselect = false;
 
     public Defender beacon; //Punto central que deben destruir los enemigos
 

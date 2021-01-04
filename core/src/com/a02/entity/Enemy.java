@@ -81,10 +81,58 @@ public class Enemy extends Entity {
                 this.walkAnimation = createAnimation("Enemies/e2-walk.png",2,2,0.2f);
                 this.attackAnimation = createAnimation("Enemies/e2-attack.png",5,1,0.2f);
                 this.deathAnimation = createAnimation("Enemies/e2-death.png",2,1, 0.2f);
-            case 3:
+                break;
+            case 2:
                 this.walkAnimation = createAnimation("Enemies/e3-walk.png",2,2,0.2f);
                 this.attackAnimation = createAnimation("Enemies/e3-attack.png",5,1,0.2f);
                 this.deathAnimation = createAnimation("Enemies/e3-death.png",2,1, 0.2f);
+                break;
+            case 3:
+                this.walkAnimation = createAnimation("Enemies/e4-walk.png",2,2,0.2f);
+                this.attackAnimation = createAnimation("Enemies/e4-attack.png",2,2,0.125f);
+                this.deathAnimation = createAnimation("Enemies/e4-death.png",2,1, 0.2f);
+                break;
+            case 4:
+                this.walkAnimation = createAnimation("Enemies/e5-walk.png",2,2,0.5f); //MUY LENTO (el movimiento)
+                this.attackAnimation = createAnimation("Enemies/e5-attack.png",5,1,0.2f);
+                this.deathAnimation = createAnimation("Enemies/e5-death.png",2,1, 0.2f);
+                break;
+            case 5:
+                this.walkAnimation = createAnimation("Enemies/e6-walk.png",2,2,0.2f);
+                this.attackAnimation = createAnimation("Enemies/e6-attack.png",5,1,0.2f);
+                this.deathAnimation = createAnimation("Enemies/e6-death.png",2,1, 0.2f);
+                break;
+            case 6:
+
+                break;
+            case 7: //BOSS
+                this.walkAnimation = createAnimation("Enemies/e8-walk.png",2,2,0.2f);
+                this.attackAnimation = createAnimation("Enemies/e8-attack.png",2,2,0.25f);
+                this.deathAnimation = createAnimation("Enemies/e8-death.png",3,1, 0.15f);
+                break;
+        }
+    }
+
+    private Texture getIdleTexture() { //TODO: quitar switch??
+        switch (this.getId()) {
+            case 0:
+                return new Texture(Gdx.files.internal("Enemies/e1-idle.png"));
+            case 1:
+                return new Texture(Gdx.files.internal("Enemies/e2-idle.png"));
+            case 2:
+                return new Texture(Gdx.files.internal("Enemies/e3-idle.png"));
+            case 3:
+                return new Texture(Gdx.files.internal("Enemies/e4-idle.png"));
+            case 4:
+                return new Texture(Gdx.files.internal("Enemies/e5-idle.png"));
+            case 5:
+                return new Texture(Gdx.files.internal("Enemies/e6-idle.png"));
+            case 6:
+                return new Texture(Gdx.files.internal("Enemies/e7-idle.png")); //TODO
+            case 7: //BOSS
+                return new Texture(Gdx.files.internal("Enemies/e8-idle.png"));
+            default:
+                return new Texture(Gdx.files.internal("empty.png"));
         }
     }
 
@@ -313,19 +361,6 @@ public class Enemy extends Entity {
                 return this.deathAnimation.getKeyFrame(animationTimer, true);
         }
         return null;
-    }
-
-    private Texture getIdleTexture() {
-        switch (this.getId()) {
-            case 0:
-                return new Texture(Gdx.files.internal("Enemies/e1-idle.png"));
-            case 1:
-                return new Texture(Gdx.files.internal("Enemies/e2-idle.png"));
-            case 2:
-                return new Texture(Gdx.files.internal("Enemies/e3-idle.png"));
-            default:
-                return new Texture(Gdx.files.internal("empty.png"));
-        }
     }
 
     protected Obstacle overlappedObstacle(GameScreen gs) {

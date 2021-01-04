@@ -37,11 +37,11 @@ public class MenuScreen implements Screen {
 
         playButton = new UIButton(160, 194, 74, 36,
                 "Buttons/playButtonIdle.png", "Buttons/playButtonPressed.png");
-        infiniteButton = new UIButton(340, 94, 74, 36,
+        infiniteButton = new UIButton(240, 194, 74, 36,
                 "Buttons/infiniteButtonIdle.png", "Buttons/infiniteButtonPressed.png");
         testingButton = new UIButton(160, -52, 74, 36,
                 "Buttons/testingButtonIdle.png", "Buttons/testingButtonPressed.png");
-        quitButton = new UIButton(340, 52, 74, 36,
+        quitButton = new UIButton(240, -52, 74, 36,
                 "Buttons/quitButtonIdle.png", "Buttons/quitButtonPressed.png");
 
         backgroundTexture = new Texture(Gdx.files.internal("wallpaperTest.png"));
@@ -65,9 +65,9 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         playButton.setY((float) (playButton.getY() + (94 - playButton.getY()) * 0.08));
-        infiniteButton.setX((float) (infiniteButton.getX() + (240 - infiniteButton.getX()) * 0.08));
+        infiniteButton.setY((float) (infiniteButton.getY() + (94 - infiniteButton.getY()) * 0.08));
         testingButton.setY((float) (testingButton.getY() + (52 - testingButton.getY()) * 0.08));
-        quitButton.setX((float) (quitButton.getX() + (240 - quitButton.getX()) * 0.08));
+        quitButton.setY((float) (quitButton.getY() + (52 - quitButton.getY()) * 0.08));
 
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
