@@ -19,7 +19,7 @@ public class MainGame extends Game {
 	@Override
 	public void create () {
 		entityBatch = new SpriteBatch();
-		mainGameScreen = new GameScreen(this, 0);
+		mainGameScreen = new GameScreen(this, 0, 0);
 		this.setScreen(new MenuScreen(this));
 	}
 

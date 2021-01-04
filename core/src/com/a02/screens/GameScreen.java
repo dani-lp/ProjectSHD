@@ -47,9 +47,9 @@ public class GameScreen implements Screen {
 
     public State state;
 
-    private static int gold; //Oro para comprar objetos
-    private static int currentRound; //Ronda de juego actual
-    private static int points; //Puntos que consigue el usuario
+    private int gold; //Oro para comprar objetos
+    private int currentRound; //Ronda de juego actual
+    private int points; //Puntos que consigue el usuario
 
     public List<GameObject> objects = new ArrayList<>(); //Objetos en el juego
     public List<Enemy> enemies = new ArrayList<>(); // Enemigos del juego
@@ -94,7 +94,7 @@ public class GameScreen implements Screen {
     private int contEnt = 0; //Contador de mensajes de tutorial
     private boolean messagesEnded = false;
 
-    public GameScreen(MainGame game, int round) {
+    public GameScreen(MainGame game, int round, int points) {
         log(Level.INFO, "Inicio del GameScreen", null);
 
         this.game = game;
@@ -105,6 +105,7 @@ public class GameScreen implements Screen {
 
         secTimer = 0;
         animationTimer = 0;
+        this.points = points;
 
         fullInv = new Inventory();
         attackInv = new Inventory();
@@ -120,13 +121,13 @@ public class GameScreen implements Screen {
 
         //Setup por rondas
         switch (round) { //TODO: posiciones de beacon
-            case 2:
+            case 1:
                 beacon.setX(192);
                 loadRound1();
                 map = new Map("riverMap.png"); //Mapa de río
                 gold = 60000; //TODO Oro por defecto
                 break;
-            case 1:
+            case 2:
                 beacon.setX(beacon.getX()-16);
                 beacon.setY(beacon.getY()-18);
                 loadRound2();
@@ -145,7 +146,7 @@ public class GameScreen implements Screen {
                 break;
             case 5:
                 loadRound5();
-                map = new Map("emptyMap.png"); //3 lados bloqueados, boss final
+                map = new Map("bossMap.png"); //3 lados bloqueados, boss final
                 gold = 60000;
                 break;
             case -2:
@@ -222,18 +223,16 @@ public class GameScreen implements Screen {
         //Dibujado
         draw();
 
-        if (Gdx.input.isTouched()){
-            Vector3 mousePos = getRelativeMousePos();
-            System.out.println(mousePos.x + " " + mousePos.y);
-        }
-
         //Salida de la GameScreen
         if (beacon.getHp() <= 0) { //Jugador pierde (beacon destruído)
             this.state = State.PLAYING;
             game.setScreen(new EndScreen(Settings.s.getUsername(), points, game));
         }
         else if (enemies.isEmpty() && currentRound > 0) { //Jugador gana ronda (todos los enemigos eliminados)
-            game.setScreen(new GameScreen(game, ++currentRound));
+            this.points += 5000; //Sumar 5000 puntos al ganar la ronda, más un bonus por el oro restante o por la velocidad
+            this.points += this.gold * 0.1;
+            if (5000 - this.secTimer > 0) this.points += 5000 - this.secTimer;
+            game.setScreen(new GameScreen(game, ++currentRound, this.points));
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
@@ -370,7 +369,6 @@ public class GameScreen implements Screen {
         animationTimer += Gdx.graphics.getDeltaTime();
 
         if (secTimer % 20 == 0 && currentRound != -2) gold++;
-        points += 1;
 
         //Actualiza estado de objetos del inventario
         for (GameObject object : drawingInv.getObjects()) {
@@ -432,6 +430,7 @@ public class GameScreen implements Screen {
             //Es necesario borrar desde aquí a los enemigos, para evitar un ConcurrentModificationException.
             if(tempEnemy.getDeathTimer() < secTimer && tempEnemy.getDeathTimer() != 0) {
                 enemyIterator.remove();
+                this.points += 350; //Sumar 350 puntos por eliminar a un enemigo
             }
         }
 
@@ -486,7 +485,8 @@ public class GameScreen implements Screen {
             else game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
         }
         for (Enemy enemy:enemies) {
-            game.entityBatch.draw(enemy.getCurrentAnimation(animationTimer), enemy.getX(), enemy.getY());
+            game.entityBatch.draw(enemy.getCurrentAnimation(animationTimer), enemy.flipped ? enemy.getX() + enemy.getWidth() : enemy.getX(),
+                     enemy.getY(), enemy.flipped ? -enemy.getWidth() : enemy.getWidth(), enemy.getHeight());
         }
 
         //Barras de vida y disparos
@@ -776,12 +776,28 @@ public class GameScreen implements Screen {
         return camera;
     }
 
-    public static int getGold() {
+    public int getGold() {
         return gold;
     }
 
-    public static void setGold(int gold) {
-        GameScreen.gold = gold;
+    public void setGold(int gold) {
+        this.gold = gold;
+    }
+
+    public int getCurrentRound() {
+        return currentRound;
+    }
+
+    public void setCurrentRound(int currentRound) {
+        this.currentRound = currentRound;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     private void log(Level level, String msg, Throwable exception) {
