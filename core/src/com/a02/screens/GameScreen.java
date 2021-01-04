@@ -476,6 +476,7 @@ public class GameScreen implements Screen {
             pauseFlag = !pauseFlag;
         }
         else if (menuButton.isJustClicked()) {
+            this.roundMusic.dispose();
             game.setScreen(new MenuScreen(game));
         }
         else if (quitButton.isJustClicked()) {
@@ -795,28 +796,28 @@ public class GameScreen implements Screen {
     private void loadMusic() {
         switch (this.currentRound) {
             case 1:
-                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/riverRoundMusic.wav"));
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/riverRoundMusic.mp3"));
                 break;
             case 2:
-                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/cliffRoundMusic.wav"));
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/cliffRoundMusic.mp3"));
                 break;
             case 3:
-                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/forestRoundMusic.wav"));
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/forestRoundMusic.mp3"));
                 break;
             case 4:
-                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/fieldRoundMusic.wav"));
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/fieldRoundMusic.mp3"));
                 break;
             case 5:
-                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/finalRoundMusic.wav"));
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/finalRoundMusic.mp3"));
                 break;
             case -1:
-                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/finalRoundMusic.wav"));
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/finalRoundMusic.mp3"));
                 break;
             case -2:
-                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/testingRoundMusic.wav"));
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/testingRoundMusic.mp3"));
                 break;
             default:
-                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/testingRoundMusic.wav"));
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/testingRoundMusic.mp3"));
                 break;
         }
     }
