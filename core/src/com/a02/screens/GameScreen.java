@@ -11,6 +11,7 @@ import com.a02.game.Settings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -94,6 +95,8 @@ public class GameScreen implements Screen {
     private int contEnt = 0; //Contador de mensajes de tutorial
     private boolean messagesEnded = false;
 
+    Music roundMusic;
+
     public GameScreen(MainGame game, int round, int points) {
         log(Level.INFO, "Inicio del GameScreen", null);
 
@@ -128,15 +131,15 @@ public class GameScreen implements Screen {
                 gold = 60000; //TODO Oro por defecto
                 break;
             case 2:
-                beacon.setX(beacon.getX()-16);
-                beacon.setY(beacon.getY()-18);
                 loadRound2();
-                map = new Map("forestMap.png"); //Mapa de bosque
+                map = new Map("emptyMap.png"); //Mapa de barranco
                 gold = 60000;
                 break;
             case 3:
+                beacon.setX(beacon.getX()-16);
+                beacon.setY(beacon.getY()-18);
                 loadRound3();
-                map = new Map("emptyMap.png"); //?
+                map = new Map("forestMap.png"); //Mapa de bosque
                 gold = 60000;
                 break;
             case 4:
@@ -149,13 +152,17 @@ public class GameScreen implements Screen {
                 map = new Map("bossMap.png"); //3 lados bloqueados, boss final
                 gold = 60000;
                 break;
-            case -2:
+            case -2: //TESTING
                 if (!enemies.isEmpty()) enemies.clear();
                 map = new Map("emptyMap.png");
                 gold = 0;
                 for (GameObject obj:objects) {
                     obj.setPrice(0);
                 }
+                break;
+            case -1: //INFINITO
+                map = new Map("emptyMap.png");
+                gold = 60000;
                 break;
             default:
                 map = new Map("emptyMap.png");
@@ -189,6 +196,13 @@ public class GameScreen implements Screen {
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180); //Ajusta la proporción de la cámara
+
+        if (Settings.s.isMusicCheck()) {
+            loadMusic();
+            this.roundMusic.setLooping(true);
+            this.roundMusic.setVolume(0.5f);
+            this.roundMusic.play();
+        }
     }
 
     /**
@@ -232,6 +246,10 @@ public class GameScreen implements Screen {
             this.points += 5000; //Sumar 5000 puntos al ganar la ronda, más un bonus por el oro restante o por la velocidad
             this.points += this.gold * 0.1;
             if (5000 - this.secTimer > 0) this.points += 5000 - this.secTimer;
+            if (Settings.s.isMusicCheck()) {
+                this.roundMusic.stop();
+                this.roundMusic.dispose();
+            }
             game.setScreen(new GameScreen(game, ++currentRound, this.points));
         }
 
@@ -629,6 +647,10 @@ public class GameScreen implements Screen {
     }
 
     private void loadRound2(){
+
+    }
+
+    private void loadRound3() {
         try {
             DBManager.dbManager.connect("Databases/base.db");
         } catch (DBException e) {
@@ -668,10 +690,6 @@ public class GameScreen implements Screen {
         obstacles.add(new Obstacle(160,108,64,36));
         obstacles.add(new Obstacle(32,18,64,36));
         obstacles.add(new Obstacle(160,18,64,36));
-    }
-
-    private void loadRound3() {
-
     }
     private void loadRound4() {
 
@@ -765,10 +783,41 @@ public class GameScreen implements Screen {
         defenderButton.disposeButton();
         trapButton.disposeButton();
 
-        tutoBut.disposeButton();
+        if (tutoBut != null) tutoBut.disposeButton();
+
+        roundMusic.dispose();
 
         for (GameObject object: objects) {
             object.getTexture().dispose();
+        }
+    }
+
+    private void loadMusic() {
+        switch (this.currentRound) {
+            case 1:
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/riverRoundMusic.wav"));
+                break;
+            case 2:
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/cliffRoundMusic.wav"));
+                break;
+            case 3:
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/forestRoundMusic.wav"));
+                break;
+            case 4:
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/fieldRoundMusic.wav"));
+                break;
+            case 5:
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/finalRoundMusic.wav"));
+                break;
+            case -1:
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/finalRoundMusic.wav"));
+                break;
+            case -2:
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/testingRoundMusic.wav"));
+                break;
+            default:
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/testingRoundMusic.wav"));
+                break;
         }
     }
 
@@ -798,6 +847,10 @@ public class GameScreen implements Screen {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    public Music getRoundMusic() {
+        return roundMusic;
     }
 
     private void log(Level level, String msg, Throwable exception) {

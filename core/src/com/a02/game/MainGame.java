@@ -20,6 +20,7 @@ public class MainGame extends Game {
 	public void create () {
 		entityBatch = new SpriteBatch();
 		mainGameScreen = new GameScreen(this, 0, 0);
+		if (Settings.s.isMusicCheck()) mainGameScreen.getRoundMusic().dispose();
 		this.setScreen(new MenuScreen(this));
 	}
 
