@@ -103,7 +103,9 @@ public class Enemy extends Entity {
                 this.deathAnimation = createAnimation("Enemies/e6-death.png",2,1, 0.2f);
                 break;
             case 6:
-
+                this.walkAnimation = createAnimation("Enemies/e7-walk.png",2,2,0.2f);
+                this.attackAnimation = createAnimation("Enemies/e7-attack.png",2,2,0.125f);
+                this.deathAnimation = createAnimation("Enemies/e7-death.png",2,1, 0.2f);
                 break;
             case 7: //BOSS
                 this.walkAnimation = createAnimation("Enemies/e8-walk.png",2,2,0.2f);
@@ -114,6 +116,7 @@ public class Enemy extends Entity {
     }
 
     private Texture getIdleTexture() { //TODO: quitar switch??
+        /*
         switch (this.getId()) {
             case 0:
                 return new Texture(Gdx.files.internal("Enemies/e1-idle.png"));
@@ -128,12 +131,17 @@ public class Enemy extends Entity {
             case 5:
                 return new Texture(Gdx.files.internal("Enemies/e6-idle.png"));
             case 6:
-                return new Texture(Gdx.files.internal("Enemies/e7-idle.png")); //TODO
+                return new Texture(Gdx.files.internal("Enemies/e7-idle.png"));
             case 7: //BOSS
                 return new Texture(Gdx.files.internal("Enemies/e8-idle.png"));
             default:
                 return new Texture(Gdx.files.internal("empty.png"));
         }
+
+         */
+
+        if (this.getId() >= 0 && this.getId() <= 7) return new Texture("Enemies/e" + (this.getId()+1) + "-idle.png");
+        else return new Texture(Gdx.files.internal("empty.png"));
     }
 
     public int getId() {
