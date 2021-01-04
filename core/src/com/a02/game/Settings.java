@@ -1,21 +1,13 @@
 package com.a02.game;
 
 public class Settings {
-    private String gamemode, username;
+    private String username;
     private double diff;
     private boolean musicCheck, soundCheck, tutorialCheck;
 
     public static final Settings s = new Settings();
 
     private Settings(){}
-
-    public String getGamemode() {
-        return gamemode;
-    }
-
-    public void setGamemode(String gamemode) {
-        this.gamemode = gamemode;
-    }
 
     public String getUsername() {
         return username;

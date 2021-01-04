@@ -115,31 +115,11 @@ public class Enemy extends Entity {
         }
     }
 
-    private Texture getIdleTexture() { //TODO: quitar switch??
-        /*
-        switch (this.getId()) {
-            case 0:
-                return new Texture(Gdx.files.internal("Enemies/e1-idle.png"));
-            case 1:
-                return new Texture(Gdx.files.internal("Enemies/e2-idle.png"));
-            case 2:
-                return new Texture(Gdx.files.internal("Enemies/e3-idle.png"));
-            case 3:
-                return new Texture(Gdx.files.internal("Enemies/e4-idle.png"));
-            case 4:
-                return new Texture(Gdx.files.internal("Enemies/e5-idle.png"));
-            case 5:
-                return new Texture(Gdx.files.internal("Enemies/e6-idle.png"));
-            case 6:
-                return new Texture(Gdx.files.internal("Enemies/e7-idle.png"));
-            case 7: //BOSS
-                return new Texture(Gdx.files.internal("Enemies/e8-idle.png"));
-            default:
-                return new Texture(Gdx.files.internal("empty.png"));
-        }
-
-         */
-
+    /**
+     * Devuelve la textura Idle de un enemigo, usada en congelación.
+     * @return Texture idle
+     */
+    private Texture getIdleTexture() {
         if (this.getId() >= 0 && this.getId() <= 7) return new Texture("Enemies/e" + (this.getId()+1) + "-idle.png");
         else return new Texture(Gdx.files.internal("empty.png"));
     }

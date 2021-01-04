@@ -42,9 +42,8 @@ public class SettingsWindow extends JFrame {
         checkPanel.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
         buttonsPanel.setLayout(new FlowLayout());
 
-        JLabel modeLabel = new JLabel("Gamemode:");
-        String[] cbEntries = {"Rounds", "Infinite", "Testing"};
-        final JComboBox<String> modeCB = new JComboBox<>(cbEntries);
+        JToolTip userJTP = new JToolTip();
+        userJTP.setTipText("User " + user.getUsername() + ". Record: " + user.getScoreRecord());
         JLabel diffLabel = new JLabel("Difficulty:");
         final JSlider diffSlider = new JSlider(JSlider.HORIZONTAL, 0, 10, 0);
         diffSlider.setPaintTrack(true);
@@ -76,7 +75,6 @@ public class SettingsWindow extends JFrame {
 
         confirmButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Settings.s.setGamemode(String.valueOf(modeCB.getSelectedItem()));
                 Settings.s.setDiff(getDmgMult(diffSlider.getValue()));
                 Settings.s.setMusicCheck(musicCheck.isSelected());
                 Settings.s.setSoundCheck(soundCheck.isSelected());
@@ -122,8 +120,7 @@ public class SettingsWindow extends JFrame {
         };
 
         //Tecla enter presiona los botones
-        modeLabel.addKeyListener(enterKA);
-        modeCB.addKeyListener(enterKA);
+        userJTP.addKeyListener(enterKA);
         diffLabel.addKeyListener(enterKA);
         diffSlider.addKeyListener(enterKA);
         musicLabel.addKeyListener(enterKA);
@@ -144,8 +141,7 @@ public class SettingsWindow extends JFrame {
         checkPanel.add(soundCheck);
         checkPanel.add(tutorialLabel);
         checkPanel.add(tutorialCheck);
-        modePanel.add(modeLabel);
-        modePanel.add(modeCB);
+        modePanel.add(userJTP);
         buttonsPanel.add(cancelButton);
         buttonsPanel.add(confirmButton);
         buttonsPanel.add(adminButton);

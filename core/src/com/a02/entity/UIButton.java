@@ -11,21 +11,19 @@ import static com.a02.game.Utils.getRelativeMousePos;
  */
 public class UIButton extends Entity {
 
-    private Texture idleTexture; //Aspecto del botón
-    private Texture pressedTexture;
+    private final Texture idleTexture; //Aspecto del botón
+    private final Texture pressedTexture;
 
     private boolean touched = false;
     private boolean pressed;
+
+    private boolean active; //Si el botón está inactivo (active = false) no se realiza ninguna acción con él.
 
     public UIButton(float x, float y, int width, int height, String idleTexturePath, String pressedTexturePath) {
         super(x, y, width, height);
         this.idleTexture = new Texture(idleTexturePath);
         this.pressedTexture = new Texture(pressedTexturePath);
-    }
-
-    public UIButton() {
-        super();
-        this.idleTexture = null;
+        this.active = true;
     }
 
     /**
@@ -34,6 +32,7 @@ public class UIButton extends Entity {
      */
     public boolean isTouched() {
         Vector3 mousePos = getRelativeMousePos();
+        if (!this.active) return false;
         if (!(this.overlapsPoint(mousePos.x, mousePos.y) && !Gdx.input.isTouched())) {
             this.touched = false;
         }
@@ -49,6 +48,7 @@ public class UIButton extends Entity {
      * @return True si se cumple la condición
      */
     public boolean isBeingClicked() {
+        if (!this.active) return false;
         Vector3 mousePos = getRelativeMousePos();
         return this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched();
     }
@@ -58,6 +58,7 @@ public class UIButton extends Entity {
      * @return true si acaba de ser pulsado, false en cualquier otro caso.
      */
     public boolean isJustClicked() {
+        if (!this.active) return false;
         Vector3 mousePos = getRelativeMousePos();
         if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched() && !this.isPressed()) {
             this.pressed = true;
@@ -72,11 +73,18 @@ public class UIButton extends Entity {
         }
     }
 
+    /**
+     * Devuelve la textura actual.
+     * @return Texture actual
+     */
     public Texture getCurrentTexture() {
         if (this.touched) return this.getPressedTexture();
         else return this.getIdleTexture();
     }
 
+    /**
+     * Elimina las texturas del botón.
+     */
     public void disposeButton () {
         this.idleTexture.dispose();
         this.pressedTexture.dispose();
@@ -90,15 +98,15 @@ public class UIButton extends Entity {
         return idleTexture;
     }
 
-    public void setIdleTexture(Texture idleTexture) {
-        this.idleTexture = idleTexture;
-    }
-
     public Texture getPressedTexture() {
         return pressedTexture;
     }
 
-    public void setPressedTexture(Texture pressedTexture) {
-        this.pressedTexture = pressedTexture;
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
