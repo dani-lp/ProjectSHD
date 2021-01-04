@@ -224,11 +224,10 @@ public class Enemy extends Entity {
                     this.move();
                 }
                 if (routing && this.getY() < this.getFocusY() + 5 && this.getY() > this.getFocusY() - 5){
-                    this.setFocus(110,this.getFocusY());
+                    this.setFocus(115,this.getFocusY());
                 }
-                if (routing && this.getX() > 100){
+                if (routing && this.getX() > 110){
                     this.setFocus(gs.beacon.getX(),gs.beacon.getY());
-                    this.setRouting(false);
                 }
                 if (this.getHp() <= 0) {
                     this.state = State.DYING;
@@ -240,9 +239,9 @@ public class Enemy extends Entity {
                 break;
 
             case ATTACKING:
+                System.out.println("Ey");
                 if (this.overlappedObject(gs) != null) {
                     GameObject tempObj = this.overlappedObject(gs);    //Objeto siendo colisionado
-
                     if (tempObj.getHp() > 0 && !tempObj.isGrabbed() && gs.secTimer % 60 == 0) { //Pegar 1 vez por segundo
                         tempObj.setHp(tempObj.getHp() - this.attackDamage);
                     } else if (tempObj.getHp() <= 0) {
@@ -271,11 +270,17 @@ public class Enemy extends Entity {
 
         switch (this.trapEffect) {
             case BURNING:
-                if ((gs.secTimer % 30 == 0) && (gs.secTimer < this.effectTimer + 180)) this.hp -= 30;
+                if ((gs.secTimer % 30 == 0) && (gs.secTimer < this.effectTimer + 180)){
+                    this.hp -= 30;
+                    this.trapEffect = TrapEffect.NEUTRAL;
+                }
                 break;
             case FREEZE:
                 this.state = State.IDLE;
-                if (gs.secTimer > this.effectTimer + 300) this.state = State.WALKING;
+                if (gs.secTimer > this.effectTimer + 300) {
+                    this.trapEffect = TrapEffect.NEUTRAL;
+                    this.state = State.WALKING;
+                }
                 break;
             case CONFUSED:
                 if (gs.secTimer == this.effectTimer) {
