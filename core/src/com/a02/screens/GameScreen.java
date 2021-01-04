@@ -121,6 +121,7 @@ public class GameScreen implements Screen {
         //Setup por rondas
         switch (round) { //TODO: posiciones de beacon
             case 1:
+                beacon.setX(192);
                 loadRound1();
                 map = new Map("riverMap.png"); //Mapa de río
                 gold = 60000; //TODO Oro por defecto
@@ -585,7 +586,16 @@ public class GameScreen implements Screen {
                     String line = sc.next();
                     String[] fields = line.split(";");
 
-                    larry = DBManager.dbManager.getEnemy(0);
+                    if (enemies.size()<4){
+                        larry = DBManager.dbManager.getEnemy(5);
+                    } else if (enemies.size()<9){
+                        larry = DBManager.dbManager.getEnemy(6);
+                    } else if (enemies.size()<10){
+                        larry = DBManager.dbManager.getEnemy(0);
+                    } else {
+                        larry = DBManager.dbManager.getEnemy(3);
+                    }
+
                     loadEnemy(larry, fields);
                 }
                 sc.close();

@@ -224,7 +224,7 @@ public class Enemy extends Entity {
                     this.move();
                 }
                 if (routing && this.getY() < this.getFocusY() + 5 && this.getY() > this.getFocusY() - 5){
-                    this.setFocus(115,this.getFocusY());
+                    this.setFocus(125,this.getFocusY());
                 }
                 if (routing && this.getX() > 110){
                     this.setFocus(gs.beacon.getX(),gs.beacon.getY());
@@ -371,15 +371,15 @@ public class Enemy extends Entity {
         switch (gs.map.getSprite()){ //TODO: cambiar por currentRound una vez que estén creadas
             case "riverMap.png":
                 if (this.getY() >= 0 && this.getY() <= 54){
-                    this.setFocus(35,30);
+                    this.setFocus(30,25);
                     this.move();
 
                 } else if (this.getY() >= 55 && this.getY() <= 125){
-                    this.setFocus(35,90);
+                    this.setFocus(30,90);
                     this.move();
 
                 }  else {
-                    this.setFocus(35,140);
+                    this.setFocus(30,135);
                     this.move();
                 }
         }
