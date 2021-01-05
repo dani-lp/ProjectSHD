@@ -28,8 +28,8 @@ public class Enemy extends Entity {
     protected Animation<TextureRegion> walkAnimation;
     protected Animation<TextureRegion> attackAnimation;
     protected Animation<TextureRegion> deathAnimation;
+    public Texture idleTexture;
 
-    private Node node; //Nodo asociado al enemigo, probablemente no usado
     public Node focusNode; //Nodo al que se dirige el enemigo
 
     public enum State {
@@ -51,7 +51,6 @@ public class Enemy extends Entity {
         this.speed = speed;
         this.state = State.IDLE;
         this.trapEffect = TrapEffect.NEUTRAL;
-        this.loadAnimations();
         this.startTime = startTime;
         this.goldValue = goldValue;
         this.hpBar = new HealthBar(this, hp);
@@ -72,7 +71,6 @@ public class Enemy extends Entity {
         this.goldValue = 50;
         this.focus = new Vector2(0,0);
         this.routing = false;
-        this.loadAnimations();
     }
 
     public void loadAnimations() {
@@ -121,12 +119,11 @@ public class Enemy extends Entity {
     }
 
     /**
-     * Devuelve la textura Idle de un enemigo, usada en congelación.
-     * @return Texture idle
+     * Carga la textura Idle del enemigo.
      */
-    private Texture getIdleTexture() { //TODO: optimizar Texturas
-        if (this.getId() >= 0 && this.getId() <= 7) return new Texture("Enemies/e" + (this.getId()+1) + "-idle.png");
-        else return new Texture(Gdx.files.internal("empty.png"));
+    public void loadIdleTexture() {
+        if (this.getId() >= 0 && this.getId() <= 7) this.idleTexture = new Texture("Enemies/e" + (this.getId() + 1) + "-idle.png");
+        else this.idleTexture = new Texture(Gdx.files.internal("empty.png"));
     }
 
     public int getId() {
@@ -480,7 +477,7 @@ public class Enemy extends Entity {
     public TextureRegion getCurrentAnimation(float animationTimer) {
         switch (this.state) {
             case IDLE:
-                return new TextureRegion(this.getIdleTexture());
+                return new TextureRegion(this.idleTexture);
             case WALKING:
                 return this.walkAnimation.getKeyFrame(animationTimer, true);
             case ATTACKING:

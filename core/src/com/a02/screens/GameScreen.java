@@ -173,7 +173,7 @@ public class GameScreen implements Screen {
 
         ///////////////////////////////////////// TESTEO DE COLISIONES
         Obstacle obs = new Obstacle(64,54,32,18);
-        boolean coll = lineRectCollision(7,74,96,42,obs.getX(),obs.getY(),obs.getWidth(), obs.getHeight());
+        boolean coll = lineRectCollision(60,50,106,82,obs.getX(),obs.getY(),obs.getWidth(), obs.getHeight());
         System.out.println(coll);
         /////////////////////////////////////////
 
@@ -572,6 +572,7 @@ public class GameScreen implements Screen {
         larry.hpBar.setMaxHP(larry.getHp());
         larry.setFocus(beacon.getX(), beacon.getY());
         larry.loadAnimations();
+        larry.loadIdleTexture();
         enemies.add(larry);
     }
 
