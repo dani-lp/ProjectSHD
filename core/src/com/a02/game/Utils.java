@@ -2,12 +2,10 @@ package com.a02.game;
 
 import com.a02.users.User;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.io.*;
 import java.util.HashMap;
@@ -78,18 +76,6 @@ public class Utils {
 
         //Crea y devuelve la animación
         return new Animation<>(frameDuration, animationFrames);
-    }
-
-    public static void takeScreenshot() {   //TODO: NO FUNCIONA CORRECTAMENTE. Probablemente se puede eliminar
-        byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
-        for (int i = 4; i < pixels.length; i += 4) {
-            pixels[i - 1] = (byte) 255;
-        }
-        FileHandle fh = new FileHandle(Gdx.files.getLocalStoragePath() + "screenshot" + "1" + ".png");
-        Pixmap pixmap = ScreenUtils.getFrameBufferPixmap(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        System.out.println(fh);
-        PixmapIO.writePNG(fh, pixmap);
-        pixmap.dispose();
     }
 
     public static HashMap<String, User> readSer(String path) throws IOException, ClassNotFoundException {

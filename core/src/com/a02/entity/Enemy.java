@@ -223,34 +223,6 @@ public class Enemy extends Entity {
                 break;
 
             case WALKING: //Movimiento a beacon
-                /*
-                if (this.overlappedObstacle(gs) != null && !this.isRouting()){
-                    this.route(gs);
-                }
-                else {
-                    this.move();
-                }
-
-                switch (gs.getCurrentRound()){
-                    case 1:
-                        if (routing && this.getY() < this.getFocusY() + 5 && this.getY() > this.getFocusY() - 5){
-                            this.setFocus(125,this.getFocusY());
-                        }
-                        if (routing && this.getX() > 110){
-                            this.setFocus(gs.beacon.getX(),gs.beacon.getY());
-                            this.setRouting(false);
-                        }
-                    case 3:
-                        if (routing && this.overlapsPointArea(this.getFocusX(),this.getFocusY())){
-                            this.setFocus(gs.beacon.getX(),gs.beacon.getY());
-                            this.move();
-                            this.setRouting(false);
-                        }
-
-                }
-
-                 */
-
                 if (gs.getCurrentRound() == 1 || gs.getCurrentRound() == 3) this.updatePathfinding(gs);
 
                 if (this.getHp() <= 0) {
@@ -406,8 +378,7 @@ public class Enemy extends Entity {
             case BURNING:
                 if ((gs.secTimer % 30 == 0) && (gs.secTimer < this.effectTimer + 180)){
                     this.hp -= 30;
-                    this.trapEffect = TrapEffect.NEUTRAL;
-                }
+                } else if (gs.secTimer > this.effectTimer + 180) this.trapEffect = TrapEffect.NEUTRAL;
                 break;
             case FREEZE:
                 this.state = State.IDLE;
@@ -496,46 +467,5 @@ public class Enemy extends Entity {
             }
         }
         return null;
-    }
-
-    protected void route(GameScreen gs){
-        this.setRouting(true);
-        switch (gs.map.getSprite()){ //TODO: cambiar por currentRound una vez que estén creadas
-            case "riverMap.png":
-                if (this.getY() >= 0 && this.getY() <= 54){
-                    this.setFocus(30,25);
-                    this.move();
-
-                } else if (this.getY() >= 55 && this.getY() <= 125){
-                    this.setFocus(30,90);
-                    this.move();
-
-                }  else {
-                    this.setFocus(30,135);
-                    this.move();
-                }
-            case "forestMap.png":
-                if (this.getX() <= 31){
-                    this.setFocus(5,70);
-                    this.move();
-                } else if (this.getX() > 31 && this.getX() < 221){
-                    if (this.getY() >= 0 && this.getY() <= 54){
-                        this.setFocus(135,4);
-                        this.move();
-                    } else if (this.getY() >= 108){
-                        this.setFocus(130,160);
-                        this.move();
-                    }
-
-                } else if (this.getX() >= 222){
-                    this.setFocus(234,70);
-                    this.move();
-                }
-
-        }
-        if (this.trapEffect == TrapEffect.CONFUSED){
-            this.setFocus(this.getX(),this.getY());
-        }
-
     }
 }

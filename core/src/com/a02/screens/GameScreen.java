@@ -63,6 +63,8 @@ public class GameScreen implements Screen {
 
     public Defender beacon; //Punto central que deben destruir los enemigos
 
+    Texture pauseTexture = new Texture("pauseMenu.png"); //Textura del fondo del menú de pausa
+
     public Inventory drawingInv; //Inventario actual
     public Inventory fullInv; //Inventario con todos los objetos
     public Inventory attackInv; //Objetos de ataque
@@ -533,7 +535,7 @@ public class GameScreen implements Screen {
 
         //Menu de pausa
         if (pauseFlag) {
-            game.entityBatch.draw(new Texture("pauseMenu.png"), 50, 26); //TODO: optimizar
+            game.entityBatch.draw(pauseTexture, 50, 26);
             game.entityBatch.draw(resumeButton.getCurrentTexture(), resumeButton.getX(), resumeButton.getY());
             game.entityBatch.draw(menuButton.getCurrentTexture(), menuButton.getX(), menuButton.getY());
             game.entityBatch.draw(quitButton.getCurrentTexture(), quitButton.getX(), quitButton.getY());
@@ -965,6 +967,12 @@ public class GameScreen implements Screen {
         for (GameObject object: objects) {
             object.getTexture().dispose();
         }
+
+        for (Enemy enemy : enemies) {
+            enemy.idleTexture.dispose();
+        }
+
+        pauseTexture.dispose();
     }
 
     private void loadMusic() {
