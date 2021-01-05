@@ -1,5 +1,6 @@
 package com.a02.entity;
 
+import com.a02.pathfinding.Node;
 import com.a02.screens.GameScreen;
 import com.a02.component.HealthBar;
 import com.badlogic.gdx.Gdx;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.a02.game.Utils.*;
@@ -26,6 +28,9 @@ public class Enemy extends Entity {
     protected Animation<TextureRegion> walkAnimation;
     protected Animation<TextureRegion> attackAnimation;
     protected Animation<TextureRegion> deathAnimation;
+
+    private Node node; //Nodo asociado al enemigo, probablemente no usado
+    public Node focusNode; //Nodo al que se dirige el enemigo
 
     public enum State {
         IDLE, WALKING, ATTACKING, DYING
@@ -119,7 +124,7 @@ public class Enemy extends Entity {
      * Devuelve la textura Idle de un enemigo, usada en congelación.
      * @return Texture idle
      */
-    private Texture getIdleTexture() {
+    private Texture getIdleTexture() { //TODO: optimizar Texturas
         if (this.getId() >= 0 && this.getId() <= 7) return new Texture("Enemies/e" + (this.getId()+1) + "-idle.png");
         else return new Texture(Gdx.files.internal("empty.png"));
     }
@@ -181,6 +186,11 @@ public class Enemy extends Entity {
         this.focus.y = y;
     }
 
+    public void setFocus(Node node) {
+        this.focus.x = node.getX();
+        this.focus.y = node.getY();
+    }
+
     public float getFocusX() {
         return this.focus.x;
     }
@@ -216,7 +226,7 @@ public class Enemy extends Entity {
                 break;
 
             case WALKING: //Movimiento a beacon
-
+                /*
                 if (this.overlappedObstacle(gs) != null && !this.isRouting()){
                     this.route(gs);
                 }
@@ -241,6 +251,10 @@ public class Enemy extends Entity {
                         }
 
                 }
+
+                 */
+
+                if (gs.getCurrentRound() == 1 || gs.getCurrentRound() == 3) this.updatePathfinding(gs);
 
                 if (this.getHp() <= 0) {
                     this.state = State.DYING;
@@ -289,9 +303,105 @@ public class Enemy extends Entity {
 
     protected void move() {
         double angle = Math.toDegrees(-Math.atan((this.getY() - this.focus.y) / (this.getX() - this.focus.x)));
-        this.flipped = Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed < 0;
-        this.setX((float) (this.getX() + Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed));
-        this.setY((float) (this.getY() + Math.cos(angle) * Gdx.graphics.getDeltaTime() * this.speed));
+        float dirX = (float) Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed;
+        float dirY = (float) Math.cos(angle) * Gdx.graphics.getDeltaTime() * this.speed;
+        this.flipped = dirX < 0;
+        this.setX((float) round(this.getX() + dirX, 4));
+        this.setY((float) round(this.getY() + dirY, 4));
+    }
+
+    private void updatePathfinding(GameScreen gs) {
+        if (this.focusNode == null) {
+            this.focusNode = getNearestValidNode(gs);
+            this.setFocus(focusNode.getX(), focusNode.getY());
+            return;
+        }
+        if (this.overlapsPoint(focusNode.getX(), focusNode.getY(), 8)) {
+            if (this.focusNode.getNextNode() != null) this.focusNode = this.focusNode.getNextNode();
+            this.setFocus(focusNode.getX(), focusNode.getY());
+        }
+        this.move();
+    }
+
+    /**
+     * Devuelve el nodo válido más cercano.
+     * @param gs Screen de juego
+     * @return Nodo válido más cercano
+     */
+    public Node getNearestValidNode(GameScreen gs) {
+        ArrayList<Node> validNodes = new ArrayList<>();
+        //Calcular nodos válidos
+        for (Node node : gs.nodes) {
+            if (this.isNodeValid(node, gs)) validNodes.add(node);
+        }
+        //Calcular nodo válido más cercano
+        int minDistanceIndex = 0;
+        double minDistance = 400; //Distancia mayor a la diagonal máxima (368 aprox.)
+        for (int node = 0; node < validNodes.size(); node++) {
+            double distance = validNodes.get(node).distanceToNode(this);
+            if (distance < minDistance ) {
+                minDistance = distance;
+                minDistanceIndex = node;
+            }
+        }
+        return validNodes.get(minDistanceIndex);
+    }
+
+    public boolean isNodeValid(Node node, GameScreen gs) {
+        boolean anyColl = false;
+        if (gs.obstacles.size() < 1) return true;
+        for (Obstacle obstacle : gs.obstacles) {
+            //Abajo izquierda
+            boolean coll1 = lineRectCollision(
+                    this.getX(),this.getY(),
+                    node.getX(),node.getY(),
+                    obstacle.getX(),obstacle.getY(),obstacle.getWidth(), obstacle.getHeight());
+            //Abajo derecha
+            boolean coll2 = lineRectCollision(
+                    this.getX() + this.getWidth(),this.getY(),
+                    node.getX() + this.getWidth(),node.getY(),
+                    obstacle.getX(),obstacle.getY(),obstacle.getWidth(), obstacle.getHeight());
+            //Arriba izquierda
+            boolean coll3 = lineRectCollision(
+                    this.getX(),this.getY() + this.getHeight(),
+                    node.getX(),node.getY() + this.getHeight(),
+                    obstacle.getX(),obstacle.getY(),obstacle.getWidth(), obstacle.getHeight());
+            //Arriba derecha
+            boolean coll4 = lineRectCollision(
+                    this.getX() + this.getWidth(),this.getY() + this.getHeight(),
+                    node.getX() + this.getWidth(),node.getY() + this.getHeight(),
+                    obstacle.getX(),obstacle.getY(),obstacle.getWidth(), obstacle.getHeight());
+
+            anyColl = coll1 || coll2 || coll3 || coll4;
+        }
+        return !anyColl;
+    }
+
+    /**
+     * Colisión entre 2 líneas.
+     */
+    private static boolean lineLineCollision(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
+        //Calcular la dirección de las líneas
+        float div = ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1));
+        float uA = ((x4-x3)*(y1-y3) - (y4-y3)*(x1-x3)) / div;
+        float uB = ((x2-x1)*(y1-y3) - (y2-y1)*(x1-x3)) / div;
+
+        //Si uA y uB están entre 0 y 1, existe colisión
+        return uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1;
+    }
+
+    /**
+     * Colisión entre línea FINITA y rectángulo.
+     */
+    public static boolean lineRectCollision(float x1, float y1, float x2, float y2, float rx, float ry, float rw, float rh) {
+        //Colisión de cada lado del rectángulo
+        boolean left =   lineLineCollision(x1,y1,x2,y2, rx,ry,rx, ry+rh);
+        boolean right =  lineLineCollision(x1,y1,x2,y2, rx+rw,ry, rx+rw,ry+rh);
+        boolean top =    lineLineCollision(x1,y1,x2,y2, rx,ry, rx+rw,ry);
+        boolean bottom = lineLineCollision(x1,y1,x2,y2, rx,ry+rh, rx+rw,ry+rh);
+
+        //Si alguna de las colisiones superiores es cierta, ha habido colisión con el obstáculo
+        return left || right || top || bottom;
     }
 
     private void updateEffect(GameScreen gs) {

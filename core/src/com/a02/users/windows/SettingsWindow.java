@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import static com.a02.game.Utils.round;
+
 public class SettingsWindow extends JFrame {
     public SettingsWindow(final User user){
         //1.- Ajustes de ventana
@@ -159,16 +161,5 @@ public class SettingsWindow extends JFrame {
      */
     public static double getDmgMult(double ogValue) {
         return round((ogValue + 5) * 0.1,1);
-    }
-
-    /**
-     * Redondea con n decimales.
-     * @param value Valor a redondear
-     * @param precision Número de decimales
-     * @return Número redondeado
-     */
-    private static double round(double value, int precision) {
-        int scale = (int) Math.pow(10, precision);
-        return (double) Math.round(value * scale) / scale;
     }
 }

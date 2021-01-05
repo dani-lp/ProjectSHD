@@ -79,6 +79,10 @@ public abstract class Entity {
         return this.x <= x && this.x + this.width >= x && this.y <= y && this.y + this.height >= y;
     }
 
+    public boolean overlapsPoint(float x, float y, int offset) {
+        return this.x - offset <= x && this.x + offset >= x && this.y - offset <= y && this.y + offset >= y;
+    }
+
     public boolean overlapsPointArea(float x, float y) {
         return this.x <= x + 9 && this.x >= x - 9 && this.y <= y + 9 && this.y >= y - 9;
     }

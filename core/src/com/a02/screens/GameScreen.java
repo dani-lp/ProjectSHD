@@ -8,6 +8,7 @@ import com.a02.component.Inventory;
 import com.a02.game.MainGame;
 import com.a02.component.Map;
 import com.a02.game.Settings;
+import com.a02.pathfinding.Node;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.a02.entity.Enemy.lineRectCollision;
 import static com.a02.game.Utils.*;
 
 public class GameScreen implements Screen {
@@ -47,6 +49,8 @@ public class GameScreen implements Screen {
     }
 
     public State state;
+
+    public LinkedHashSet<Node> nodes; //Nodos de cada fase. Un HashSet no funciona correctamente, pero un LinkedHashSet sí
 
     private int gold; //Oro para comprar objetos
     private int currentRound; //Ronda de juego actual
@@ -116,7 +120,6 @@ public class GameScreen implements Screen {
         trapInv = new Inventory();
 
         createObjects();
-        loadBeacon();
 
         drawingInv = fullInv.sortInventory();
         currentRound = round;
@@ -124,6 +127,8 @@ public class GameScreen implements Screen {
         msg2 = "clicka el texto para seguir";
 
         //Setup por rondas
+        loadBeacon();
+        loadNodes();
         loadSetup();
 
         map.getOccGrid()[(int) beacon.getX() / 16][(int) beacon.getY() / 18] = true; //Casilla del beacon
@@ -159,6 +164,19 @@ public class GameScreen implements Screen {
             this.roundMusic.setVolume(0.5f);
             this.roundMusic.play();
         }
+
+        for (Enemy e : enemies) {
+            e.focusNode = e.getNearestValidNode(this);
+            e.setFocus(e.focusNode.getX(), e.focusNode.getY());
+        }
+
+
+        ///////////////////////////////////////// TESTEO DE COLISIONES
+        Obstacle obs = new Obstacle(64,54,32,18);
+        boolean coll = lineRectCollision(7,74,96,42,obs.getX(),obs.getY(),obs.getWidth(), obs.getHeight());
+        System.out.println(coll);
+        /////////////////////////////////////////
+
     }
 
     /**
@@ -432,7 +450,7 @@ public class GameScreen implements Screen {
             pauseFlag = !pauseFlag;
         }
         else if (menuButton.isJustClicked()) {
-            this.roundMusic.dispose();
+            if (this.roundMusic != null) this.roundMusic.dispose();
             game.setScreen(new MenuScreen(game));
         }
         else if (quitButton.isJustClicked()) {
@@ -515,13 +533,16 @@ public class GameScreen implements Screen {
 
         //Menu de pausa
         if (pauseFlag) {
-            game.entityBatch.draw(new Texture("pauseMenu.png"), 50, 26);
+            game.entityBatch.draw(new Texture("pauseMenu.png"), 50, 26); //TODO: optimizar
             game.entityBatch.draw(resumeButton.getCurrentTexture(), resumeButton.getX(), resumeButton.getY());
             game.entityBatch.draw(menuButton.getCurrentTexture(), menuButton.getX(), menuButton.getY());
             game.entityBatch.draw(quitButton.getCurrentTexture(), quitButton.getX(), quitButton.getY());
         }
+        Texture shoot = new Texture("shoot.png"); //TODO: TESTING DE NODOS
+        for (Node node : nodes) game.entityBatch.draw(shoot, node.getX(), node.getY());
 
         game.entityBatch.end();
+        shoot.dispose();
     }
 
     /**
@@ -596,11 +617,10 @@ public class GameScreen implements Screen {
         } catch (DBException ignored) {
 
         }
-        obstacles.add(new Obstacle(63,0,30,18));
-        obstacles.add(new Obstacle(63,55,30,18));
-        obstacles.add(new Obstacle(63,108,30,18));
-        obstacles.add(new Obstacle(63,163,30,18));
-
+        obstacles.add(new Obstacle(64,0,32,18));
+        obstacles.add(new Obstacle(64,54,32,18));
+        obstacles.add(new Obstacle(64,108,32,18));
+        obstacles.add(new Obstacle(64,162,32,18));
     }
 
     private void loadRound2(){
@@ -643,10 +663,10 @@ public class GameScreen implements Screen {
         } catch (DBException ignored) {
 
         }
-        obstacles.add(new Obstacle(32,108,64,36));
-        obstacles.add(new Obstacle(160,108,64,36));
-        obstacles.add(new Obstacle(32,18,64,36));
-        obstacles.add(new Obstacle(160,18,64,36));
+        obstacles.add(new Obstacle(32,108,64,37));
+        obstacles.add(new Obstacle(160,108,64,37));
+        obstacles.add(new Obstacle(32,17,64,37));
+        obstacles.add(new Obstacle(160,17,64,37));
     }
     private void loadRound4() {
 
@@ -714,43 +734,31 @@ public class GameScreen implements Screen {
     private void loadSetup() {
         switch (this.currentRound) {
             case 1:
-                beacon.setX(208);
-                beacon.setY(90);
                 loadRound1();
                 map = new Map("riverMap.png"); //Mapa de río
                 gold = 60000; //TODO Oro por defecto
                 break;
             case 2:
-                beacon.setX(128);
-                beacon.setY(90);
                 loadRound2();
                 map = new Map("cliffMap.png"); //Mapa de barranco
                 gold = 60000;
                 break;
             case 3:
-                beacon.setX(128);
-                beacon.setY(72);
                 loadRound3();
                 map = new Map("forestMap.png"); //Mapa de bosque
                 gold = 60000;
                 break;
             case 4:
-                beacon.setX(128);
-                beacon.setY(90);
-                loadRound3();
+                loadRound4();
                 map = new Map("emptyMap.png"); //Mapa abierto
                 gold = 60000;
                 break;
             case 5:
-                beacon.setX(208);
-                beacon.setY(90);
                 loadRound5();
                 map = new Map("bossMap.png"); //3 lados bloqueados, boss final
                 gold = 60000;
                 break;
             case -2: //TESTING
-                beacon.setX(144);
-                beacon.setY(90);
                 if (!enemies.isEmpty()) enemies.clear();
                 map = new Map("emptyMap.png");
                 gold = 0;
@@ -759,8 +767,6 @@ public class GameScreen implements Screen {
                 }
                 break;
             case -1: //INFINITO
-                beacon.setX(208);
-                beacon.setY(90);
                 map = new Map("emptyMap.png");
                 gold = 60000;
                 break;
@@ -771,10 +777,159 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * Carga los nodos precomputados.
+     */
+    private void loadNodes() { //Súper largo, pero no tengo tiempo de hacerlo más corto
+        this.nodes = new LinkedHashSet<>();
+        Node beaconNode = new Node(beacon.getX(), beacon.getY());
+
+        Node n1;
+        Node n2;
+        Node n3;
+        Node n4;
+        Node n5;
+        Node n6;
+        Node n7;
+        Node n8;
+        Node n9;
+        Node n10;
+        Node n11;
+        Node n12;
+        Node n13;
+        Node n14;
+        Node n15;
+        Node n16;
+
+        switch (this.currentRound) {
+            case 1:
+                n1 = new Node(47, 145);
+                n2 = new Node(96, 145);
+                n3 = new Node(47, 126);
+                n4 = new Node(96, 126);
+                n5 = new Node(47, 91);
+                n6 = new Node(96, 91);
+                n7 = new Node(47, 72);
+                n8 = new Node(96, 72);
+                n9 = new Node(47, 37);
+                n10 = new Node(96, 37);
+                n11 = new Node(47, 18);
+                n12 = new Node(96, 18);
+
+                n1.setNextNode(n2);
+                n2.setNextNode(beaconNode);
+                n3.setNextNode(n4);
+                n4.setNextNode(beaconNode);
+                n5.setNextNode(n6);
+                n6.setNextNode(beaconNode);
+                n7.setNextNode(n6); //BEACON?
+                n8.setNextNode(beaconNode);
+                n9.setNextNode(n10);
+                n10.setNextNode(beaconNode);
+                n11.setNextNode(n10);
+                n12.setNextNode(beaconNode);
+
+                this.nodes.add(n1);
+                this.nodes.add(n2);
+                this.nodes.add(n3);
+                this.nodes.add(n4);
+                this.nodes.add(n5);
+                this.nodes.add(n6);
+                this.nodes.add(n7);
+                this.nodes.add(n8);
+                this.nodes.add(n9);
+                this.nodes.add(n10);
+                this.nodes.add(n11);
+                this.nodes.add(n12);
+                this.nodes.add(beaconNode);
+
+                break;
+            case 3:
+                n1 = new Node(15, 144);
+                n2 = new Node(96, 144);
+                n3 = new Node(143, 144);
+                n4 = new Node(224, 144);
+                n5 = new Node(15, 91);
+                n6 = new Node(96, 91);
+                n7 = new Node(143, 91);
+                n8 = new Node(224, 91);
+                n9 = new Node(15, 54);
+                n10 = new Node(96, 54);
+                n11 = new Node(143, 54);
+                n12 = new Node(224, 54);
+                n13 = new Node(15, 0);
+                n14 = new Node(96, 0);
+                n15 = new Node(143, 0);
+                n16 = new Node(224, 0);
+
+                n1.setNextNode(n2);
+                n2.setNextNode(beaconNode);
+                n3.setNextNode(beaconNode);
+                n4.setNextNode(n8);
+                n5.setNextNode(beaconNode);
+                n6.setNextNode(beaconNode);
+                n7.setNextNode(beaconNode);
+                n8.setNextNode(beaconNode);
+                n9.setNextNode(beaconNode);
+                n10.setNextNode(beaconNode);
+                n11.setNextNode(beaconNode);
+                n12.setNextNode(beaconNode);
+                n13.setNextNode(n14);
+                n14.setNextNode(beaconNode);
+                n15.setNextNode(beaconNode);
+                n16.setNextNode(n12);
+
+                this.nodes.add(n1);
+                this.nodes.add(n2);
+                this.nodes.add(n3);
+                this.nodes.add(n4);
+                this.nodes.add(n5);
+                this.nodes.add(n6);
+                this.nodes.add(n7);
+                this.nodes.add(n8);
+                this.nodes.add(n9);
+                this.nodes.add(n10);
+                this.nodes.add(n11);
+                this.nodes.add(n12);
+                this.nodes.add(n13);
+                this.nodes.add(n14);
+                this.nodes.add(n15);
+                this.nodes.add(n16);
+                this.nodes.add(beaconNode);
+
+                break;
+            default:
+                this.nodes.add(beaconNode);
+                break;
+        }
+    }
+
     private void loadBeacon() {
         beacon = new Defender(144, 90, 16, 18, -1, "Beacon", -1, false, 9000);
         beacon.hpBar.setMaxHP(beacon.getHp());
         beacon.loadTextures();
+        switch (this.currentRound) {
+            case 1:
+            case 5:
+            case -1:
+                beacon.setX(208);
+                beacon.setY(90);
+                break;
+            case 2:
+            case 4:
+                beacon.setX(128);
+                beacon.setY(90);
+                break;
+            case 3:
+                beacon.setX(128);
+                beacon.setY(72);
+                break;
+            case -2:
+            default:
+                beacon.setX(144);
+                beacon.setY(90);
+                break;
+        }
         objects.add(beacon);
     }
 

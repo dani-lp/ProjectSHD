@@ -31,7 +31,7 @@ public class Utils {
      * @return Vector3 posición
      */
     public static Vector3 getRelativeMousePos() {
-        return MainGame.mainGameScreen.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(),0));
+        return MainGame.cursorCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(),0));
     }
 
     private static boolean isPressed;
@@ -149,5 +149,16 @@ public class Utils {
                 Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
         return matcher.find() || emailStr.equals("");
+    }
+
+    /**
+     * Redondea con n decimales.
+     * @param value Valor a redondear
+     * @param precision Número de decimales
+     * @return Número redondeado
+     */
+    public static double round(double value, int precision) {
+        int scale = (int) Math.pow(10, precision);
+        return (double) Math.round(value * scale) / scale;
     }
 }
