@@ -32,7 +32,7 @@ public class Trap extends GameObject {
                 boolean unlocked, int hp, String effect, int attackDamage) {
         super(x, y, width, height, id, type, price, unlocked, hp);
         this.attackDamage = attackDamage;
-        this.effect=effect;
+        this.effect = effect;
 
         loadTextures();
 

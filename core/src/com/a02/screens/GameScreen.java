@@ -101,7 +101,7 @@ public class GameScreen implements Screen {
     private int contEnt = 0; //Contador de mensajes de tutorial
     private boolean messagesEnded = false;
 
-    Music roundMusic;
+    private Music roundMusic;
 
     public GameScreen(MainGame game, int round, int points) {
         log(Level.INFO, "Inicio del GameScreen", null);
@@ -109,6 +109,7 @@ public class GameScreen implements Screen {
         this.game = game;
         this.state = State.PLAYING;
         pauseFlag = false;
+        currentRound = round;
 
         font = new BitmapFont(Gdx.files.internal("Fonts/test.fnt"));
 
@@ -124,7 +125,6 @@ public class GameScreen implements Screen {
         createObjects();
 
         drawingInv = fullInv.sortInventory();
-        currentRound = round;
         msg1 = "en este tutorial veras como jugar," ;
         msg2 = "clicka el texto para seguir";
 
@@ -132,8 +132,6 @@ public class GameScreen implements Screen {
         loadBeacon();
         loadNodes();
         loadSetup();
-
-        map.getOccGrid()[(int) beacon.getX() / 16][(int) beacon.getY() / 18] = true; //Casilla del beacon
 
         //Botones de pausa y inventario
         deleteButton = new UIButton(280, 3, 10, 20, "pala.png", "pala.png");
@@ -160,7 +158,7 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180); //Ajusta la proporción de la cámara
 
-        if (Settings.s.isMusicCheck()) {
+        if (Settings.s.isMusicCheck()) { //Carga de música
             loadMusic();
             this.roundMusic.setLooping(true);
             this.roundMusic.setVolume(0.5f);
@@ -739,16 +737,34 @@ public class GameScreen implements Screen {
             case 1:
                 loadRound1();
                 map = new Map("riverMap.png"); //Mapa de río
+                for (int i = 0; i < 10; i++) { //Casillas ya ocupadas
+                    map.getOccGrid()[4][i] = true;
+                    map.getOccGrid()[5][i] = true;
+                }
                 gold = 60000; //TODO Oro por defecto
                 break;
             case 2:
                 loadRound2();
                 map = new Map("cliffMap.png"); //Mapa de barranco
+                for (int i = 0; i < 10; i++) { //Casillas ya ocupadas
+                    map.getOccGrid()[0][i] = true;
+                    map.getOccGrid()[1][i] = true;
+                    map.getOccGrid()[2][i] = true;
+                    map.getOccGrid()[13][i] = true;
+                    map.getOccGrid()[14][i] = true;
+                    map.getOccGrid()[15][i] = true;
+                }
                 gold = 60000;
                 break;
             case 3:
                 loadRound3();
                 map = new Map("forestMap.png"); //Mapa de bosque
+                for (int i = 1; i <= 7; i++) { //Espacio de "bosque" no utilizable
+                    for (int j = 2; j <= 13; j++) {
+                        if ((i == 1 || i == 2 || i == 6 || i == 7) &&
+                                (j <= 5 || j >= 10)) map.getOccGrid()[j][i] = true;
+                    }
+                }
                 gold = 60000;
                 break;
             case 4:
@@ -778,6 +794,8 @@ public class GameScreen implements Screen {
                 gold = 60000;
                 break;
         }
+
+        map.getOccGrid()[(int) beacon.getX() / 16][(int) beacon.getY() / 18] = true; //Casilla del beacon
     }
 
     /**
@@ -993,7 +1011,7 @@ public class GameScreen implements Screen {
                 this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/finalRoundMusic.mp3"));
                 break;
             case -1:
-                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/finalRoundMusic.mp3"));
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/finalRoundMusic.mp3")); //TODO
                 break;
             case -2:
                 this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/testingRoundMusic.mp3"));
@@ -1022,18 +1040,6 @@ public class GameScreen implements Screen {
 
     public void setCurrentRound(int currentRound) {
         this.currentRound = currentRound;
-    }
-
-    public int getPoints() {
-        return points;
-    }
-
-    public void setPoints(int points) {
-        this.points = points;
-    }
-
-    public Music getRoundMusic() {
-        return roundMusic;
     }
 
     private void log(Level level, String msg, Throwable exception) {
