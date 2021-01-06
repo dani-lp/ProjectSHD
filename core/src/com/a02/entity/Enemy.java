@@ -212,7 +212,7 @@ public class Enemy extends Entity {
                 break;
 
             case WALKING: //Movimiento a beacon
-                if (gs.getCurrentRound() == 1 || gs.getCurrentRound() == 3) this.updatePathfinding(gs);
+                this.updatePathfinding(gs);
 
                 if (this.getHp() <= 0) {
                     this.state = State.DYING;

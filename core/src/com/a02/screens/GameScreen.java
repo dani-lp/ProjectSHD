@@ -122,16 +122,16 @@ public class GameScreen implements Screen {
         defInv = new Inventory();
         trapInv = new Inventory();
 
-        createObjects();
+        createObjects(); //Crear objetos
 
         drawingInv = fullInv.sortInventory();
         msg1 = "en este tutorial veras como jugar," ;
         msg2 = "clicka el texto para seguir";
 
         //Setup por rondas
-        loadBeacon();
-        loadNodes();
-        loadSetup();
+        loadBeacon(); //Posiciones del beacon
+        loadNodes(); //Posiciones de nodos
+        loadSetup(); //Oro, mapa y ronda
 
         //Botones de pausa y inventario
         deleteButton = new UIButton(280, 3, 10, 20, "pala.png", "pala.png");
@@ -538,11 +538,15 @@ public class GameScreen implements Screen {
             game.entityBatch.draw(menuButton.getCurrentTexture(), menuButton.getX(), menuButton.getY());
             game.entityBatch.draw(quitButton.getCurrentTexture(), quitButton.getX(), quitButton.getY());
         }
-        Texture shoot = new Texture("shoot.png"); //TODO: TESTING DE NODOS
-        for (Node node : nodes) game.entityBatch.draw(shoot, node.getX(), node.getY());
+
+        //////////////////////////////////////////////////////TESTING DE NODOS
+        Texture t = new Texture("shoot.png");
+        t.dispose();
+        for (Node node : nodes) game.entityBatch.draw(t, node.getX(), node.getY());
+        //////////////////////////////////////////////////////
 
         game.entityBatch.end();
-        shoot.dispose();
+
     }
 
     /**
@@ -585,7 +589,7 @@ public class GameScreen implements Screen {
         Enemy larry;
         try {
             try {
-                Scanner sc = new Scanner(new FileInputStream("core/assets/ronda1.csv"));
+                Scanner sc = new Scanner(new FileInputStream("core/assets/round1.csv"));
                 while (sc.hasNext()) {
                     String line = sc.next();
                     String[] fields = line.split(";");
@@ -625,7 +629,37 @@ public class GameScreen implements Screen {
     }
 
     private void loadRound2(){
+        try {
+            DBManager.dbManager.connect("Databases/base.db");
+        } catch (DBException e) {
+            log( Level.INFO, "Error en la conexion a la base de datos", null );
+        }
+        Enemy larry;
+        try {
+            try {
+                Scanner sc = new Scanner(new FileInputStream("core/assets/round2.csv"));
+                while (sc.hasNext()) {
+                    String line = sc.next();
+                    String[] fields = line.split(";");
+                    larry = DBManager.dbManager.getEnemy(Integer.parseInt(fields[3]));
+                    larry.loadAnimations();
 
+                    loadEnemy(larry, fields);
+                }
+                sc.close();
+
+
+            } catch (FileNotFoundException e) {
+                log( Level.INFO, "No se ha podido abrir el fichero", null );
+            }
+        } catch (DBException e) {
+            log( Level.INFO, "No se ha podido obtener el enemigo", null );
+        }
+        try {
+            DBManager.dbManager.disconnect();
+        } catch (DBException ignored) {
+
+        }
     }
 
     private void loadRound3() {
@@ -637,7 +671,7 @@ public class GameScreen implements Screen {
         Enemy larry;
         try {
             try {
-                Scanner sc= new Scanner(new FileInputStream("core/assets/ronda2.csv"));
+                Scanner sc = new Scanner(new FileInputStream("core/assets/round3.csv"));
                 while (sc.hasNext()) {
                     String line = sc.next();
                     String[] fields = line.split(";");
