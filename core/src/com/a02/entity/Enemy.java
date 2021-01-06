@@ -41,7 +41,6 @@ public class Enemy extends Entity {
 
     public State state;
     public TrapEffect trapEffect;
-    public boolean routing;
 
     public Enemy(float x, float y, int width, int height, int id, int hp, int attackDamage, float speed, int startTime, int goldValue) {  //Constructor de enemigos
         super(x, y, width, height);
@@ -55,7 +54,6 @@ public class Enemy extends Entity {
         this.goldValue = goldValue;
         this.hpBar = new HealthBar(this, hp);
         this.focus = new Vector2(0,0);
-        this.routing = false;
 
     }
 
@@ -70,7 +68,6 @@ public class Enemy extends Entity {
         this.hpBar = new HealthBar(this, 0);
         this.goldValue = 50;
         this.focus = new Vector2(0,0);
-        this.routing = false;
     }
 
     public void loadAnimations() {
@@ -194,14 +191,6 @@ public class Enemy extends Entity {
 
     public float getFocusY() {
         return this.focus.y;
-    }
-
-    public boolean isRouting() {
-        return routing;
-    }
-
-    public void setRouting(boolean routing) {
-        this.routing = routing;
     }
 
     public int getDeathTimer() {
@@ -389,22 +378,46 @@ public class Enemy extends Entity {
                 break;
             case CONFUSED:
                 if (gs.secTimer == this.effectTimer) {
-                    this.setRouting(false);
-                    this.focus.x = (float)(Math.random() * 3200 - 1600); //Posición X máxima
-                    this.focus.y = (float)(Math.random() * 1800 - 900); //Posición Y máxima
+                    this.focus = getRandomFocus(gs);
                     this.state = State.WALKING;
                 }
                 if (gs.secTimer > this.effectTimer + 280) {
                     this.trapEffect = TrapEffect.NEUTRAL;
-                    this.focus.x = gs.beacon.getX();
-                    this.focus.y = gs.beacon.getY();
-                    this.setRouting(true);
+                    this.setFocus(this.focusNode);
                     this.move();
                     this.state = State.WALKING;
                 }
             case NEUTRAL:
                 break;
         }
+    }
+
+    private Vector2 getRandomFocus(GameScreen gs) {
+        float x = 0;
+        float y = 0;
+        switch (gs.getCurrentRound()) {
+            case 1: //Limitado a delante del puente
+                x = (float)(Math.random() * 300 + 96); //TODO: y si se confunde antes de cruzar el puente?
+                y = (float)(Math.random() * 1800 - 900); //TODO igual es buena idea bloquar la zona oeste del puente
+                break;
+            case 2: //Limitado al barranco
+                x = (float)(Math.random() * 159 + 48);
+                y = (float)(Math.random() * 1800 - 900);
+                break;
+            case 3: //TODO
+                x = (float)(Math.random());
+                y = (float)(Math.random());
+                break;
+            case 4: //Ilimitado
+                x = (float)(Math.random() * 3200 - 1600);
+                y = (float)(Math.random() * 1800 - 900);
+                break;
+            case 5: //Limitado hacia detrás
+                x = (float)(320 - Math.random() * 300);
+                y = (float)(Math.random() * 180);
+                break;
+        }
+        return new Vector2(x, y);
     }
 
     /**
