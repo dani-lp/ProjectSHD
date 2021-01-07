@@ -221,7 +221,7 @@ public class Attacker extends GameObject {
                 }
 
                 //Ataque
-                if (gs.secTimer % 60 == 0 && !this.isSelected && this.overlappedArea(gs) != null) { //Ataque cada segundo
+                if (gs.secTimer % 60 == 0 && !this.isSelected && this.overlappedArea(gs) != null && !this.isGrabbed()) { //Ataque cada segundo
                     gs.shots.add(new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 2,
                             this.getAttackDamage(), "shoot.png", 5, this.getId(),"n", 0, this.angle));
                 }

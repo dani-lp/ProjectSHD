@@ -24,6 +24,7 @@ import com.badlogic.gdx.math.Vector3;
 import java.io.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -57,7 +58,7 @@ public class GameScreen implements Screen {
     private int points; //Puntos que consigue el usuario
 
     public List<GameObject> objects = new ArrayList<>(); //Objetos en el juego
-    public List<Enemy> enemies = new ArrayList<>(); // Enemigos del juego
+    public CopyOnWriteArrayList<Enemy> enemies = new CopyOnWriteArrayList<>(); // Enemigos del juego
     public List<Shoot> shots = new ArrayList<>(); //Disparos de juego
     public List<Obstacle> obstacles = new ArrayList<>(); //Obstaculos en los mapas
 
@@ -707,7 +708,41 @@ public class GameScreen implements Screen {
 
     }
     private void loadRound5() {
+        try {
+            DBManager.dbManager.connect("Databases/base.db");
+        } catch (DBException e) {
+            log( Level.INFO, "Error en la conexion a la base de datos", null );
+        }
+        Enemy larry;
+        FinalBoss boss;
+        try {
+            try {
+                Scanner sc = new Scanner(new FileInputStream("core/assets/round5.csv"));
+                while (sc.hasNext()) {
+                    String line = sc.next();
+                    String[] fields = line.split(";");
+                    larry = DBManager.dbManager.getEnemy(Integer.parseInt(fields[3]));
+                    larry.loadAnimations();
 
+                    loadEnemy(larry, fields);
+                }
+                sc.close();
+
+                boss = DBManager.dbManager.getBoss();
+                boss.setFocus(beacon.getX(), beacon.getY());
+                enemies.add(boss);
+
+            } catch (FileNotFoundException e) {
+                log( Level.INFO, "No se ha podido abrir el fichero", null );
+            }
+        } catch (DBException e) {
+            log( Level.INFO, "No se ha podido obtener el enemigo", null );
+        }
+        try {
+            DBManager.dbManager.disconnect();
+        } catch (DBException ignored) {
+
+        }
     }
 
     /**

@@ -42,7 +42,8 @@ public class Enemy extends Entity {
     public State state;
     public TrapEffect trapEffect;
 
-    public Enemy(float x, float y, int width, int height, int id, int hp, int attackDamage, float speed, int startTime, int goldValue) {  //Constructor de enemigos
+    public Enemy(float x, float y, int width, int height, int id, int hp,
+                 int attackDamage, float speed, int startTime, int goldValue) {  //Constructor de enemigos
         super(x, y, width, height);
         this.id = id;
         this.hp = hp;
@@ -175,6 +176,10 @@ public class Enemy extends Entity {
         this.startTime = startTime;
     }
 
+    public void setDeathTimer(int deathTimer) {
+        this.deathTimer = deathTimer;
+    }
+
     public void setFocus(float x, float y) {
         this.focus.x = x;
         this.focus.y = y;
@@ -183,14 +188,6 @@ public class Enemy extends Entity {
     public void setFocus(Node node) {
         this.focus.x = node.getX();
         this.focus.y = node.getY();
-    }
-
-    public float getFocusX() {
-        return this.focus.x;
-    }
-
-    public float getFocusY() {
-        return this.focus.y;
     }
 
     public int getDeathTimer() {
@@ -268,7 +265,7 @@ public class Enemy extends Entity {
         this.setY((float) round(this.getY() + dirY, 4));
     }
 
-    private void updatePathfinding(GameScreen gs) {
+    void updatePathfinding(GameScreen gs) {
         if (this.focusNode == null) {
             this.focusNode = getNearestValidNode(gs);
             this.setFocus(focusNode.getX(), focusNode.getY());

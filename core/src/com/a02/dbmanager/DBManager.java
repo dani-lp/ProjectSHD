@@ -1,9 +1,6 @@
 package com.a02.dbmanager;
 
-import com.a02.entity.Attacker;
-import com.a02.entity.Defender;
-import com.a02.entity.Enemy;
-import com.a02.entity.Trap;
+import com.a02.entity.*;
 import com.a02.game.Settings;
 
 import java.sql.*;
@@ -72,6 +69,35 @@ public class DBManager {
             }
         } catch (SQLException e) {
             throw new DBException("Error obteniendo el enemigo con id " + id, e);
+        }
+    }
+
+    public FinalBoss getBoss() throws DBException {
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM enemy WHERE ID_E=7")) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                FinalBoss boss = new FinalBoss();
+                boss.setId(rs.getInt("ID_E"));
+                boss.setHp(rs.getInt("HP_E"));
+                boss.setWidth(rs.getInt("WIDTH_E"));
+                boss.setHeight(rs.getInt("HEIGHT_E"));
+                boss.setAttackDamage((int) (rs.getInt("ATTACKDAMAGE_E") * Settings.s.getDiff()));
+                boss.setSpeed(rs.getFloat("SPEED_E"));
+                boss.setGoldValue(rs.getInt("GOLD_VALUE_E"));
+                boss.setX(-32);
+                boss.setY(90);
+                boss.setStartTime(600); //TODO
+                boss.hpBar.setMaxHP(boss.getHp());
+                boss.loadAnimations();
+                boss.loadIdleTexture();
+                return boss;
+            } else {
+                return new FinalBoss();
+            }
+        } catch (SQLException e) {
+            throw new DBException("Error obteniendo el jefe con id 7", e);
         }
     }
 
