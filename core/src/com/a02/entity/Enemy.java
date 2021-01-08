@@ -496,7 +496,7 @@ public class Enemy extends Entity {
     protected GameObject overlappedArea(GameScreen gs) { //TODO: no selecciona por proximidad, sino por primer enemigo encontrado
         for (GameObject obj : gs.objects) {
             if ((obj.getX() < this.getX() + 50 && obj.getX() > this.getX() - 50)
-                    && (obj.getY() < this.getY() + 50 && obj.getY() > this.getY() - 50)) {
+                    && (obj.getY() < this.getY() + 50 && obj.getY() > this.getY() - 50) && !(obj instanceof Trap)) {
                 return obj;
             }
         }
