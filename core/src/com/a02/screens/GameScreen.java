@@ -1067,7 +1067,7 @@ public class GameScreen implements Screen {
      * Carga dos minions al ArrayList de enemigos.
      */
     public void queryMinionLoad() {
-        FinalBoss boss = findBoss();
+        FinalBoss boss = (FinalBoss) enemies.get(recursiveFindBoss(enemies, 0));
         Enemy minion1 = new Enemy(boss.getX() + 8,boss.getY() - 8 ,16,16,6,450,50,
                 30,secTimer + 240, 50);
         Enemy minion2 = new Enemy(boss.getX() + 8,boss.getY() + 32,16,16,6,450,50,
@@ -1085,13 +1085,19 @@ public class GameScreen implements Screen {
      * Devuelve el primer FinalBoss encontrado en el ArrayList de enemigos.
      * @return Primer FinalBoss encontrado
      */
-    public FinalBoss findBoss() {
+    private FinalBoss findBoss() {
         for (Enemy boss : enemies) {
             if (boss instanceof FinalBoss) {
                 return (FinalBoss) boss;
             }
         }
         return null;
+    }
+
+    private int recursiveFindBoss(List<Enemy> al, int index) {
+        if (al.isEmpty()) return -1;
+        else if (al.get(0) instanceof FinalBoss) return index;
+        else return recursiveFindBoss(al.subList(1, al.size()), index + 1);
     }
 
     @Override

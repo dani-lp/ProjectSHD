@@ -124,7 +124,7 @@ public class Trap extends GameObject {
                         this.state = State.DYING;
                         logger.info("Congelado por trampa");
                         break;
-                    case TELEPORT :
+                    case TELEPORT : //TODO cambiar para ajustar a mapa
                         this.focusedEnemy.setX((float) Math.random() * 320);
                         this.focusedEnemy.setY((float) Math.random() * 180);
                         this.state = State.DYING;
