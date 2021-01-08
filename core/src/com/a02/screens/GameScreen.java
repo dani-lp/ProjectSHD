@@ -69,6 +69,7 @@ public class GameScreen implements Screen {
     Texture pauseTexture = new Texture("pauseMenu.png"); //Textura del fondo del menú de pausa
 
     public Inventory drawingInv; //Inventario actual
+    //Inventarios precomputados
     public Inventory fullInv; //Inventario con todos los objetos
     public Inventory attackInv; //Objetos de ataque
     public Inventory defInv; //Objetos de defensa

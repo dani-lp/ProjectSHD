@@ -2,19 +2,15 @@ package com.a02.entity;
 
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector3;
 
 import java.util.logging.Logger;
 
 public class EnemyShoot extends Entity{
-    private double angle = 0;
+    private double angle;
     private float speed;
     private float attackdamage;
     private Texture texture;
     private int hp;
-    Shoot.State state;
-    private String dir;
-    Vector3 focus = new Vector3();
     private static Logger logger = Logger.getLogger(Shoot.class.getName());
 
     public EnemyShoot(float x, float y, int height, int width, int speed, float attackdamage, String sprite, int hp,
@@ -25,10 +21,8 @@ public class EnemyShoot extends Entity{
         this.speed = speed;
         this.attackdamage = attackdamage;
         this.texture = new Texture(sprite);
-        this.state = Shoot.State.IDLE;
         this.setHeight(height);
         this.setWidth(width);
-        this.dir = dir;
         this.angle = angle;
     }
 
@@ -88,13 +82,9 @@ public class EnemyShoot extends Entity{
         this.hp = hp;
     }
 
-    public String getDir() {
-        return dir;
-    }
-
     @Override
     public String toString() {
-        return "Shoot{" +
+        return "EnemyShoot{" +
                 "x=" + getX() +
                 ", y=" + getY() +
                 ", speed=" + speed +

@@ -42,7 +42,7 @@ public abstract class GameObject extends Entity {
         this.maxHp= hp;
         this.hpBar = new HealthBar(this, hp);
         this.ogPos = new Vector2();
-        this.isSelected=false;
+        this.isSelected = false;
     }
 
     public GameObject(GameObject other) {
@@ -64,7 +64,7 @@ public abstract class GameObject extends Entity {
         this.hp = 0;
         this.hpBar = new HealthBar(this, hp);
         this.ogPos = new Vector2();
-        this.isSelected=false;
+        this.isSelected = false;
     }
 
     public int getId() {
