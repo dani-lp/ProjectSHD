@@ -1,16 +1,3 @@
-/**
- * ALGORITMOS DE PATHFINDING
- * ---------------------------------------------------------------------------
- * Check si se puede avanzar al nodo del beacon
- *      -Si se puede, avanzar
- *      -Si NO se puede: sacar nodo más cercano alcanzable, avanzar hacia él
- * ---------------------------------------------------------------------------
- * Check si se está en el focus
- *      -Si NO se está, avanzar
- *      -Si SÍ se está, elegir nuevo focus
- * ---------------------------------------------------------------------------
- */
-
 package com.a02.pathfinding;
 
 import com.a02.entity.Enemy;

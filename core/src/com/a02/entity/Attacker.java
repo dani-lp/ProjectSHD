@@ -170,13 +170,13 @@ public class Attacker extends GameObject {
                 else if (this.getId() == 3) {
                     if (!this.isInInventory(gs) && gs.secTimer % 120 == 0) {
                         Shoot rightShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
-                                this.getAttackDamage(), "onda-export.png", 5, this.getId(),"r", 1);
+                                this.getAttackDamage(), "onda-export.png", 5,"r", 1);
                         Shoot leftShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
-                                this.getAttackDamage(), "onda-export.png", 5, this.getId(),"l", 1);
+                                this.getAttackDamage(), "onda-export.png", 5, "l", 1);
                         Shoot upShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
-                                this.getAttackDamage(), "onda-export.png", 5, this.getId(),"u", 1);
+                                this.getAttackDamage(), "onda-export.png", 5, "u", 1);
                         Shoot downShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
-                                this.getAttackDamage(), "onda-export.png", 5, this.getId(),"d", 1);
+                                this.getAttackDamage(), "onda-export.png", 5,"d", 1);
 
                         gs.shots.add(rightShot);
                         gs.shots.add(leftShot);
@@ -219,7 +219,7 @@ public class Attacker extends GameObject {
                 //Ataque
                 if (gs.secTimer % 60 == 0 && !this.isSelected && this.overlappedArea(gs) != null && !this.isGrabbed()) { //Ataque cada segundo
                     gs.shots.add(new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 2,
-                            this.getAttackDamage(), "shoot.png", 5, this.getId(),"n", 0, this.angle));
+                            this.getAttackDamage(), "shoot.png", 5,"n", 0, this.angle));
                 }
                 else if (this.isSelected) { //Ataque seleccionado
                     this.timer++;
@@ -232,7 +232,7 @@ public class Attacker extends GameObject {
                         double angle = ((Math.atan2(this.getY() - focus.y, this.getX() - focus.x) * 180) / Math.PI + 90);
 
                         gs.shots.add(new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 2,
-                                this.getAttackDamage(), "shoot.png", 5, this.getId(),"n", 0, angle));
+                                this.getAttackDamage(), "shoot.png", 5,"n", 0, angle));
 
                         this.timer = 0;
                     }
@@ -255,13 +255,13 @@ public class Attacker extends GameObject {
             case 3: //Waves
                 if (gs.secTimer % 120 == 0 && !this.isInInventory(gs)) { //Cada 2 segundos crea 4 disparos en cada una de las direcciones
                     gs.shots.add(new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
-                            this.getAttackDamage(), "onda-export.png", 5, this.getId(),"r", 1));
+                            this.getAttackDamage(), "onda-export.png", 5,"r", 1));
                     gs.shots.add(new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
-                            this.getAttackDamage(), "onda-export.png", 5, this.getId(),"l", 1));
+                            this.getAttackDamage(), "onda-export.png", 5,"l", 1));
                     gs.shots.add(new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
-                            this.getAttackDamage(), "onda-export.png", 5, this.getId(),"u", 1));
+                            this.getAttackDamage(), "onda-export.png", 5,"u", 1));
                     gs.shots.add(new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
-                            this.getAttackDamage(), "onda-export.png", 5, this.getId(),"d", 1));
+                            this.getAttackDamage(), "onda-export.png", 5,"d", 1));
                 }
                 break;
         }

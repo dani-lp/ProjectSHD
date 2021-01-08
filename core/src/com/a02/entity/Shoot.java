@@ -2,59 +2,47 @@ package com.a02.entity;
 
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector3;
 
 import java.util.logging.Logger;
 
 public class Shoot extends Entity {
-    private double angle = 0;
+    private double angle;
     private int type; //0 para ballesta, 1 para waves
     private float speed;
     private float attackdamage;
     private Texture texture;
     private int hp;
-    State state;
-    private int att_id;
     private String dir;
-    Vector3 focus = new Vector3();
     private static Logger logger = Logger.getLogger(Shoot.class.getName());
 
-    public Shoot(float x, float y, int height, int width, int speed, float attackdamage, String sprite, int hp,
-                 int att_id, String dir, int type, double angle) { //Disparo ballesta
+    public Shoot(float x, float y, int height, int width, int speed, float attackdamage,
+                 String sprite, int hp, String dir, int type, double angle) { //Disparo ballesta
         this.setX(x);
         this.setY(y);
         this.hp = hp;
         this.speed = speed;
         this.attackdamage = attackdamage;
         this.texture = new Texture(sprite);
-        this.state = State.IDLE;
         this.setHeight(height);
         this.setWidth(width);
-        this.att_id = att_id;
         this.dir = dir;
         this.type = type;
         this.angle = calcAngle(angle);
     }
 
-    public Shoot(float x, float y, int height, int width, int speed, float attackdamage, String sprite, int hp,
-                 int att_id, String dir, int type) { //Disparo waves
+    public Shoot(float x, float y, int height, int width, int speed, float attackdamage,
+                 String sprite, int hp, String dir, int type) { //Disparo waves
         this.setX(x);
         this.setY(y);
         this.hp = hp;
         this.speed = speed;
         this.attackdamage = attackdamage;
         this.texture = new Texture(sprite);
-        this.state = State.IDLE;
         this.setHeight(height);
         this.setWidth(width);
-        this.att_id = att_id;
         this.dir = dir;
         this.type = type;
         this.angle = calcAngle(0);
-    }
-
-    protected enum State {
-        ATTACKING,IMPACT,IDLE
     }
 
     private double calcAngle(double angle) {
