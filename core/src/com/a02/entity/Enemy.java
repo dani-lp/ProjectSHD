@@ -209,14 +209,15 @@ public class Enemy extends Entity {
                 break;
 
             case WALKING: //Movimiento a beacon
-                this.updatePathfinding(gs);
+                if (this.getId() != 3) this.updatePathfinding(gs);
+                else this.move();
 
                 if (this.getHp() <= 0) {
                     this.state = State.DYING;
                     this.deathTimer = gs.secTimer + 60;
                 }
-                else if (this.overlappedObject(gs) != null || this.overlappedObject(gs) instanceof Trap) {
-                    if (!this.overlappedObject(gs).isGrabbed()) this.state = State.ATTACKING;
+                else if ((this.overlappedObject(gs) != null || this.overlappedObject(gs) instanceof Trap) && !this.overlappedObject(gs).isGrabbed()) {
+                    if (!(this.overlappedObject(gs) instanceof Trap && this.getId() == 3)) this.state = State.ATTACKING;
                 }
                 break;
 

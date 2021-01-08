@@ -111,7 +111,7 @@ public class GameScreen implements Screen {
         this.game = game;
         this.state = State.PLAYING;
         pauseFlag = false;
-        currentRound = 5;
+        currentRound = round;
 
         font = new BitmapFont(Gdx.files.internal("Fonts/test.fnt"));
 
@@ -169,7 +169,8 @@ public class GameScreen implements Screen {
 
         for (Enemy e : enemies) {
             e.focusNode = e.getNearestValidNode(this);
-            e.setFocus(e.focusNode.getX(), e.focusNode.getY());
+            if (e.getId() != 3) e.setFocus(e.focusNode.getX(), e.focusNode.getY());
+            else e.setFocus(beacon.getX(), beacon.getY());
         }
 
 

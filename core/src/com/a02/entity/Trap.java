@@ -102,8 +102,8 @@ public class Trap extends GameObject {
 
     public void update(GameScreen gs) {
         switch (this.state) {
-            case IDLE:
-                if (this.overlappedEnemy(gs) != null) {
+            case IDLE:                                //A larry y al grifo no le afectan las trampas
+                if (this.overlappedEnemy(gs) != null && this.overlappedEnemy(gs).getId() != 3 && this.overlappedEnemy(gs).getId() != 0) {
                     this.focusedEnemy = this.overlappedEnemy(gs);
                     this.state = State.ATTACKING;
                 }
