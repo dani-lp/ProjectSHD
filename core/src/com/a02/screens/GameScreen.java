@@ -37,6 +37,7 @@ public class GameScreen implements Screen {
     private static Logger logger = Logger.getLogger(GameScreen.class.getName());
 
     private static boolean pauseFlag; //Flags de compra y pausa
+    private boolean queryingMinions = false; //
 
     /**
      * Estado del juego.
@@ -58,7 +59,7 @@ public class GameScreen implements Screen {
     private int points; //Puntos que consigue el usuario
 
     public List<GameObject> objects = new ArrayList<>(); //Objetos en el juego
-    public CopyOnWriteArrayList<Enemy> enemies = new CopyOnWriteArrayList<>(); // Enemigos del juego
+    public List<Enemy> enemies = new ArrayList<>(); // Enemigos del juego
     public List<Shoot> shots = new ArrayList<>(); //Disparos de juego
     public List<Obstacle> obstacles = new ArrayList<>(); //Obstaculos en los mapas
 
@@ -110,7 +111,7 @@ public class GameScreen implements Screen {
         this.game = game;
         this.state = State.PLAYING;
         pauseFlag = false;
-        currentRound = round;
+        currentRound = 5;
 
         font = new BitmapFont(Gdx.files.internal("Fonts/test.fnt"));
 
@@ -225,7 +226,8 @@ public class GameScreen implements Screen {
                 this.roundMusic.stop();
                 this.roundMusic.dispose();
             }
-            game.setScreen(new GameScreen(game, ++currentRound, this.points));
+            if (currentRound != 5) game.setScreen(new GameScreen(game, ++currentRound, this.points));
+            else game.setScreen(new WinScreen());
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
@@ -426,6 +428,7 @@ public class GameScreen implements Screen {
                 this.points += 350; //Sumar 350 puntos por eliminar a un enemigo
             }
         }
+        if (queryingMinions) queryMinionLoad();
 
         ListIterator<Shoot> shootIterator = shots.listIterator();
         while(shootIterator.hasNext()){
@@ -1023,6 +1026,37 @@ public class GameScreen implements Screen {
         objects.add(beacon);
     }
 
+    /**
+     * Carga dos minions al ArrayList de enemigos.
+     */
+    public void queryMinionLoad() {
+        FinalBoss boss = findBoss();
+        Enemy minion1 = new Enemy(boss.getX() + 8,boss.getY() - 8 ,16,16,6,450,50,
+                30,secTimer + 240, 50);
+        Enemy minion2 = new Enemy(boss.getX() + 8,boss.getY() + 32,16,16,6,450,50,
+                30,secTimer + 240, 50);
+        minion1.loadAnimations();
+        minion2.loadAnimations();
+        minion1.loadIdleTexture();
+        minion2.loadIdleTexture();
+        enemies.add(minion1);
+        enemies.add(minion2);
+        queryingMinions = false;
+    }
+
+    /**
+     * Devuelve el primer FinalBoss encontrado en el ArrayList de enemigos.
+     * @return Primer FinalBoss encontrado
+     */
+    public FinalBoss findBoss() {
+        for (Enemy boss : enemies) {
+            if (boss instanceof FinalBoss) {
+                return (FinalBoss) boss;
+            }
+        }
+        return null;
+    }
+
     @Override
     public void dispose() {
         game.entityBatch.dispose();
@@ -1107,8 +1141,12 @@ public class GameScreen implements Screen {
         return currentRound;
     }
 
-    public void setCurrentRound(int currentRound) {
-        this.currentRound = currentRound;
+    public boolean isQueryingMinions() {
+        return queryingMinions;
+    }
+
+    public void setQueryingMinions(boolean queryingMinions) {
+        this.queryingMinions = queryingMinions;
     }
 
     private void log(Level level, String msg, Throwable exception) {

@@ -88,7 +88,7 @@ public class FinalBoss extends Enemy{
                 break;
 
             case SPAWNING:
-                if (this.spawningTimer == 0) this.addMinions(gs);
+                if (this.spawningTimer == 0) gs.setQueryingMinions(true);
                 if (this.spawningTimer > 240) {//Después de 4 segundos de spawn vuelve a andar
                     this.state = State.WALKING;
                     this.spawnTimer = 0;
