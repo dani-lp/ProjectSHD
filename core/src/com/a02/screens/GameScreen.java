@@ -61,6 +61,7 @@ public class GameScreen implements Screen {
     public List<GameObject> objects = new ArrayList<>(); //Objetos en el juego
     public List<Enemy> enemies = new ArrayList<>(); // Enemigos del juego
     public List<Shoot> shots = new ArrayList<>(); //Disparos de juego
+    public List<EnemyShoot> enemyShots = new ArrayList<>(); //Disparos de Enemigos
     public List<Obstacle> obstacles = new ArrayList<>(); //Obstaculos en los mapas
 
     public Defender beacon; //Punto central que deben destruir los enemigos
@@ -439,6 +440,15 @@ public class GameScreen implements Screen {
                 shootIterator.remove();
             }
         }
+
+        ListIterator<EnemyShoot> enemyShootIterator = enemyShots.listIterator();
+        while(enemyShootIterator.hasNext()){
+            EnemyShoot tempSh = enemyShootIterator.next();
+            tempSh.update(this);
+            if(tempSh.getHp() <= 0) {
+                enemyShootIterator.remove();
+            }
+        }
     }
 
     /**
@@ -501,6 +511,10 @@ public class GameScreen implements Screen {
             }
         }
         for(Shoot shoot: shots){
+            game.entityBatch.draw(shoot.getTexture(),shoot.getX(),shoot.getY());
+        }
+
+        for(EnemyShoot shoot: enemyShots){
             game.entityBatch.draw(shoot.getTexture(),shoot.getX(),shoot.getY());
         }
 
@@ -599,15 +613,8 @@ public class GameScreen implements Screen {
                     String line = sc.next();
                     String[] fields = line.split(";");
 
-                    if (enemies.size()<4){
-                        larry = DBManager.dbManager.getEnemy(5);
-                    } else if (enemies.size()<9){
-                        larry = DBManager.dbManager.getEnemy(6);
-                    } else if (enemies.size()<10){
-                        larry = DBManager.dbManager.getEnemy(0);
-                    } else {
-                        larry = DBManager.dbManager.getEnemy(3);
-                    }
+                    larry = DBManager.dbManager.getEnemy(Integer.parseInt(fields[3]));
+                    larry.loadAnimations();
 
                     loadEnemy(larry, fields);
                 }

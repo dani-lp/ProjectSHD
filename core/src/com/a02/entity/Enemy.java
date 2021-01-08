@@ -216,18 +216,31 @@ public class Enemy extends Entity {
                     this.state = State.DYING;
                     this.deathTimer = gs.secTimer + 60;
                 }
-                else if ((this.overlappedObject(gs) != null || this.overlappedObject(gs) instanceof Trap) && !this.overlappedObject(gs).isGrabbed()) {
+                else if (this.overlappedObject(gs) != null && !this.overlappedObject(gs).isGrabbed() && this.getId() != 2) {
                     if (!(this.overlappedObject(gs) instanceof Trap && this.getId() == 3)) this.state = State.ATTACKING;
+                }
+                else if (this.overlappedArea(gs) != null && !this.overlappedArea(gs).isGrabbed() && this.getId() == 2){
+                    this.state = State.ATTACKING;
                 }
                 break;
 
             case ATTACKING:
-                if (this.overlappedObject(gs) != null) {
+
+                if (this.overlappedObject(gs) != null && this.getId() != 2) {
                     GameObject tempObj = this.overlappedObject(gs);    //Objeto siendo colisionado
                     if (tempObj.getHp() > 0 && !tempObj.isGrabbed() && gs.secTimer % 60 == 0) { //Pegar 1 vez por segundo
                         tempObj.setHp(tempObj.getHp() - this.attackDamage);
                     } else if (tempObj.getHp() <= 0) {
                         this.state = State.WALKING;
+                    }
+                }
+                else if (this.overlappedArea(gs) != null && this.getId() == 2){
+                    if (gs.secTimer % 60 == 0) {
+                        double angle = ((Math.atan2(this.getY() - overlappedArea(gs).getY(),
+                                this.getX() - overlappedArea(gs).getX()) * 180) / Math.PI + 90);
+                        EnemyShoot shoot = new EnemyShoot(this.getX() + 18, this.getY() + 9, 2, 2, 2,
+                                this.getAttackDamage(), "spectralShoot.png", 5, angle); //TODO Cambiar color del disparo
+                        gs.enemyShots.add(shoot);
                     }
                 }
                 else {
@@ -475,6 +488,16 @@ public class Enemy extends Entity {
             if (this.getX() < obstacle.getX() + obstacle.getWidth() && this.getX() + this.getWidth() > obstacle.getX() &&
                     this.getY() < obstacle.getY() + obstacle.getHeight() && this.getY() + this.getHeight() > obstacle.getY() ) {
                 return obstacle;
+            }
+        }
+        return null;
+    }
+
+    protected GameObject overlappedArea(GameScreen gs) { //TODO: no selecciona por proximidad, sino por primer enemigo encontrado
+        for (GameObject obj : gs.objects) {
+            if ((obj.getX() < this.getX() + 50 && obj.getX() > this.getX() - 50)
+                    && (obj.getY() < this.getY() + 50 && obj.getY() > this.getY() - 50)) {
+                return obj;
             }
         }
         return null;

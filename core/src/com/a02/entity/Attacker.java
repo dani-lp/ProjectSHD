@@ -159,10 +159,6 @@ public class Attacker extends GameObject {
                             this.isSelected = true;
                             gs.state = GameScreen.State.SELECTING;
                         }
-                        Shoot shoot = new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 2,
-                                this.getAttackDamage(), "shoot.png", 5, this.getId(),"n", 0, this.angle);
-
-                        gs.shots.add(shoot);
 
                         //Giro
                         if (this.overlappedArea(gs) != null) {
