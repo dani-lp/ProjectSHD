@@ -88,7 +88,7 @@ public class DBManager {
                 boss.setGoldValue(rs.getInt("GOLD_VALUE_E"));
                 boss.setX(-32);
                 boss.setY(90);
-                boss.setStartTime(600); //TODO
+                boss.setStartTime(1100); //TODO
                 boss.hpBar.setMaxHP(boss.getHp());
                 boss.loadAnimations();
                 boss.loadIdleTexture();

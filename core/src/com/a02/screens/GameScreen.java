@@ -113,7 +113,7 @@ public class GameScreen implements Screen {
         this.game = game;
         this.state = State.PLAYING;
         pauseFlag = false;
-        currentRound = round;
+        currentRound = 5;
 
         font = new BitmapFont(Gdx.files.internal("Fonts/test.fnt"));
 
@@ -236,6 +236,8 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
 
         updateCursor();
+
+        //TODO: fase 4, carga de caballería suena el cuerno después de una pausa y hay ataque en V
     }
 
     /**
@@ -688,11 +690,7 @@ public class GameScreen implements Screen {
                 while (sc.hasNext()) {
                     String line = sc.next();
                     String[] fields = line.split(";");
-                    if (enemies.size()<6){
-                        larry = DBManager.dbManager.getEnemy(0);
-                    } else {
-                        larry = DBManager.dbManager.getEnemy(1);
-                    }
+                    larry = DBManager.dbManager.getEnemy(Integer.parseInt(fields[3]));
                     larry.loadAnimations();
 
                     loadEnemy(larry, fields);
@@ -717,7 +715,37 @@ public class GameScreen implements Screen {
         obstacles.add(new Obstacle(160,17,64,37));
     }
     private void loadRound4() {
+        try {
+            DBManager.dbManager.connect("Databases/base.db");
+        } catch (DBException e) {
+            log( Level.INFO, "Error en la conexion a la base de datos", null );
+        }
+        Enemy larry;
+        try {
+            try {
+                Scanner sc = new Scanner(new FileInputStream("core/assets/round4.csv"));
+                while (sc.hasNext()) {
+                    String line = sc.next();
+                    String[] fields = line.split(";");
+                    larry = DBManager.dbManager.getEnemy(Integer.parseInt(fields[3]));
+                    larry.loadAnimations();
 
+                    loadEnemy(larry, fields);
+                }
+                sc.close();
+
+
+            } catch (FileNotFoundException e) {
+                log( Level.INFO, "No se ha podido abrir el fichero", null );
+            }
+        } catch (DBException e) {
+            log( Level.INFO, "No se ha podido obtener el enemigo", null );
+        }
+        try {
+            DBManager.dbManager.disconnect();
+        } catch (DBException ignored) {
+
+        }
     }
     private void loadRound5() {
         try {
@@ -1120,7 +1148,7 @@ public class GameScreen implements Screen {
                 this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/fieldRoundMusic.mp3"));
                 break;
             case 5:
-                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/finalRoundMusic.mp3"));
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/tottfiy.mp3"));
                 break;
             case -1:
                 this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/finalRoundMusic.mp3")); //TODO

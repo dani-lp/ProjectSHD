@@ -190,6 +190,7 @@ public class Attacker extends GameObject {
     }
 
     public void update(GameScreen gs) {
+        if (this.isInInventory(gs)) return;
         switch (this.getId()) {
             case 0: //Electricidad
                 if (this.overlappedEnemy(gs) != null) {
