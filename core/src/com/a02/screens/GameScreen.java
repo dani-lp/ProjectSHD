@@ -113,7 +113,7 @@ public class GameScreen implements Screen {
         this.game = game;
         this.state = State.PLAYING;
         pauseFlag = false;
-        currentRound = 5;
+        currentRound = round;
 
         font = new BitmapFont(Gdx.files.internal("Fonts/test.fnt"));
 
@@ -234,6 +234,7 @@ public class GameScreen implements Screen {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.F)) enemies.clear();
 
         updateCursor();
 
@@ -602,27 +603,36 @@ public class GameScreen implements Screen {
         enemies.add(larry);
     }
 
-    private void loadRound1(){
+    /**
+     * Carga los enemigos a su arraylist correspondiente desde un fichero .csv introducido como parámetro.
+     * @param path Ruta del .csv con la información de las rondas
+     */
+    private void extractEnemies(String path) {
         try {
             DBManager.dbManager.connect("Databases/base.db");
         } catch (DBException e) {
             log( Level.INFO, "Error en la conexion a la base de datos", null );
         }
-        Enemy larry;
+        Enemy enemy;
         try {
             try {
-                Scanner sc = new Scanner(new FileInputStream("core/assets/round1.csv"));
+                Scanner sc = new Scanner(new FileInputStream(path));
                 while (sc.hasNext()) {
                     String line = sc.next();
                     String[] fields = line.split(";");
 
-                    larry = DBManager.dbManager.getEnemy(Integer.parseInt(fields[3]));
-                    larry.loadAnimations();
+                    enemy = DBManager.dbManager.getEnemy(Integer.parseInt(fields[3]));
+                    enemy.loadAnimations();
 
-                    loadEnemy(larry, fields);
+                    loadEnemy(enemy, fields);
                 }
                 sc.close();
 
+                if (path.charAt(17) == '5') { //Ronda 5
+                    FinalBoss boss = DBManager.dbManager.getBoss();
+                    boss.setFocus(beacon.getX(), beacon.getY());
+                    enemies.add(boss);
+                }
 
             } catch (FileNotFoundException e) {
                 log( Level.INFO, "No se ha podido abrir el fichero", null );
@@ -637,6 +647,12 @@ public class GameScreen implements Screen {
         } catch (DBException ignored) {
 
         }
+    }
+
+    //Métodos de cargado de rondas
+
+    private void loadRound1(){
+        extractEnemies("core/assets/round1.csv");
         obstacles.add(new Obstacle(64,0,32,18));
         obstacles.add(new Obstacle(64,54,32,18));
         obstacles.add(new Obstacle(64,108,32,18));
@@ -644,145 +660,23 @@ public class GameScreen implements Screen {
     }
 
     private void loadRound2(){
-        try {
-            DBManager.dbManager.connect("Databases/base.db");
-        } catch (DBException e) {
-            log( Level.INFO, "Error en la conexion a la base de datos", null );
-        }
-        Enemy larry;
-        try {
-            try {
-                Scanner sc = new Scanner(new FileInputStream("core/assets/round2.csv"));
-                while (sc.hasNext()) {
-                    String line = sc.next();
-                    String[] fields = line.split(";");
-                    larry = DBManager.dbManager.getEnemy(Integer.parseInt(fields[3]));
-                    larry.loadAnimations();
-
-                    loadEnemy(larry, fields);
-                }
-                sc.close();
-
-
-            } catch (FileNotFoundException e) {
-                log( Level.INFO, "No se ha podido abrir el fichero", null );
-            }
-        } catch (DBException e) {
-            log( Level.INFO, "No se ha podido obtener el enemigo", null );
-        }
-        try {
-            DBManager.dbManager.disconnect();
-        } catch (DBException ignored) {
-
-        }
+        extractEnemies("core/assets/round2.csv");
     }
 
     private void loadRound3() {
-        try {
-            DBManager.dbManager.connect("Databases/base.db");
-        } catch (DBException e) {
-            log( Level.INFO, "Error en la conexion a la base de datos", null );
-        }
-        Enemy larry;
-        try {
-            try {
-                Scanner sc = new Scanner(new FileInputStream("core/assets/round3.csv"));
-                while (sc.hasNext()) {
-                    String line = sc.next();
-                    String[] fields = line.split(";");
-                    larry = DBManager.dbManager.getEnemy(Integer.parseInt(fields[3]));
-                    larry.loadAnimations();
-
-                    loadEnemy(larry, fields);
-                }
-                sc.close();
-
-
-            } catch (FileNotFoundException e) {
-                log( Level.INFO, "No se ha podido abrir el fichero", null );
-            }
-        } catch (DBException e) {
-            log( Level.INFO, "No se ha podido obtener el enemigo", null );
-        }
-        try {
-            DBManager.dbManager.disconnect();
-        } catch (DBException ignored) {
-
-        }
+        extractEnemies("core/assets/round3.csv");
         obstacles.add(new Obstacle(32,108,64,37));
         obstacles.add(new Obstacle(160,108,64,37));
         obstacles.add(new Obstacle(32,17,64,37));
         obstacles.add(new Obstacle(160,17,64,37));
     }
+
     private void loadRound4() {
-        try {
-            DBManager.dbManager.connect("Databases/base.db");
-        } catch (DBException e) {
-            log( Level.INFO, "Error en la conexion a la base de datos", null );
-        }
-        Enemy larry;
-        try {
-            try {
-                Scanner sc = new Scanner(new FileInputStream("core/assets/round4.csv"));
-                while (sc.hasNext()) {
-                    String line = sc.next();
-                    String[] fields = line.split(";");
-                    larry = DBManager.dbManager.getEnemy(Integer.parseInt(fields[3]));
-                    larry.loadAnimations();
-
-                    loadEnemy(larry, fields);
-                }
-                sc.close();
-
-
-            } catch (FileNotFoundException e) {
-                log( Level.INFO, "No se ha podido abrir el fichero", null );
-            }
-        } catch (DBException e) {
-            log( Level.INFO, "No se ha podido obtener el enemigo", null );
-        }
-        try {
-            DBManager.dbManager.disconnect();
-        } catch (DBException ignored) {
-
-        }
+        extractEnemies("core/assets/round4.csv");
     }
+
     private void loadRound5() {
-        try {
-            DBManager.dbManager.connect("Databases/base.db");
-        } catch (DBException e) {
-            log( Level.INFO, "Error en la conexion a la base de datos", null );
-        }
-        Enemy larry;
-        FinalBoss boss;
-        try {
-            try {
-                Scanner sc = new Scanner(new FileInputStream("core/assets/round5.csv"));
-                while (sc.hasNext()) {
-                    String line = sc.next();
-                    String[] fields = line.split(";");
-                    larry = DBManager.dbManager.getEnemy(Integer.parseInt(fields[3]));
-                    larry.loadAnimations();
-
-                    loadEnemy(larry, fields);
-                }
-                sc.close();
-
-                boss = DBManager.dbManager.getBoss();
-                boss.setFocus(beacon.getX(), beacon.getY());
-                enemies.add(boss);
-
-            } catch (FileNotFoundException e) {
-                log( Level.INFO, "No se ha podido abrir el fichero", null );
-            }
-        } catch (DBException e) {
-            log( Level.INFO, "No se ha podido obtener el enemigo", null );
-        }
-        try {
-            DBManager.dbManager.disconnect();
-        } catch (DBException ignored) {
-
-        }
+        extractEnemies("core/assets/round5.csv");
     }
 
     /**
@@ -834,7 +728,7 @@ public class GameScreen implements Screen {
             }
         }
 
-        try{
+        try {
             DBManager.dbManager.disconnect();
         } catch (DBException ignored) {
 
@@ -847,10 +741,11 @@ public class GameScreen implements Screen {
                 loadRound1();
                 map = new Map("riverMap.png"); //Mapa de río
                 for (int i = 0; i < 10; i++) { //Casillas ya ocupadas
-                    map.getOccGrid()[4][i] = true;
-                    map.getOccGrid()[5][i] = true;
+                    for (int j = 0; j < 6; j++) {
+                        map.getOccGrid()[j][i] = true; //TODO: cambiar sprite de mapa inicial
+                    }
                 }
-                gold = 60000; //TODO Oro por defecto
+                gold = 60000; //TODO: oro por defecto
                 break;
             case 2:
                 loadRound2();

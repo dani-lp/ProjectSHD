@@ -84,6 +84,7 @@ public class Utils {
             FileInputStream fs = new FileInputStream(path);
             ObjectInputStream os = new ObjectInputStream(fs);
             map = (HashMap<String, User>) os.readObject();
+            os.close();
             return map;
         } catch (EOFException e) {
             map = new HashMap<>();
@@ -102,6 +103,7 @@ public class Utils {
         ObjectOutputStream oos = new ObjectOutputStream(fos);
 
         oos.writeObject(map);
+        oos.close();
     }
 
     public static void deleteUser(String path, String key) {

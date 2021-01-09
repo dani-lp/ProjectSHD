@@ -457,7 +457,7 @@ public class Enemy extends Entity {
         for (GameObject object: gs.objects) {
             if (this.getX() < object.getX() + object.getWidth() && this.getX() + this.getWidth() > object.getX() &&
                     this.getY() < object.getY() + object.getHeight() && this.getY() + this.getHeight() > object.getY() &&
-                    !object.isInInventory(gs)) {
+                    !object.isInInventory(gs) && !(object instanceof Trap)) {
                 return object;
             }
         }

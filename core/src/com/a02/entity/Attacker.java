@@ -105,91 +105,8 @@ public class Attacker extends GameObject {
         return angle;
     }
 
-    /**
-     * Actualiza el estado de los objetos de ataque.
-     * @param gs GameScreen utilizada
-     */
-    public void update2(GameScreen gs) {
-
-        if (this.getId() == 2) {
-            if (this.overlappedArea(gs) != null) {
-                this.angle = ((Math.atan2(this.getY() - overlappedArea(gs).getY(),
-                        this.getX() - overlappedArea(gs).getX())*180) / Math.PI + 90);
-            }
-        }
-
-        switch (this.state) {
-            case IDLE:
-                if (this.getId() == 2 || this.getId() == 3){
-                    this.state = State.ATTACKING;
-                }
-                if (this.overlappedEnemy(gs) != null) {
-                    this.state = State.ATTACKING;
-                    logger.info("Enemigo atacando");
-                }
-                break;
-
-            case ATTACKING:
-                if (this.getId() == 0){
-                    if (this.overlappedEnemy(gs) != null) {
-                        Enemy tempEnemy = this.overlappedEnemy(gs);
-                        if (tempEnemy.getHp() > 0 && gs.secTimer % 60 == 0) {
-                            tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackDamage));
-                        } else if (tempEnemy.getHp() <= 0) {
-                            this.state = State.IDLE;
-                        }
-                    }
-                }
-
-                else if (this.getId() == 1){
-                    if (this.overlappedEnemy(gs) != null) {
-                        Enemy tempEnemy = this.overlappedEnemy(gs);
-                        if (tempEnemy.getHp() > 0 && gs.secTimer % 15 == 0) {
-                            tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackDamage));
-                        } else if (tempEnemy.getHp() <= 0) {
-                            this.state = State.IDLE;
-                        }
-                    }
-                }
-                else if (this.getId() == 2) {
-                    if (!this.isInInventory(gs) && gs.secTimer % 60 == 0) {
-                        //Selección del objeto
-                        Vector3 mousePos = getRelativeMousePos();
-                        if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched() && !(gs.state == GameScreen.State.DELETING)) {
-                            this.isSelected = true;
-                            gs.state = GameScreen.State.SELECTING;
-                        }
-
-                        //Giro
-                        if (this.overlappedArea(gs) != null) {
-                            this.angle = ((Math.atan2(this.getY() - overlappedArea(gs).getY(),
-                                    this.getX() - overlappedArea(gs).getX())*180) / Math.PI + 90);
-                        }
-                    }
-                }
-                else if (this.getId() == 3) {
-                    if (!this.isInInventory(gs) && gs.secTimer % 120 == 0) {
-                        Shoot rightShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
-                                this.getAttackDamage(), "onda-export.png", 5,"r", 1);
-                        Shoot leftShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
-                                this.getAttackDamage(), "onda-export.png", 5, "l", 1);
-                        Shoot upShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
-                                this.getAttackDamage(), "onda-export.png", 5, "u", 1);
-                        Shoot downShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
-                                this.getAttackDamage(), "onda-export.png", 5,"d", 1);
-
-                        gs.shots.add(rightShot);
-                        gs.shots.add(leftShot);
-                        gs.shots.add(upShot);
-                        gs.shots.add(downShot);
-                    }
-                }
-                break;
-        }
-        this.hpBar.update(this, this.getHp());
-    }
-
     public void update(GameScreen gs) {
+        this.hpBar.update(this, this.getHp());
         if (this.isInInventory(gs)) return;
         switch (this.getId()) {
             case 0: //Electricidad
@@ -266,7 +183,6 @@ public class Attacker extends GameObject {
                 }
                 break;
         }
-        this.hpBar.update(this, this.getHp());
     }
 
     protected Enemy overlappedArea(GameScreen gs) { //TODO: no selecciona por proximidad, sino por primer enemigo encontrado
