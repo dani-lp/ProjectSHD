@@ -57,6 +57,8 @@ public class SettingsWindow extends JFrame {
         JLabel soundLabel = new JLabel("     Sound:");
         final JCheckBox musicCheck = new JCheckBox();
         final JCheckBox soundCheck = new JCheckBox();
+        musicCheck.setSelected(true);
+        soundCheck.setSelected(true);
         JLabel tutorialLabel = new JLabel("     Tutorial:");
         final JCheckBox tutorialCheck = new JCheckBox();
         JButton cancelButton = new JButton("Cancel");

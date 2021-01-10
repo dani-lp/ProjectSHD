@@ -183,8 +183,10 @@ public abstract class GameObject extends Entity {
 
                 if (gs.getGold() >= this.price)
                     this.setObjectInGrid(gs);
-                else
+                else {
+                    gs.soundPlayer.playCoins();
                     logger.warning("No hay suficiente oro");
+                }
             }
         }
     }

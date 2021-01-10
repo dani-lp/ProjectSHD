@@ -14,6 +14,8 @@ public class DBManager {
 
     }
 
+    //TODO: cerrar rs, ps https://stackoverflow.com/questions/2225221/closing-database-connections-in-java
+
     /**
      * Crea una conexión con la BD.
      * @param dbPath Ruta de la BD

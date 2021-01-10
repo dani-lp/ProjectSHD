@@ -239,7 +239,7 @@ public class Enemy extends Entity {
                         double angle = ((Math.atan2(this.getY() - overlappedArea(gs).getY(),
                                 this.getX() - overlappedArea(gs).getX()) * 180) / Math.PI + 90);
                         EnemyShoot shoot = new EnemyShoot(this.getX() + 18, this.getY() + 9, 2, 2, 2,
-                                this.getAttackDamage(), "spectralShoot.png", 5, angle); //TODO Cambiar color del disparo
+                                this.getAttackDamage(), "spectralShoot.png", 5, angle);
                         gs.enemyShots.add(shoot);
                     }
                 }
@@ -408,8 +408,8 @@ public class Enemy extends Entity {
         float y = 0;
         switch (gs.getCurrentRound()) {
             case 1: //Limitado a delante del puente
-                x = (float)(Math.random() * 300 + 96); //TODO: y si se confunde antes de cruzar el puente?
-                y = (float)(Math.random() * 1800 - 900); //TODO igual es buena idea bloquar la zona oeste del puente
+                x = (float)(Math.random() * 300 + 96);
+                y = (float)(Math.random() * 1800 - 900);
                 break;
             case 2: //Limitado al barranco
                 x = (float)(Math.random() * 159 + 48);

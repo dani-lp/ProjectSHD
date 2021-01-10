@@ -1,5 +1,6 @@
 package com.a02.screens;
 
+import com.a02.component.SoundPlayer;
 import com.a02.entity.Shoot;
 import com.a02.dbmanager.DBException;
 import com.a02.dbmanager.DBManager;
@@ -106,6 +107,7 @@ public class GameScreen implements Screen {
     private boolean messagesEnded = false;
 
     private Music roundMusic;
+    public SoundPlayer soundPlayer;
 
     public GameScreen(MainGame game, int round, int points) {
         log(Level.INFO, "Inicio del GameScreen", null);
@@ -169,6 +171,8 @@ public class GameScreen implements Screen {
             this.roundMusic.play();
         }
 
+        this.soundPlayer = new SoundPlayer();
+
         for (Enemy e : enemies) {
             e.focusNode = e.getNearestValidNode(this);
             if (e.getId() != 3) e.setFocus(e.focusNode.getX(), e.focusNode.getY());
@@ -225,6 +229,7 @@ public class GameScreen implements Screen {
             this.points += 5000; //Sumar 5000 puntos al ganar la ronda, más un bonus por el oro restante o por la velocidad
             this.points += this.gold * 0.1;
             if (5000 - this.secTimer > 0) this.points += 5000 - this.secTimer;
+            soundPlayer.playRoundEnd();
             if (Settings.s.isMusicCheck()) {
                 this.roundMusic.stop();
                 this.roundMusic.dispose();
@@ -238,7 +243,7 @@ public class GameScreen implements Screen {
 
         updateCursor();
 
-        //TODO: fase 4, carga de caballería suena el cuerno después de una pausa y hay ataque en V
+        if (this.currentRound == 4 && this.secTimer == 2000) soundPlayer.playHorn();
     }
 
     /**
@@ -1032,9 +1037,10 @@ public class GameScreen implements Screen {
         }
 
         pauseTexture.dispose();
+        soundPlayer.dispose();
     }
 
-    private void loadMusic() {
+    private void loadMusic() { //TODO: subir y bajar volumen con teclas
         switch (this.currentRound) {
             case 1:
                 this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/riverRoundMusic.mp3"));
@@ -1046,7 +1052,7 @@ public class GameScreen implements Screen {
                 this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/forestRoundMusic.mp3"));
                 break;
             case 4:
-                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/fieldRoundMusic.mp3"));
+                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/finalRoundMusic.mp3"));
                 break;
             case 5:
                 this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/tottfiy.mp3"));

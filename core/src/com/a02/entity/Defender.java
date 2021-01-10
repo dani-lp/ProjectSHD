@@ -147,12 +147,14 @@ public class Defender extends GameObject {
                 Vector3 focus = getRelativeMousePos();
 
                 if (this.isSelected && overlappedObject(gs,focus.x, focus.y) != null &&
-                        (mouseJustClicked() || Gdx.input.isKeyPressed(Input.Keys.SPACE))) {
+                        (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE))) {
                     GameObject obj = overlappedObject(gs,focus.x, focus.y);
                     if (obj != null && obj.getHp() < obj.getMaxHp() && obj.getId() != -1) {
                         obj.setHp(obj.getMaxHp());
+                        gs.soundPlayer.playHammer();
                         this.setHp(0);
-                        gs.state = GameScreen.State.PLAYING; }
+                        gs.state = GameScreen.State.PLAYING;
+                    }
                 }
 
                 //Selección
