@@ -64,6 +64,7 @@ public class GameScreen implements Screen {
     public List<Shoot> shots = new ArrayList<>(); //Disparos de juego
     public List<EnemyShoot> enemyShots = new ArrayList<>(); //Disparos de Enemigos
     public List<Obstacle> obstacles = new ArrayList<>(); //Obstaculos en los mapas
+    public HashMap<Integer,Enemy> enems = new HashMap<>();
 
     public Defender beacon; //Punto central que deben destruir los enemigos
 
@@ -422,6 +423,25 @@ public class GameScreen implements Screen {
             }
         }
 
+        if (this.currentRound == -1 && this.secTimer % 60 == 0){
+            int alea = (int) Math.floor(Math.random() * 7 );
+            int ranX = (int) Math.floor(Math.random() * (340 - 20)) -20;
+            int ranY = (int) Math.floor(Math.random() * (240 - 20)) -20;
+
+            if ((ranX > 260 || ranY > 180 || ranX < -10 || ranY < -10) && ranX != 128){
+                Enemy jon = new Enemy(enems.get(alea));
+                jon.setX(ranX);
+                jon.setY(ranY);
+                jon.setStartTime(this.secTimer+10);
+                jon.hpBar.setMaxHP(jon.getHp());
+                jon.setFocus(beacon.getX(), beacon.getY());
+                jon.loadAnimations();
+                jon.loadIdleTexture();
+
+                enemies.add(jon);
+            }
+        }
+
         if (this.state == State.DELETING && mouseJustClicked()) {
             Vector3 mousePos = getRelativeMousePos();
             for (GameObject obj:objects) {
@@ -705,6 +725,16 @@ public class GameScreen implements Screen {
         extractEnemies("core/assets/round5.csv");
     }
 
+    private void loadRoundInfinite() throws DBException {
+        try {
+            DBManager.dbManager.connect("Databases/base.db");
+            enems = DBManager.dbManager.getAllEnemies();
+        } catch (DBException e) {
+            log( Level.INFO, "Error en la conexion a la base de datos", null );
+        }
+
+    }
+
     /**
      * Extrae los objetos de la Base de Datos y los introduce en los inventarios.
      */
@@ -816,6 +846,11 @@ public class GameScreen implements Screen {
                 }
                 break;
             case -1: //INFINITO
+                try {
+                    loadRoundInfinite();
+                } catch (DBException e) {
+                    e.printStackTrace();
+                }
                 map = new Map("emptyMap.png");
                 gold = 60000;
                 break;
@@ -963,7 +998,7 @@ public class GameScreen implements Screen {
             case 1:
             case 5:
             case -1:
-                beacon.setX(208);
+                beacon.setX(128);
                 beacon.setY(90);
                 break;
             case 2:

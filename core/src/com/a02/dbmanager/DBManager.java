@@ -4,6 +4,9 @@ import com.a02.entity.*;
 import com.a02.game.Settings;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class DBManager {
 
@@ -71,6 +74,27 @@ public class DBManager {
             }
         } catch (SQLException e) {
             throw new DBException("Error obteniendo el enemigo con id " + id, e);
+        }
+    }
+
+    public HashMap<Integer,Enemy> getAllEnemies() throws DBException {
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM enemy WHERE ID_E<7")) {
+            ResultSet rs = stmt.executeQuery();
+            HashMap<Integer,Enemy> enemies = new HashMap<Integer,Enemy>();
+            while (rs.next()) {
+                Enemy enemy = new Enemy();
+                enemy.setId(rs.getInt("ID_E"));
+                enemy.setHp(rs.getInt("HP_E"));
+                enemy.setWidth(rs.getInt("WIDTH_E"));
+                enemy.setHeight(rs.getInt("HEIGHT_E"));
+                enemy.setAttackDamage((int) (rs.getInt("ATTACKDAMAGE_E") * Settings.s.getDiff()));
+                enemy.setSpeed(rs.getFloat("SPEED_E"));
+                enemy.setGoldValue(rs.getInt("GOLD_VALUE_E"));
+                enemies.put(enemy.getId(),enemy);
+            }
+            return enemies;
+        } catch (SQLException e) {
+            throw new DBException("Error obteniendo los enemigos", e);
         }
     }
 

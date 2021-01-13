@@ -72,6 +72,20 @@ public class Enemy extends Entity {
         this.focus = new Vector2(0,0);
     }
 
+    public Enemy(Enemy other){
+        this.id = other.id;
+        this.hp = other.hp;
+        this.attackDamage = other.attackDamage;
+        this.speed = other.speed;
+        this.state = other.state;
+        this.trapEffect = other.trapEffect;
+        this.hpBar = new HealthBar(other, 0);
+        this.goldValue = other.goldValue;
+        this.focus = other.focus;
+        this.setWidth(other.getWidth());
+        this.setHeight(other.getHeight());
+    }
+
     public void loadAnimations() {
         switch (this.getId()){
             case 0:
