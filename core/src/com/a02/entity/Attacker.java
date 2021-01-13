@@ -1,8 +1,8 @@
 package com.a02.entity;
 
-import com.a02.component.Shoot;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
@@ -12,14 +12,19 @@ import java.util.logging.Logger;
 import static com.a02.game.Utils.*;
 
 public class Attacker extends GameObject {
-    public static boolean selected;
+    /**
+     * Indica si el objeto concreto está seleccionado
+     */
     private boolean isSelected;
+
     private float attackDamage;
     private String attackType;
+    private double angle = 0;
     private final static Logger logger = Logger.getLogger(GameObject.class.getName());
     private enum State {
         IDLE, ATTACKING
     }
+    private int timer = 60;
 
     State state;
 
@@ -29,7 +34,7 @@ public class Attacker extends GameObject {
         this.attackType = attackType;
         this.attackDamage = attackDamage;
         this.state = State.IDLE;
-        this.isSelected=false;
+        this.isSelected = false;
         loadTextures();
     }
 
@@ -37,15 +42,16 @@ public class Attacker extends GameObject {
         switch (this.getId()){
             case 0: //Electricidad
                 this.setTexture(new Texture(Gdx.files.internal("electricity.png")));
+                this.setAnimation(createAnimation("electricity-Sheet.png", 2, 1, 0.1f));
                 break;
-            case 1:
+            case 1: //Thwomp
                 this.setTexture(new Texture(Gdx.files.internal("maquinaDeMatar.png")));
                 this.setAnimation(createAnimation("willy-Sheet.png", 2, 2, 0.1f));
                 break;
-            case 2:
-                this.setTexture(new Texture(Gdx.files.internal("boredlion.png")));
+            case 2: //Ballesta/disparos
+                this.setTexture(new Texture(Gdx.files.internal("crossbow.png")));
                 break;
-            case 3:
+            case 3: //Waves
                 this.setTexture(new Texture(Gdx.files.internal("waves.png")));
                 this.setAnimation(createAnimation("wifi-Sheet.png", 3, 1, 0.2f));
                 break;
@@ -57,7 +63,7 @@ public class Attacker extends GameObject {
         this.attackType = "";
         this.attackDamage = 0;
         this.state = State.IDLE;
-        this.isSelected=false;
+        this.isSelected = false;
         loadTextures();
     }
 
@@ -66,7 +72,7 @@ public class Attacker extends GameObject {
         this.attackType = other.getAttackType();
         this.attackDamage = other.getAttackDamage();
         this.state = other.state;
-        this.isSelected=false;
+        this.isSelected = false;
         this.setAnimation(other.getAnimation());
         this.setTexture(other.getTexture());
     }
@@ -95,78 +101,100 @@ public class Attacker extends GameObject {
         isSelected = selected;
     }
 
-    /**
-     * Actualiza el estado de los objetos de ataque.
-     * @param gs GameScreen utilizada
-     */
+    public double getAngle() {
+        return angle;
+    }
+
     public void update(GameScreen gs) {
-        switch (this.state) {
-            case IDLE:
-                if (this.getId() == 2 || this.getId() == 3){
-                    this.state = State.ATTACKING;
-                }
+        this.hpBar.update(this, this.getHp());
+        if (this.isInInventory(gs)) return;
+        switch (this.getId()) {
+            case 0: //Electricidad
                 if (this.overlappedEnemy(gs) != null) {
-                    this.state = State.ATTACKING;
-                    logger.info("Enemigo atacando");
+                    Enemy tempEnemy = this.overlappedEnemy(gs);
+                    if (tempEnemy.getHp() > 0 && gs.secTimer % 60 == 0) { //Golpea 1 vez/segundo
+                        tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackDamage));
+                    }
                 }
                 break;
 
-            case ATTACKING:
-                if (this.getId() == 0){
-                    if (this.overlappedEnemy(gs) != null) {
-                        Enemy tempEnemy = this.overlappedEnemy(gs);
-                        if (tempEnemy.getHp() > 0 && gs.secTimer % 60 == 0) {
-                            tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackDamage));
-                        } else if (tempEnemy.getHp() <= 0) {
-                            this.state = State.IDLE;
-                        }
+            case 1: //Thwomp
+                if (this.overlappedEnemy(gs) != null) {
+                    Enemy tempEnemy = this.overlappedEnemy(gs);
+                    if (tempEnemy.getHp() > 0 && gs.secTimer % 15 == 0) { //Golpea 4 veces/segundo
+                        tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackDamage));
+                    }
+                }
+                break;
+
+            case 2: //Ballesta
+                //Rotación
+                if (this.overlappedArea(gs) != null && !this.isInInventory(gs)) {
+                    this.angle = ((Math.atan2(this.getY() - overlappedArea(gs).getY(),
+                            this.getX() - overlappedArea(gs).getX()) * 180) / Math.PI + 90);
+                }
+
+                //Ataque
+                if (gs.secTimer % 60 == 0 && !this.isSelected && this.overlappedArea(gs) != null && !this.isGrabbed()) { //Ataque cada segundo
+                    gs.shots.add(new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 2,
+                            this.getAttackDamage(), "shoot.png", 5,"n", 0, this.angle));
+                    gs.soundPlayer.playArrow();
+                }
+                else if (this.isSelected) { //Ataque seleccionado
+                    this.timer++;
+
+                    Vector3 focus = getRelativeMousePos();
+                    this.angle = ((Math.atan2(this.getY() - focus.y,
+                            this.getX() - focus.x) * 180) / Math.PI + 90);;
+
+                    if ((Gdx.input.isTouched() || Gdx.input.isKeyPressed(Input.Keys.SPACE)) && this.timer > 60) {
+                        double angle = ((Math.atan2(this.getY() - focus.y, this.getX() - focus.x) * 180) / Math.PI + 90);
+
+                        gs.shots.add(new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 2,
+                                this.getAttackDamage(), "shoot.png", 5,"n", 0, angle));
+                        gs.soundPlayer.playArrow();
+                        this.timer = 0;
                     }
                 }
 
-                else if (this.getId() == 1){
-                    if (this.overlappedEnemy(gs) != null) {
-                        Enemy tempEnemy = this.overlappedEnemy(gs);
-                        if (tempEnemy.getHp() > 0 && gs.secTimer % 15 == 0) {
-                            tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackDamage));
-                        } else if (tempEnemy.getHp() <= 0) {
-                            this.state = State.IDLE;
-                        }
+                //Selección
+                Vector3 mousePos = getRelativeMousePos();
+                if (this.overlapsPoint(mousePos.x, mousePos.y) && mouseJustClicked()) {
+                    //Sólo se puede tomar control si no se está comprando ni eliminando
+                    if (gs.state == GameScreen.State.PLAYING && !this.isSelected) {
+                        gs.state = GameScreen.State.SELECTING;
+                        this.isSelected = true;
+                    }
+                    else if (gs.state == GameScreen.State.SELECTING && this.isSelected) {
+                        gs.state = GameScreen.State.PLAYING;
+                        this.isSelected = false;
                     }
                 }
-                else if (this.getId() == 2) {
-                    if (!this.isInInventory(gs) && gs.secTimer % 60 == 0) {
-                        Vector3 mousePos = getRelativeMousePos();
-                        if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched()) {
-                            this.isSelected = true;
-                            selected = true;
-                            Pixmap pm = new Pixmap(Gdx.files.internal("mira-export.png"));
-                            Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
-                            pm.dispose();
-                        }
-                        Shoot shoot = new Shoot(this.getX(), this.getY(), 2, 2, 2, this.getAttackDamage(), "shoot.png", 5, this.getId(),"n");
-
-                        GameScreen.shoots.add(shoot);
-
-                    }
-                }
-                else if (this.getId() == 3) {
-                    if (!this.isInInventory(gs) && gs.secTimer % 120 == 0) {
-                        Shoot rightShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"r");
-                        Shoot leftShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"l");
-                        Shoot upShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"u");
-                        Shoot downShot = new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5, this.getAttackDamage(), "onda-export.png", 5, this.getId(),"d");
-
-                        GameScreen.shoots.add(rightShot);
-                        GameScreen.shoots.add(leftShot);
-                        GameScreen.shoots.add(upShot);
-                        GameScreen.shoots.add(downShot);
-                    }
+                break;
+            case 3: //Waves
+                if (gs.secTimer % 120 == 0 && !this.isInInventory(gs)) { //Cada 2 segundos crea 4 disparos en cada una de las direcciones
+                    gs.shots.add(new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
+                            this.getAttackDamage(), "onda-export.png", 5,"r", 1));
+                    gs.shots.add(new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
+                            this.getAttackDamage(), "onda-export.png", 5,"l", 1));
+                    gs.shots.add(new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
+                            this.getAttackDamage(), "onda-export.png", 5,"u", 1));
+                    gs.shots.add(new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
+                            this.getAttackDamage(), "onda-export.png", 5,"d", 1));
                 }
                 break;
         }
-        this.hpBar.update(this, this.getHp());
     }
 
+    protected Enemy overlappedArea(GameScreen gs) { //TODO: no selecciona por proximidad, sino por primer enemigo encontrado
+        for (Enemy enemy : gs.enemies) {
+            if ((enemy.getX() < this.getX() + 50 && enemy.getX() > this.getX() - 50)
+                    && (enemy.getY() < this.getY() + 50 && enemy.getY() > this.getY() - 50)) {
+                return enemy;
+            }
+        }
+        return null;
+    }
 }
 
 

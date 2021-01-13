@@ -2,12 +2,10 @@ package com.a02.game;
 
 import com.a02.users.User;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.ScreenUtils;
 
 import java.io.*;
 import java.util.HashMap;
@@ -15,6 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 public class Utils {
     /**
@@ -30,7 +29,23 @@ public class Utils {
      * @return Vector3 posición
      */
     public static Vector3 getRelativeMousePos() {
-        return MainGame.mainGameScreen.getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(),0));
+        return MainGame.cursorCamera.unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(),0));
+    }
+
+    private static boolean isPressed;
+
+    public static boolean mouseJustClicked() {
+        if (Gdx.input.isTouched() && !isPressed) {
+            isPressed = true;
+            return true;
+        }
+        else if (!Gdx.input.isTouched() && isPressed) {
+            isPressed = false;
+            return false;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
@@ -63,27 +78,23 @@ public class Utils {
         return new Animation<>(frameDuration, animationFrames);
     }
 
-    public static void takeScreenshot() {   //TODO: NO FUNCIONA CORRECTAMENTE. Probablemente se puede eliminar
-        byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(), true);
-        for (int i = 4; i < pixels.length; i += 4) {
-            pixels[i - 1] = (byte) 255;
-        }
-        FileHandle fh = new FileHandle(Gdx.files.getLocalStoragePath() + "screenshot" + "1" + ".png");
-        Pixmap pixmap = ScreenUtils.getFrameBufferPixmap(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        System.out.println(fh);
-        PixmapIO.writePNG(fh, pixmap);
-        pixmap.dispose();
-    }
-
     public static HashMap<String, User> readSer(String path) throws IOException, ClassNotFoundException {
         HashMap<String, User> map;
-        FileInputStream fs = new FileInputStream(path);
         try{
+            FileInputStream fs = new FileInputStream(path);
             ObjectInputStream os = new ObjectInputStream(fs);
             map = (HashMap<String, User>) os.readObject();
+            os.close();
             return map;
         } catch (EOFException e) {
-            return new HashMap<String, User>();
+            map = new HashMap<>();
+            writeSer(path, map);
+            return map;
+        } catch (FileNotFoundException e) {
+            PrintWriter writer = new PrintWriter(path, "UTF-8"); //Crea el archivo, aunque no se utilize después
+            map = new HashMap<>();
+            writeSer(path, map);
+            return map;
         }
     }
 
@@ -92,6 +103,7 @@ public class Utils {
         ObjectOutputStream oos = new ObjectOutputStream(fos);
 
         oos.writeObject(map);
+        oos.close();
     }
 
     public static void deleteUser(String path, String key) {
@@ -125,5 +137,16 @@ public class Utils {
                 Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
         return matcher.find() || emailStr.equals("");
+    }
+
+    /**
+     * Redondea con n decimales.
+     * @param value Valor a redondear
+     * @param precision Número de decimales
+     * @return Número redondeado
+     */
+    public static double round(double value, int precision) {
+        int scale = (int) Math.pow(10, precision);
+        return (double) Math.round(value * scale) / scale;
     }
 }

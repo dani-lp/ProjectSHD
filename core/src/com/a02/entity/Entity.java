@@ -71,12 +71,19 @@ public abstract class Entity {
         return x < vec.x + width && x + width > vec.x && y < vec.y + height && y + height > vec.y;
     }
 
-    protected boolean overlaps(Entity entity) {
+    public boolean overlaps(Entity entity) {
         return x < entity.x + entity.width && x + width > entity.x && y < entity.y + entity.height && y + height > entity.y;
     }
 
-    protected boolean overlapsPoint(float x, float y) {
+    public boolean overlapsPoint(float x, float y) {
         return this.x <= x && this.x + this.width >= x && this.y <= y && this.y + this.height >= y;
     }
 
+    public boolean overlapsPoint(float x, float y, int offset) {
+        return this.x - offset <= x && this.x + offset >= x && this.y - offset <= y && this.y + offset >= y;
+    }
+
+    public boolean overlapsPointArea(float x, float y) {
+        return this.x <= x + 9 && this.x >= x - 9 && this.y <= y + 9 && this.y >= y - 9;
+    }
 }

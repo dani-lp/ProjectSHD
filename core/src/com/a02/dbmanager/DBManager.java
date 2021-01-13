@@ -1,9 +1,6 @@
 package com.a02.dbmanager;
 
-import com.a02.entity.Attacker;
-import com.a02.entity.Defender;
-import com.a02.entity.Enemy;
-import com.a02.entity.Trap;
+import com.a02.entity.*;
 import com.a02.game.Settings;
 
 import java.sql.*;
@@ -16,6 +13,8 @@ public class DBManager {
     private DBManager() {
 
     }
+
+    //TODO: cerrar rs, ps https://stackoverflow.com/questions/2225221/closing-database-connections-in-java
 
     /**
      * Crea una conexión con la BD.
@@ -75,6 +74,35 @@ public class DBManager {
         }
     }
 
+    public FinalBoss getBoss() throws DBException {
+        try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM enemy WHERE ID_E=7")) {
+
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                FinalBoss boss = new FinalBoss();
+                boss.setId(rs.getInt("ID_E"));
+                boss.setHp(rs.getInt("HP_E"));
+                boss.setWidth(rs.getInt("WIDTH_E"));
+                boss.setHeight(rs.getInt("HEIGHT_E"));
+                boss.setAttackDamage((int) (rs.getInt("ATTACKDAMAGE_E") * Settings.s.getDiff()));
+                boss.setSpeed(rs.getFloat("SPEED_E"));
+                boss.setGoldValue(rs.getInt("GOLD_VALUE_E"));
+                boss.setX(-32);
+                boss.setY(90);
+                boss.setStartTime(1100); //TODO
+                boss.hpBar.setMaxHP(boss.getHp());
+                boss.loadAnimations();
+                boss.loadIdleTexture();
+                return boss;
+            } else {
+                return new FinalBoss();
+            }
+        } catch (SQLException e) {
+            throw new DBException("Error obteniendo el jefe con id 7", e);
+        }
+    }
+
     /**
      * Devuelve un objeto Trap.
      * @param id ID del objeto Trap
@@ -92,10 +120,8 @@ public class DBManager {
                 trap.setId(rs.getInt("ID_T"));
                 trap.setHp(rs.getInt("HP_T"));
                 trap.setAttackDamage(rs.getInt("ATTACKDAMAGE_T"));
-                int bool=rs.getInt("UNLOCKED_T");
-                if (bool==1){
-                    trap.setUnlocked(true);
-                }
+                int bool = rs.getInt("UNLOCKED_T");
+                if (bool == 1) trap.setUnlocked(true); //TODO: pasar a boolean
                 trap.setPrice(rs.getInt("PRICE_T"));
                 trap.setType(rs.getString("TYPE"));
                 trap.setEffect(Trap.Effect.valueOf(rs.getString("EFFECT")));
@@ -158,10 +184,8 @@ public class DBManager {
                 attacker.setId(rs.getInt("ID_A"));
                 attacker.setHp(rs.getInt("HP_A"));
                 attacker.setAttackDamage(rs.getInt("ATTACKDAMAGE_A"));
-                int bool=rs.getInt("UNLOCKED_A");
-                if (bool==1){
-                    attacker.setUnlocked(true);
-                }
+                int bool = rs.getInt("UNLOCKED_A");
+                if (bool == 1) attacker.setUnlocked(true);
                 attacker.setPrice(rs.getInt("PRICE_A"));
                 attacker.setType(rs.getString("TYPE_A"));
                 attacker.setAttackType(rs.getString("ATTACK_TYPE"));

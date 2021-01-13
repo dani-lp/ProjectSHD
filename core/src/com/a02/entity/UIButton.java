@@ -11,17 +11,19 @@ import static com.a02.game.Utils.getRelativeMousePos;
  */
 public class UIButton extends Entity {
 
-    private Texture texture; //Aspecto del botón
+    private final Texture idleTexture; //Aspecto del botón
+    private final Texture pressedTexture;
+
+    private boolean touched = false;
     private boolean pressed;
 
-    public UIButton(float x, float y, int width, int height, String texturePath) {
-        super(x, y, width, height);
-        this.texture = new Texture(texturePath);
-    }
+    private boolean active; //Si el botón está inactivo (active = false) no se realiza ninguna acción con él.
 
-    public UIButton() {
-        super();
-        this.texture = null;
+    public UIButton(float x, float y, int width, int height, String idleTexturePath, String pressedTexturePath) {
+        super(x, y, width, height);
+        this.idleTexture = new Texture(idleTexturePath);
+        this.pressedTexture = new Texture(pressedTexturePath);
+        this.active = true;
     }
 
     /**
@@ -30,7 +32,15 @@ public class UIButton extends Entity {
      */
     public boolean isTouched() {
         Vector3 mousePos = getRelativeMousePos();
-        return this.overlapsPoint(mousePos.x, mousePos.y) && !Gdx.input.isTouched();
+        if (!this.active) return false;
+        if (!(this.overlapsPoint(mousePos.x, mousePos.y) && !Gdx.input.isTouched())) {
+            this.touched = false;
+        }
+        else {
+            this.touched = true;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -38,6 +48,7 @@ public class UIButton extends Entity {
      * @return True si se cumple la condición
      */
     public boolean isBeingClicked() {
+        if (!this.active) return false;
         Vector3 mousePos = getRelativeMousePos();
         return this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched();
     }
@@ -47,6 +58,7 @@ public class UIButton extends Entity {
      * @return true si acaba de ser pulsado, false en cualquier otro caso.
      */
     public boolean isJustClicked() {
+        if (!this.active) return false;
         Vector3 mousePos = getRelativeMousePos();
         if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched() && !this.isPressed()) {
             this.pressed = true;
@@ -61,15 +73,40 @@ public class UIButton extends Entity {
         }
     }
 
-    public Texture getTexture() {
-        return texture;
+    /**
+     * Devuelve la textura actual.
+     * @return Texture actual
+     */
+    public Texture getCurrentTexture() {
+        if (this.touched) return this.getPressedTexture();
+        else return this.getIdleTexture();
+    }
+
+    /**
+     * Elimina las texturas del botón.
+     */
+    public void disposeButton () {
+        this.idleTexture.dispose();
+        this.pressedTexture.dispose();
     }
 
     public boolean isPressed() {
         return pressed;
     }
 
-    public void setTexture(Texture texture) {
-        this.texture = texture;
+    public Texture getIdleTexture() {
+        return idleTexture;
+    }
+
+    public Texture getPressedTexture() {
+        return pressedTexture;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
