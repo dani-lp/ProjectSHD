@@ -4,6 +4,7 @@ public class Settings {
     private String username;
     private double diff;
     private boolean musicCheck, soundCheck, tutorialCheck;
+    private float volume = 0.5f;
 
     public static final Settings s = new Settings();
 
@@ -47,5 +48,17 @@ public class Settings {
 
     public void setTutorialCheck(boolean tutorialCheck) {
         this.tutorialCheck = tutorialCheck;
+    }
+
+    public float getVolume() {
+        return volume;
+    }
+
+    public void incVolume() {
+        if (this.volume < 1.0f) volume += 0.1f;
+    }
+
+    public void decVolume() {
+        if (this.volume > 0.1f) volume -= 0.1f;
     }
 }

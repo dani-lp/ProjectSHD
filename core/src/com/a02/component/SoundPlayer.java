@@ -5,8 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 
 public class SoundPlayer {
-    private Sound arrow, coins, github, hammer, horn, roar, roundEnd;
-    private final float SOUND_VOLUME = 0.7f;
+    private final Sound arrow, coins, github, hammer, horn, roar, roundEnd;
 
     public SoundPlayer() {
         this.arrow = Gdx.audio.newSound(Gdx.files.internal("Sounds/arrow.mp3"));
@@ -19,25 +18,25 @@ public class SoundPlayer {
     }
 
     public void playArrow() {
-        if (Settings.s.isSoundCheck()) this.arrow.play(SOUND_VOLUME);
+        if (Settings.s.isSoundCheck()) this.arrow.play(Settings.s.getVolume());
     }
     public void playCoins() {
-        if (Settings.s.isSoundCheck()) this.coins.play(SOUND_VOLUME);
+        if (Settings.s.isSoundCheck()) this.coins.play(Settings.s.getVolume());
     }
     public void playGithub() {
-        if (Settings.s.isSoundCheck()) this.github.play(SOUND_VOLUME);
+        if (Settings.s.isSoundCheck()) this.github.play(Settings.s.getVolume());
     }
     public void playHammer() {
-        if (Settings.s.isSoundCheck()) this.hammer.play(SOUND_VOLUME);
+        if (Settings.s.isSoundCheck()) this.hammer.play(Settings.s.getVolume());
     }
     public void playHorn() {
-        if (Settings.s.isSoundCheck()) this.horn.play(SOUND_VOLUME);
+        if (Settings.s.isSoundCheck()) this.horn.play(Settings.s.getVolume());
     }
     public void playRoar() {
-        if (Settings.s.isSoundCheck()) this.roar.play(SOUND_VOLUME);
+        if (Settings.s.isSoundCheck()) this.roar.play(Settings.s.getVolume());
     }
     public void playRoundEnd() {
-        if (Settings.s.isSoundCheck()) this.roundEnd.play(SOUND_VOLUME);
+        if (Settings.s.isSoundCheck()) this.roundEnd.play(Settings.s.getVolume());
     }
 
     public void dispose() {

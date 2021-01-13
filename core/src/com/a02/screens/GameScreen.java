@@ -38,7 +38,7 @@ public class GameScreen implements Screen {
     private static Logger logger = Logger.getLogger(GameScreen.class.getName());
 
     private static boolean pauseFlag; //Flags de compra y pausa
-    private boolean queryingMinions = false; //
+    private boolean queryingMinions = false; //Utilizado para cargar el spawn de minions
 
     /**
      * Estado del juego.
@@ -167,7 +167,7 @@ public class GameScreen implements Screen {
         if (Settings.s.isMusicCheck()) { //Carga de música
             loadMusic();
             this.roundMusic.setLooping(true);
-            this.roundMusic.setVolume(0.5f);
+            this.roundMusic.setVolume(Settings.s.getVolume());
             this.roundMusic.play();
         }
 
@@ -180,7 +180,7 @@ public class GameScreen implements Screen {
         }
 
 
-        ///////////////////////////////////////// TESTEO DE COLISIONES
+        ///////////////////////////////////////// TESTEO DE COLISIONES TODO
         Obstacle obs = new Obstacle(64,54,32,18);
         boolean coll = lineRectCollision(60,50,106,82,obs.getX(),obs.getY(),obs.getWidth(), obs.getHeight());
         System.out.println(coll);
@@ -223,6 +223,7 @@ public class GameScreen implements Screen {
         //Salida de la GameScreen
         if (beacon.getHp() <= 0) { //Jugador pierde (beacon destruído)
             this.state = State.PLAYING;
+            this.roundMusic.dispose();
             game.setScreen(new EndScreen(Settings.s.getUsername(), points, game));
         }
         else if (enemies.isEmpty() && currentRound > 0) { //Jugador gana ronda (todos los enemigos eliminados)
@@ -242,6 +243,7 @@ public class GameScreen implements Screen {
         else if (Gdx.input.isKeyJustPressed(Input.Keys.F)) enemies.clear();
 
         updateCursor();
+        updateVolume();
 
         if (this.currentRound == 4 && this.secTimer == 2000) soundPlayer.playHorn();
     }
@@ -313,6 +315,8 @@ public class GameScreen implements Screen {
             if (messagesEnded && enemies.isEmpty()) {
                 Settings.s.setTutorialCheck(false);
                 game.setScreen(new MenuScreen(game));
+                this.roundMusic.stop();
+                this.roundMusic.dispose();
             }
         }
 
@@ -322,6 +326,8 @@ public class GameScreen implements Screen {
             Enemy larry = new Enemy(-15,90,16,16,1,500,300,15,
                     this.secTimer + 30,200);
             larry.setFocus(beacon.getX(), beacon.getY());
+            larry.loadAnimations();
+            larry.loadIdleTexture();
             enemies.add(larry);
             messagesEnded = true;
         }
@@ -364,6 +370,21 @@ public class GameScreen implements Screen {
                 }
                 break;
         }
+    }
+
+    /**
+     * Sube o baja el volumen con las teclas de arriba/abajo, o las teclas 'o' y 'l'.
+     */
+    private void updateVolume() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.O)) {
+            Settings.s.incVolume();
+            this.roundMusic.setVolume(Settings.s.getVolume());
+        }
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+            Settings.s.decVolume();
+            this.roundMusic.setVolume(Settings.s.getVolume());
+        }
+
     }
 
     /**
@@ -747,7 +768,7 @@ public class GameScreen implements Screen {
                 map = new Map("riverMap.png"); //Mapa de río
                 for (int i = 0; i < 10; i++) { //Casillas ya ocupadas
                     for (int j = 0; j < 6; j++) {
-                        map.getOccGrid()[j][i] = true; //TODO: cambiar sprite de mapa inicial
+                        map.getOccGrid()[j][i] = true;
                     }
                 }
                 gold = 60000; //TODO: oro por defecto
