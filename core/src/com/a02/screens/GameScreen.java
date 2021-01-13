@@ -22,7 +22,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 
+import java.awt.*;
 import java.io.*;
+import java.net.URI;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -95,6 +97,8 @@ public class GameScreen implements Screen {
     private final UIButton defenderButton;
     private final UIButton trapButton;
 
+    private final UIButton githubButton;
+
     public int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones. Suma el tiempo transcurrido entre fotogramas.
     private final static boolean LOGGING = false; //Cambiar para activar/desactivar el logging
@@ -157,6 +161,8 @@ public class GameScreen implements Screen {
                 "Buttons/Inventory/defenderButtonIdle.png","Buttons/Inventory/defenderButtonPressed.png");
         trapButton = new UIButton(302,162,15,15,
                 "Buttons/Inventory/trapButtonIdle.png","Buttons/Inventory/trapButtonPressed.png");
+
+        githubButton = new UIButton(74, 168, 8, 7, "empty.png", "empty.png");
 
         if (Settings.s.isTutorialCheck()) tutoBut = new UIButton(2,40,220,35,
                 "textfield.png", "textfield.png");
@@ -477,6 +483,20 @@ public class GameScreen implements Screen {
             tempSh.update(this);
             if(tempSh.getHp() <= 0) {
                 enemyShootIterator.remove();
+            }
+        }
+
+        if (currentRound == 1) {
+            if (githubButton.isJustClicked()) {
+                pauseFlag = true;
+                Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+                if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+                    try {
+                        desktop.browse(new URI("https://github.com/Dzl17/ProjectSHD.git"));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
     }
@@ -1073,7 +1093,7 @@ public class GameScreen implements Screen {
         soundPlayer.dispose();
     }
 
-    private void loadMusic() { //TODO: subir y bajar volumen con teclas
+    private void loadMusic() {
         switch (this.currentRound) {
             case 1:
                 this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/riverRoundMusic.mp3"));
