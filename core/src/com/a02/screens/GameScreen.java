@@ -964,6 +964,18 @@ public class GameScreen implements Screen {
     }
 
     /**
+     * Devuelve si hay colisión entre una entidad y algún obstáculo del mapa.
+     * @param e Entidad objetivo
+     * @return Resultado de la colisión
+     */
+    public boolean entityCollidesObstacles(Entity e) {
+        for (Obstacle obs:obstacles) {
+            if (obs.overlaps(e)) return true;
+        }
+        return false;
+    }
+
+    /**
      * Carga dos minions al ArrayList de enemigos.
      */
     public void queryMinionLoad() {

@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.a02.entity.Trap.randomRound3Positions;
 import static com.a02.game.Utils.*;
 
 public class Enemy extends Entity {
@@ -194,6 +195,11 @@ public class Enemy extends Entity {
         return deathTimer;
     }
 
+    public void setNewPos(Vector2 newPos) {
+        this.setX(newPos.x);
+        this.setY(newPos.y);
+    }
+
     /**
      * Actualiza la posición, estado y efectos de un enemigo.
      * @param gs GameScreen utilizada
@@ -210,7 +216,7 @@ public class Enemy extends Entity {
 
             case WALKING: //Movimiento a beacon
                 if (this.getId() != 3) this.updatePathfinding(gs);
-                else this.move();
+                else this.move(gs);
 
                 if (this.getHp() <= 0) {
                     this.state = State.DYING;
@@ -270,13 +276,19 @@ public class Enemy extends Entity {
 
     public boolean flipped = false; //Usado para saber si un objeto debe estar dado la vuelta al animarlo
 
-    protected void move() {
+    protected void move(GameScreen gs) {
         double angle = Math.toDegrees(-Math.atan((this.getY() - this.focus.y) / (this.getX() - this.focus.x)));
         float dirX = (float) Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed;
         float dirY = (float) Math.cos(angle) * Gdx.graphics.getDeltaTime() * this.speed;
         this.flipped = dirX < 0;
-        this.setX((float) round(this.getX() + dirX, 4));
-        this.setY((float) round(this.getY() + dirY, 4));
+        if (gs.entityCollidesObstacles(this) && this.trapEffect == TrapEffect.CONFUSED) {
+            this.setX((float) round(this.getX() - dirX, 4));
+            this.setY((float) round(this.getY() - dirY, 4));
+        }
+        else {
+            this.setX((float) round(this.getX() + dirX, 4));
+            this.setY((float) round(this.getY() + dirY, 4));
+        }
     }
 
     void updatePathfinding(GameScreen gs) {
@@ -289,7 +301,7 @@ public class Enemy extends Entity {
             if (this.focusNode.getNextNode() != null) this.focusNode = this.focusNode.getNextNode();
             this.setFocus(focusNode.getX(), focusNode.getY());
         }
-        this.move();
+        this.move(gs);
     }
 
     /**
@@ -395,7 +407,7 @@ public class Enemy extends Entity {
                 if (gs.secTimer > this.effectTimer + 280) {
                     this.trapEffect = TrapEffect.NEUTRAL;
                     this.setFocus(this.focusNode);
-                    this.move();
+                    this.move(gs);
                     this.state = State.WALKING;
                 }
             case NEUTRAL:
@@ -416,9 +428,8 @@ public class Enemy extends Entity {
                 y = (float)(Math.random() * 1800 - 900);
                 break;
             case 3: //TODO
-                x = (float)(Math.random());
-                y = (float)(Math.random());
-                break;
+                this.setFocus(gs.beacon.getX(), gs.beacon.getY());
+                return randomRound3Positions[(int)(Math.random()*4)];
             case 4: //Ilimitado
                 x = (float)(Math.random() * 3200 - 1600);
                 y = (float)(Math.random() * 1800 - 900);

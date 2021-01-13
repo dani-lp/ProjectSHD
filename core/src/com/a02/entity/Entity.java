@@ -71,7 +71,7 @@ public abstract class Entity {
         return x < vec.x + width && x + width > vec.x && y < vec.y + height && y + height > vec.y;
     }
 
-    protected boolean overlaps(Entity entity) {
+    public boolean overlaps(Entity entity) {
         return x < entity.x + entity.width && x + width > entity.x && y < entity.y + entity.height && y + height > entity.y;
     }
 

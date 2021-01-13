@@ -11,6 +11,7 @@ package com.a02.entity;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 
 import java.util.logging.Logger;
 
@@ -125,13 +126,12 @@ public class Trap extends GameObject {
                         logger.info("Congelado por trampa");
                         break;
                     case TELEPORT : //TODO cambiar para ajustar a mapa
-                        this.focusedEnemy.setX((float) Math.random() * 320);
-                        this.focusedEnemy.setY((float) Math.random() * 180);
+                        this.focusedEnemy.setNewPos(getRandomTpPos(gs));
                         this.state = State.DYING;
                         logger.info("Teleportado por trampa");
                         break;
                     case DAMAGE :
-                        this.focusedEnemy.setHp(focusedEnemy.getHp() - this.attackDamage) ;
+                        this.focusedEnemy.setHp(focusedEnemy.getHp() - this.attackDamage);
                         this.state = State.DYING;
                         logger.info("Dañado por trampa");
                         break;
@@ -149,5 +149,41 @@ public class Trap extends GameObject {
                 break;
         }
         this.hpBar.update(this, this.getHp());
+    }
+
+    public static final Vector2[] randomRound3Positions = {new Vector2(2,80), new Vector2(124,158), new Vector2(230, 83), new Vector2(126, 2)};
+
+    /**
+     * Consigue una nueva posición para un enemigo afectado por la trampa de teletransporte.
+     * @param gs GameScren (para colisiones con obstáculos + nº de ronda)
+     * @return Nueva posición
+     */
+    private Vector2 getRandomTpPos(GameScreen gs) {
+        float x;
+        float y;
+        switch (gs.getCurrentRound()) {
+            case 1:
+                x = (float)(Math.random() * 160 + 96);
+                y = (float)(Math.random() * 180);
+                this.focusedEnemy.setFocus(gs.beacon.getX(), gs.beacon.getY());
+                break;
+            case 2:
+                x = (float)(Math.random() * 159 + 48);
+                y = (float)(Math.random() * 180);
+                break;
+            case 3:
+                this.focusedEnemy.setFocus(gs.beacon.getX(), gs.beacon.getY());
+                return randomRound3Positions[(int)(Math.random()*4)];
+            case 4:
+            case 5:
+                x = (float)(Math.random() * 320);
+                y = (float)(Math.random() * 180);
+                break;
+            default:
+                x = 160;
+                y = 90;
+                break;
+        }
+        return new Vector2(x,y);
     }
 }

@@ -181,15 +181,8 @@ public class UsersWindow extends JFrame {
 
         private HashMap<String, User> map; //Mapa de datos de usuario
 
-        {
-            try {
-                map = readSer("users.ser");
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-
         public UserTableModel(HashMap<String, User> map) { //Pasa los datos del mapa a el array 'data'
+            this.map = map;
             data = new Object[map.size()][7];
             int index = 0;
             for (User user : map.values()) {
