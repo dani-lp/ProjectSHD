@@ -441,7 +441,7 @@ public class Enemy extends Entity {
                 x = (float)(Math.random() * 159 + 48);
                 y = (float)(Math.random() * 1800 - 900);
                 break;
-            case 3: //TODO
+            case 3:
                 this.setFocus(gs.beacon.getX(), gs.beacon.getY());
                 return randomRound3Positions[(int)(Math.random()*4)];
             case 4: //Ilimitado

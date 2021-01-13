@@ -105,18 +105,6 @@ public class MenuScreen implements Screen {
             Gdx.app.exit();
             System.exit(0);
         }
-        /*
-        else if (githubButton.isJustClicked() && introTimer) {
-            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-            if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
-                try {
-                    desktop.browse(new URI("https://github.com/Dzl17/ProjectSHD.git"));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-         */
     }
 
     @Override
