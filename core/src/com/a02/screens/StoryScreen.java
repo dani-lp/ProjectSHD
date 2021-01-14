@@ -7,12 +7,23 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.a02.game.Utils.createAnimation;
 
 public class StoryScreen implements Screen {
-    MainGame game;
+    private final MainGame game;
 
-    int currentRound, currentPoints; //Pasados entre GameScreen(s)
+    private final int currentRound, currentPoints; //Pasados entre GameScreen(s)
+    private float animationTimer; //Usado para animaciones
+    private float baseX; //Posición inicial de los enemigos
+
+    private List<Animation<TextureRegion>> enemyAnimations;
 
     private Texture characterIconTexture; //Textura de icono de personaje
     private Texture characterNameTexture; //Textura del nombre del personaje
@@ -29,6 +40,10 @@ public class StoryScreen implements Screen {
         this.currentRound = round;
         this.currentPoints = points;
 
+        this.animationTimer = 0;
+
+        loadEnemyAnimations();
+
         characterIconTexture = new Texture(getIconRoute(this.currentRound));
         frameTexture = new Texture("storyFrame.png");
         nextButton = new UIButton(296,29,18,18,"Buttons/nextButtonIdle.png","Buttons/nextButtonPressed.png");
@@ -36,10 +51,14 @@ public class StoryScreen implements Screen {
         soundPlayer = new SoundPlayer();
 
         font = new BitmapFont(Gdx.files.internal("Fonts/test.fnt"));
+
+        baseX = -(20 * enemyAnimations.size()) - 16;
     }
 
     @Override
     public void render(float delta) {
+        animationTimer += Gdx.graphics.getDeltaTime();
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -54,6 +73,14 @@ public class StoryScreen implements Screen {
 
         font.draw(game.entityBatch, topTextLines[this.currentRound - 1][convCounter], 47, 35);
         font.draw(game.entityBatch, botTextLines[this.currentRound - 1][convCounter], 47, 25);
+
+        int posCounter = 1;
+
+        for (Animation<TextureRegion> animation:enemyAnimations) {
+            game.entityBatch.draw(animation.getKeyFrame(animationTimer, true), baseX + posCounter*20,130);
+            baseX += 0.1f;
+            posCounter++;
+        }
 
         game.entityBatch.end();
     }
@@ -112,6 +139,45 @@ public class StoryScreen implements Screen {
             {"", "", ""},
             {"", "", ""}
     };
+
+    /**
+     * Genera animaciones de cada enemigo que vaya a aparecer en la ronda. Éstas se mostrarán en la parte superior de la pantalla.
+     */
+    private void loadEnemyAnimations() {
+        this.enemyAnimations = new ArrayList<>();
+        switch (this.currentRound) {
+            case 1: //3 5 6
+                this.enemyAnimations.add(createAnimation("Enemies/e4-walk.png",2,2,0.2f));
+                this.enemyAnimations.add(createAnimation("Enemies/e6-walk.png",2,2,0.5f));
+                this.enemyAnimations.add(createAnimation("Enemies/e7-walk.png",2,2,0.2f));
+                break;
+            case 2: //0 1 5 6
+                this.enemyAnimations.add(createAnimation("Enemies/e1-walk.png",3,1,0.2f));
+                this.enemyAnimations.add(createAnimation("Enemies/e2-walk.png",2,2,0.2f));
+                this.enemyAnimations.add(createAnimation("Enemies/e6-walk.png",2,2,0.2f));
+                this.enemyAnimations.add(createAnimation("Enemies/e7-walk.png",2,2,0.2f));
+                break;
+            case 3: //2 3 4 6
+                this.enemyAnimations.add(createAnimation("Enemies/e3-walk.png",2,2,0.2f));
+                this.enemyAnimations.add(createAnimation("Enemies/e4-walk.png",2,2,0.2f));
+                this.enemyAnimations.add(createAnimation("Enemies/e5-walk.png",2,2,0.5f));
+                this.enemyAnimations.add(createAnimation("Enemies/e7-walk.png",2,2,0.2f));
+                break;
+            case 4: //0 1 2 3 5 6
+                this.enemyAnimations.add(createAnimation("Enemies/e1-walk.png",3,1,0.2f));
+                this.enemyAnimations.add(createAnimation("Enemies/e2-walk.png",2,2,0.2f));
+                this.enemyAnimations.add(createAnimation("Enemies/e3-walk.png",2,2,0.2f));
+                this.enemyAnimations.add(createAnimation("Enemies/e4-walk.png",2,2,0.2f));
+                this.enemyAnimations.add(createAnimation("Enemies/e6-walk.png",2,2,0.2f));
+                this.enemyAnimations.add(createAnimation("Enemies/e7-walk.png",2,2,0.2f));
+                break;
+            case 5: //0 2 7
+                this.enemyAnimations.add(createAnimation("Enemies/e1-walk.png",3,1,0.2f));
+                this.enemyAnimations.add(createAnimation("Enemies/e3-walk.png",2,2,0.2f));
+                this.enemyAnimations.add(createAnimation("Enemies/e8-walk.png",2,2,0.2f));
+                break;
+        }
+    }
 
     @Override
     public void dispose() {
