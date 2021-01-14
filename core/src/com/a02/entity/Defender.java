@@ -131,7 +131,7 @@ public class Defender extends GameObject {
     public void update (GameScreen gs) {
         switch (this.getId()) {
             case 0: //Health: cura en área, perdiendo vida cuando lo hace
-                if (gs.secTimer % 30 == 0) {
+                if (gs.secTimer % 30 == 0 && !this.isInInventory(gs)) {
                     hurt = overlappedArea(gs);
                     int healedObjectCounter = 0;
                     for (GameObject obj : hurt) {

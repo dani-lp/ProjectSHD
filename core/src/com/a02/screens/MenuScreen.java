@@ -10,8 +10,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
-import java.awt.*;
-import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -59,7 +57,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if (Settings.s.isTutorialCheck()) game.setScreen(new GameScreen(game, 0, 0));
+        if (Settings.s.isTutorialCheck()) game.setScreen(new GameScreen(game, 0, 0)); //Ronda 0 si se pide ejecutar tutorial
 
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -93,7 +91,7 @@ public class MenuScreen implements Screen {
 
         //Lógica
         if (playButton.isJustClicked() && introTimer) {
-            game.setScreen(new GameScreen(game, 1, 0));
+            game.setScreen(new StoryScreen(game, 1, 0));
         }
         if (infiniteButton.isJustClicked() && introTimer) {
             game.setScreen(new GameScreen(game, -1, 0)); //Modo infinito (ronda -1)

@@ -258,7 +258,7 @@ public class Enemy extends Entity {
                     if (gs.secTimer % 60 == 0) {
                         double angle = ((Math.atan2(this.getY() - overlappedArea(gs).getY(),
                                 this.getX() - overlappedArea(gs).getX()) * 180) / Math.PI + 90);
-                        EnemyShoot shoot = new EnemyShoot(this.getX() + 18, this.getY() + 9, 2, 2, 2,
+                        EnemyShoot shoot = new EnemyShoot(this.getX() + 8, this.getY() + 8, 2, 2, 2,
                                 this.getAttackDamage(), "spectralShoot.png", 5, angle);
                         gs.enemyShots.add(shoot);
                     }
