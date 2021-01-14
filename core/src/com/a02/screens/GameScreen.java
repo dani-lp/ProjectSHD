@@ -27,7 +27,6 @@ import java.io.*;
 import java.net.URI;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -632,7 +631,7 @@ public class GameScreen implements Screen {
         //////////////////////////////////////////////////////TESTING DE NODOS
         Texture t = new Texture("shoot.png");
         t.dispose();
-        for (Node node : nodes) game.entityBatch.draw(t, node.getX(), node.getY());
+        //for (Node node : nodes) game.entityBatch.draw(t, node.getX(), node.getY());
         //////////////////////////////////////////////////////
 
         game.entityBatch.end();

@@ -22,6 +22,7 @@ public class StoryScreen implements Screen {
     private final int currentRound, currentPoints; //Pasados entre GameScreen(s)
     private float animationTimer; //Usado para animaciones
     private float baseX; //Posición inicial de los enemigos
+    private float alphaTimer; //Para el 'fade in'
 
     private List<Animation<TextureRegion>> enemyAnimations;
 
@@ -41,10 +42,12 @@ public class StoryScreen implements Screen {
         this.currentPoints = points;
 
         this.animationTimer = 0;
+        this.alphaTimer = 0;
 
         loadEnemyAnimations();
 
         characterIconTexture = new Texture(getIconRoute(this.currentRound));
+        characterNameTexture = new Texture(getNameRoute(this.currentRound));
         frameTexture = new Texture("storyFrame.png");
         nextButton = new UIButton(296,29,18,18,"Buttons/nextButtonIdle.png","Buttons/nextButtonPressed.png");
         skipButton = new UIButton(296,5,18,18,"Buttons/skipButtonIdle.png","Buttons/skipButtonPressed.png");
@@ -57,10 +60,14 @@ public class StoryScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if (animationTimer == 0 && this.currentRound == 5) soundPlayer.playRoar();
         animationTimer += Gdx.graphics.getDeltaTime();
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if (alphaTimer < 1.0f) alphaTimer += 0.02f;
+        game.entityBatch.setColor(1,1,1,alphaTimer);
 
         updateButtonLogic();
 
@@ -70,6 +77,7 @@ public class StoryScreen implements Screen {
         game.entityBatch.draw(nextButton.getCurrentTexture(), nextButton.getX(), nextButton.getY());
         game.entityBatch.draw(skipButton.getCurrentTexture(), skipButton.getX(), skipButton.getY());
         game.entityBatch.draw(characterIconTexture, 10,10);
+        game.entityBatch.draw(characterNameTexture, 14,48);
 
         font.draw(game.entityBatch, topTextLines[this.currentRound - 1][convCounter], 47, 35);
         font.draw(game.entityBatch, botTextLines[this.currentRound - 1][convCounter], 47, 25);
@@ -77,8 +85,8 @@ public class StoryScreen implements Screen {
         int posCounter = 1;
 
         for (Animation<TextureRegion> animation:enemyAnimations) {
-            game.entityBatch.draw(animation.getKeyFrame(animationTimer, true), baseX + posCounter*20,130);
-            baseX += 0.1f;
+            game.entityBatch.draw(animation.getKeyFrame(animationTimer, true), baseX + posCounter * 20,130);
+            baseX += 0.1f; //Movimiento lateral
             posCounter++;
         }
 
@@ -91,9 +99,15 @@ public class StoryScreen implements Screen {
 
         if (nextButton.isJustClicked()) {
             if (convCounter < topTextLines[this.currentRound - 1].length - 1) convCounter++; //Si hay más texto avanza
-            else game.setScreen(new GameScreen(game, this.currentRound, this.currentPoints)); //Si no pasa al juego
+            else {
+                game.entityBatch.setColor(1,1,1, 1);
+                game.setScreen(new GameScreen(game, this.currentRound, this.currentPoints)); //Si no pasa al juego
+            }
         }
-        if (skipButton.isJustClicked()) game.setScreen(new GameScreen(game, this.currentRound, this.currentPoints));
+        if (skipButton.isJustClicked()) {
+            game.entityBatch.setColor(1,1,1, 1);
+            game.setScreen(new GameScreen(game, this.currentRound, this.currentPoints));
+        }
     }
 
     /**
@@ -104,15 +118,37 @@ public class StoryScreen implements Screen {
     private String getIconRoute(int round) {
         switch (round) {
             case 1:
-                return "CharacterIcons/e6Icon.png"; //Caballero genérico
+                return "CharacterIcons/e6Icon.png"; //Gregor
             case 2:
-                return "CharacterIcons/e1Icon.png"; //Caballero rojo
+                return "CharacterIcons/e1Icon.png"; //Larry
             case 3:
-                return "CharacterIcons/e5Icon.png"; //Árbol, está controlado por el E8
+                return "CharacterIcons/e5Icon.png"; //Vmenta
             case 4:
-                return "CharacterIcons/e3Icon.png"; //Fantasma
+                return "CharacterIcons/e3Icon.png"; //Kelsier
             case 5:
-                return "CharacterIcons/e8Icon.png"; //Boss
+                return "CharacterIcons/e8Icon.png"; //Abzul
+            default:
+                return "empty.png";
+        }
+    }
+
+    /**
+     * Devuelve la ruta del nombre del enemigo necesario.
+     * @param round Ronda actual
+     * @return Ruta de la imagen
+     */
+    private String getNameRoute(int round) {
+        switch (round) {
+            case 1:
+                return "EnemyNames/Gregor.png"; //Gregor
+            case 2:
+                return "EnemyNames/Larry.png"; //Larry
+            case 3:
+                return "EnemyNames/Vmenta.png"; //Vmenta
+            case 4:
+                return "EnemyNames/Kelsier.png"; //Kelsier
+            case 5:
+                return "EnemyNames/Abzul.png"; //Abzul
             default:
                 return "empty.png";
         }
@@ -122,22 +158,22 @@ public class StoryScreen implements Screen {
      * Textos de la línea superior de diálogo.
      */
     private final String[][] topTextLines = {
-            {"We're no strangers to love", "A full commitment's what I'm thinking of", "I just wanna tell you how I'm feeling", "Never gonna give you up", "Never gonna run around and desert you", "Never gonna say goodbye"},
-            {"", "", ""},
-            {"", "", ""},
-            {"", "", ""},
-            {"", "", ""}
+            {"Bro, estoy harto del infierno.", "Hace eones que no pruebo una,", "tropece con esa BROcha..."},
+            {"BROS DEL INFRAMUNDO!", "para evitar que la humanidad ", "Asi podremos conquistar la Tierra,"},
+            {"Lo siento, no quiero hacer esto...", "Esta obligando a mi gente a", "Aunque algunos de nosotros se han", "de un manjar divino que llaman 'pizza'."},
+            {"No te haces a la idea de lo que me costo", "No vamos a dejar que todo nuestro", "El 'Proyecto SHD' era mucho mas", "Intentar obtener energia..."},
+            {"Pizzaaaa..."}
     };
 
     /**
      * Textos de la línea inferior de diálogo.
      */
     private final String[][] botTextLines = {
-            {"You know the rules and so do I", "You wouldn't get this from any other guy", "Gotta make you understand","Never gonna let you down", "Never gonna make you cry", "Never gonna tell a lie and hurt you"},
-            {"", "", ""},
-            {"", "", ""},
-            {"", "", ""},
-            {"", "", ""}
+            {"Quiero un poco de pizza, bro...", "desde que me mori cuando me ", "Llevo mucho esperando..."},
+            {"debemos destruir el cuaternizador,", "cierre el portal.", "y poder tener pizza infinita!"},
+            {"El Rey Demonio Abzul...", "obedecerle! Somos un pueblo pacífico...", "pasado a su bando, por las promesas", "El Rey Demonio no deja de repetirlo..."},
+            {"poseer a aquel cientifico...", "trabajo sea en vano.", "peligroso de lo que nunca pensasteis.", "del infierno? No me hagas reir."},
+            {"PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"}
     };
 
     /**
@@ -188,6 +224,7 @@ public class StoryScreen implements Screen {
         skipButton.disposeButton();
         soundPlayer.dispose();
         font.dispose();
+        enemyAnimations.clear();
     }
 
     @Override
