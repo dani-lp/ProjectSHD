@@ -234,7 +234,7 @@ public class GameScreen implements Screen {
                 this.roundMusic.dispose();
             }
             if (currentRound != 5) game.setScreen(new StoryScreen(game, ++currentRound, this.points));
-            else game.setScreen(new WinScreen());
+            else game.setScreen(new WinScreen(this.game,this.points));
         }
 
         if ((Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) && secTimer != 0) pauseFlag = !pauseFlag;
