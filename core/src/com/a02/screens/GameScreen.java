@@ -10,6 +10,7 @@ import com.a02.game.MainGame;
 import com.a02.component.Map;
 import com.a02.game.Settings;
 import com.a02.pathfinding.Node;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -65,6 +66,7 @@ public class GameScreen implements Screen {
     public List<EnemyShoot> enemyShots = new ArrayList<>(); //Disparos de Enemigos
     public List<Obstacle> obstacles = new ArrayList<>(); //Obstaculos en los mapas
     public HashMap<Integer,Enemy> enems = new HashMap<>();
+    public List<Texture> locks = new ArrayList<>(); //Obstaculos en los mapas
 
     public Defender beacon; //Punto central que deben destruir los enemigos
 
@@ -132,7 +134,6 @@ public class GameScreen implements Screen {
         trapInv = new Inventory();
 
         createObjects(); //Crear objetos
-
         drawingInv = fullInv.sortInventory();
         msg1 = "En este tutorial aprenderás a jugar." ;
         msg2 = "Haz click en el texto para continuar.";
@@ -399,6 +400,7 @@ public class GameScreen implements Screen {
         //Actualiza estado de objetos del inventario
         for (GameObject object : drawingInv.getObjects()) {
             object.grabObject(this);
+
         }
 
         //Botón de eliminar objetos
@@ -592,6 +594,11 @@ public class GameScreen implements Screen {
             if (object != null) {
                 if (object.getAnimation() == null) game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
                 else game.entityBatch.draw(object.getCurrentAnimation(animationTimer), object.getX(), object.getY());
+                if (!object.isUnlocked()){
+                    Texture lock= new Texture("lock.png");
+                    game.entityBatch.draw(lock, object.getX() + 4, object.getY() + 2);
+                }
+
             }
         }
 
@@ -758,7 +765,10 @@ public class GameScreen implements Screen {
 
         for (int i = 0; i < 4; i++){
             try {
-                Attacker att = DBManager.dbManager.getAttacker(i);
+                Attacker att = DBManager.dbManager.getAttacker(i,this.currentRound);
+                if (Settings.s.isTutorialCheck()){
+                    att.setUnlocked(true);
+                }
                 att.hpBar.setMaxHP(att.getHp());
                 att.loadTextures();
                 objects.add(att);
@@ -771,7 +781,10 @@ public class GameScreen implements Screen {
 
         for (int i = 0; i < 4; i++){
             try {
-                Defender def = DBManager.dbManager.getDefender(i);
+                Defender def = DBManager.dbManager.getDefender(i,this.currentRound);
+                if (Settings.s.isTutorialCheck()){
+                    def.setUnlocked(true);
+                }
                 def.hpBar.setMaxHP(def.getHp());
                 def.loadTextures();
                 objects.add(def);
@@ -784,7 +797,10 @@ public class GameScreen implements Screen {
 
         for (int i = 0; i < 5; i++){
             try {
-                Trap trap = DBManager.dbManager.getTrap(i);
+                Trap trap = DBManager.dbManager.getTrap(i,this.currentRound);
+                if (Settings.s.isTutorialCheck()){
+                    trap.setUnlocked(true);
+                }
                 trap.hpBar.setMaxHP(trap.getHp());
                 trap.loadTextures();
                 objects.add(trap);
