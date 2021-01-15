@@ -1,8 +1,6 @@
 package com.a02.users.windows;
 
 import com.a02.users.User;
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
@@ -111,7 +109,6 @@ public class LoginWindow extends JFrame{
                 int key = e.getKeyCode();
                 if (key == KeyEvent.VK_ENTER) {
                     loginButton.doClick();
-                    changeLF();
                 }
             }
         };
@@ -151,30 +148,5 @@ public class LoginWindow extends JFrame{
                     "Invalid user", JOptionPane.ERROR_MESSAGE);
             return false;
         }
-    }
-
-    private boolean isDark = false;
-    private void changeLF() {
-        try {
-            if (!isDark) {
-                UIManager.setLookAndFeel(new FlatDarkLaf());
-                isDark = true;
-            } else {
-                UIManager.setLookAndFeel(new FlatLightLaf());
-                isDark = false;
-            }
-
-            SwingUtilities.updateComponentTreeUI(this);
-        } catch (Exception ignored) {
-
-        }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new LoginWindow();
-            }
-        });
     }
 }

@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.Texture;
 import java.util.logging.Logger;
 
 public class EnemyShoot extends Entity{
-    private double angle;
-    private float speed;
-    private float attackdamage;
-    private Texture texture;
+    private final double angle;
+    private final float speed;
+    private final float attackdamage;
+    private final Texture texture;
     private int hp;
-    private static Logger logger = Logger.getLogger(Shoot.class.getName());
+    private final static Logger logger = Logger.getLogger(Shoot.class.getName());
 
     public EnemyShoot(float x, float y, int height, int width, int speed, float attackdamage, String sprite, int hp,
                   double angle) {
@@ -63,12 +63,6 @@ public class EnemyShoot extends Entity{
         }
         return null;
     }
-
-    public float getSpeed() {
-        return speed;
-    }
-
-    public float getAttackdamage() { return attackdamage; }
 
     public Texture getTexture() {
         return texture;

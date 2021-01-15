@@ -4,9 +4,7 @@ import com.a02.entity.*;
 import com.a02.game.Settings;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class DBManager {
 
@@ -16,8 +14,6 @@ public class DBManager {
     private DBManager() {
 
     }
-
-    //TODO: cerrar rs, ps https://stackoverflow.com/questions/2225221/closing-database-connections-in-java
 
     /**
      * Crea una conexión con la BD.
@@ -58,7 +54,6 @@ public class DBManager {
             stmt.setInt(1, id);
 
             ResultSet rs = stmt.executeQuery();
-
             if (rs.next()) {
                 Enemy enemy = new Enemy();
                 enemy.setId(rs.getInt("ID_E"));
@@ -80,7 +75,7 @@ public class DBManager {
     public HashMap<Integer,Enemy> getAllEnemies() throws DBException {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM enemy WHERE ID_E<7")) {
             ResultSet rs = stmt.executeQuery();
-            HashMap<Integer,Enemy> enemies = new HashMap<Integer,Enemy>();
+            HashMap<Integer,Enemy> enemies = new HashMap<>();
             while (rs.next()) {
                 Enemy enemy = new Enemy();
                 enemy.setId(rs.getInt("ID_E"));
@@ -133,7 +128,7 @@ public class DBManager {
      * @return Trap con ID parámetro
      * @throws DBException Error de SQL
      */
-    public Trap getTrap(int id) throws DBException {
+    public Trap getTrap(int id, int round) throws DBException {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM trap WHERE ID_T=?")) {
             stmt.setInt(1, id);
 
@@ -144,13 +139,26 @@ public class DBManager {
                 trap.setId(rs.getInt("ID_T"));
                 trap.setHp(rs.getInt("HP_T"));
                 trap.setAttackDamage(rs.getInt("ATTACKDAMAGE_T"));
-                int bool = rs.getInt("UNLOCKED_T");
-                if (bool == 1) trap.setUnlocked(true); //TODO: pasar a boolean
+                trap.setUnlocked(false);
                 trap.setPrice(rs.getInt("PRICE_T"));
                 trap.setType(rs.getString("TYPE"));
                 trap.setEffect(Trap.Effect.valueOf(rs.getString("EFFECT")));
                 trap.setWidth(rs.getInt("WIDTH_T"));
                 trap.setHeight(rs.getInt("HEIGHT_T"));
+                trap.setUnlocked(false);
+                switch (trap.getId()) {
+                    case 0:
+                    case 1:
+                        trap.setUnlocked(true);
+                        break;
+                    case 2:
+                    case 4:
+                        if (round > 1 || round < 0) trap.setUnlocked(true);
+                        break;
+                    case 3:
+                        if (round > 3 || round < 0) trap.setUnlocked(true);
+                        break;
+                }
                 return trap;
             } else {
                 return new Trap();
@@ -166,7 +174,7 @@ public class DBManager {
      * @return Defender con ID parámetro
      * @throws DBException Error de SQL
      */
-    public Defender getDefender(int id) throws DBException {
+    public Defender getDefender(int id,int round) throws DBException {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM defender WHERE ID_D=?")) {
             stmt.setInt(1, id);
 
@@ -176,12 +184,23 @@ public class DBManager {
                 Defender defender = new Defender();
                 defender.setId(rs.getInt("ID_D"));
                 defender.setHp(rs.getInt("HP_A"));
-                int bool = rs.getInt("UNLOCKED_D");
-                if (bool == 1) defender.setUnlocked(true);
+                defender.setUnlocked(false);
                 defender.setPrice(rs.getInt("PRICE_D"));
                 defender.setType(rs.getString("TYPE_D"));
                 defender.setWidth(rs.getInt("WIDTH_D"));
                 defender.setHeight(rs.getInt("HEIGHT_D"));
+
+                switch (defender.getId()) {
+                    case 1:
+                    case 2:
+                        defender.setUnlocked(true);
+                        break;
+                    case 0:
+                    case 3:
+                        if (round > 2 || round < 0) defender.setUnlocked(true);
+                        break;
+
+                }
                 return defender;
             } else {
                 return new Defender();
@@ -197,7 +216,7 @@ public class DBManager {
      * @return Attacker con ID parámetro
      * @throws DBException Error de SQL
      */
-    public Attacker getAttacker(int id) throws DBException {
+    public Attacker getAttacker(int id, int round) throws DBException {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM attacker WHERE ID_A=?")) {
             stmt.setInt(1, id);
 
@@ -208,13 +227,27 @@ public class DBManager {
                 attacker.setId(rs.getInt("ID_A"));
                 attacker.setHp(rs.getInt("HP_A"));
                 attacker.setAttackDamage(rs.getInt("ATTACKDAMAGE_A"));
-                int bool = rs.getInt("UNLOCKED_A");
-                if (bool == 1) attacker.setUnlocked(true);
+                attacker.setUnlocked(false);
                 attacker.setPrice(rs.getInt("PRICE_A"));
                 attacker.setType(rs.getString("TYPE_A"));
                 attacker.setAttackType(rs.getString("ATTACK_TYPE"));
                 attacker.setWidth(rs.getInt("WIDTH_A"));
                 attacker.setHeight(rs.getInt("HEIGHT_A"));
+                switch (attacker.getId()) {
+                    case 0:
+                        attacker.setUnlocked(true);
+                        break;
+                    case 1:
+                        if (round > 2 || round < 0) attacker.setUnlocked(true);
+                        break;
+                    case 2:
+                        if (round > 1 || round < 0) attacker.setUnlocked(true);
+                        break;
+                    case 3:
+                        if (round > 3 || round < 0) attacker.setUnlocked(true);
+                        break;
+
+                }
                 return attacker;
             } else {
                 return new Attacker();

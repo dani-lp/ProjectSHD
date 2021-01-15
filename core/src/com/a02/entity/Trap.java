@@ -130,12 +130,12 @@ public class Trap extends GameObject {
                         logger.info("Congelado por trampa");
                         break;
                     case TELEPORT :
-                        this.focusedEnemy.setNewPos(getRandomTpPos(gs));
+                        if (!(this.focusedEnemy instanceof FinalBoss)) this.focusedEnemy.setNewPos(getRandomTpPos(gs));
                         this.state = State.DYING;
                         logger.info("Teleportado por trampa");
                         break;
                     case DAMAGE :
-                        this.focusedEnemy.setHp(focusedEnemy.getHp() - this.attackDamage);
+                        if (!(this.focusedEnemy instanceof FinalBoss)) this.focusedEnemy.setHp(focusedEnemy.getHp() - this.attackDamage);
                         this.state = State.DYING;
                         logger.info("Dañado por trampa");
                         break;

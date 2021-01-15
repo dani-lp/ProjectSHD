@@ -267,21 +267,4 @@ public class UsersWindow extends JFrame {
         }
         return map;
     }
-
-    @Deprecated
-    private JTable createTable(HashMap<String, User> map) { //Para testing
-        String[] columnNames = {"Username", "Password", "Name", "Age", "Email", "Admin"};
-        String[][] data = new String[map.size()][6];
-        int index = 0;
-        for (User user : map.values()) {
-            data[index][0] = user.getUsername();
-            data[index][1] = user.getPassword();
-            data[index][2] = user.getName();
-            data[index][3] = String.valueOf(user.getAge());
-            data[index][4] = user.getMail();
-            data[index][5] = String.valueOf(user.isAdmin());
-            index++;
-        }
-        return new JTable(data, columnNames);
-    }
 }

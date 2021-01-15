@@ -26,11 +26,11 @@ public class StoryScreen implements Screen {
 
     private List<Animation<TextureRegion>> enemyAnimations;
 
-    private Texture characterIconTexture; //Textura de icono de personaje
-    private Texture characterNameTexture; //Textura del nombre del personaje
+    private final Texture characterIconTexture; //Textura de icono de personaje
+    private final Texture characterNameTexture; //Textura del nombre del personaje
     private final Texture frameTexture; //Textura del marco de texto
-    private UIButton nextButton; //Para pasar a la siguiente frase
-    private UIButton skipButton; //Para saltarse las frases y pasar al juego
+    private final UIButton nextButton; //Para pasar a la siguiente frase
+    private final UIButton skipButton; //Para saltarse las frases y pasar al juego
     private int convCounter = 0; //Contador de línea
     private final SoundPlayer soundPlayer; //Reproductor de sonido
 
@@ -53,7 +53,7 @@ public class StoryScreen implements Screen {
         skipButton = new UIButton(296,5,18,18,"Buttons/skipButtonIdle.png","Buttons/skipButtonPressed.png");
         soundPlayer = new SoundPlayer();
 
-        font = new BitmapFont(Gdx.files.internal("Fonts/test.fnt"));
+        font = new BitmapFont(Gdx.files.internal("Fonts/gameFont.fnt"));
 
         baseX = -(20 * enemyAnimations.size()) - 16;
     }
@@ -79,8 +79,8 @@ public class StoryScreen implements Screen {
         game.entityBatch.draw(characterIconTexture, 10,10);
         game.entityBatch.draw(characterNameTexture, 14,48);
 
-        font.draw(game.entityBatch, topTextLines[this.currentRound - 1][convCounter], 47, 35);
-        font.draw(game.entityBatch, botTextLines[this.currentRound - 1][convCounter], 47, 25);
+        font.draw(game.entityBatch, topTextLines[this.currentRound - 1][convCounter], 46, 30);
+        font.draw(game.entityBatch, botTextLines[this.currentRound - 1][convCounter], 46, 20);
 
         int posCounter = 1;
 
@@ -94,8 +94,8 @@ public class StoryScreen implements Screen {
     }
 
     private void updateButtonLogic() {
-        nextButton.isTouched();
-        skipButton.isTouched();
+        nextButton.updateTouched();
+        skipButton.updateTouched();
 
         if (nextButton.isJustClicked()) {
             if (convCounter < topTextLines[this.currentRound - 1].length - 1) convCounter++; //Si hay más texto avanza
@@ -158,10 +158,10 @@ public class StoryScreen implements Screen {
      * Textos de la línea superior de diálogo.
      */
     private final String[][] topTextLines = {
-            {"Bro, estoy harto del infierno.", "Hace eones que no pruebo una,", "tropece con esa BROcha..."},
-            {"BROS DEL INFRAMUNDO!", "para evitar que la humanidad ", "Asi podremos conquistar la Tierra,"},
-            {"Lo siento, no quiero hacer esto...", "Esta obligando a mi gente a", "Aunque algunos de nosotros se han", "de un manjar divino que llaman 'pizza'."},
-            {"No te haces a la idea de lo que me costo", "No vamos a dejar que todo nuestro", "El 'Proyecto SHD' era mucho mas", "Intentar obtener energia..."},
+            {"Bro, estoy harto del infierno.", "Hace eones que no pruebo una,", "tropecé con esa BROcha..."},
+            {"BROS DEL INFRAMUNDO!", "para evitar que la humanidad ", "Así podremos conquistar la Tierra,"},
+            {"Lo siento, no quiero hacer esto...", "Está obligando a mi gente a", "Aunque algunos de nosotros se han", "de un manjar divino que llaman 'pizza'."},
+            {"No te haces a la idea de lo que me costó", "No vamos a dejar que todo nuestro", "El 'Proyecto SHD' era mucho más", "Intentar obtener energía..."},
             {"Pizzaaaa..."}
     };
 
@@ -169,10 +169,10 @@ public class StoryScreen implements Screen {
      * Textos de la línea inferior de diálogo.
      */
     private final String[][] botTextLines = {
-            {"Quiero un poco de pizza, bro...", "desde que me mori cuando me ", "Llevo mucho esperando..."},
-            {"debemos destruir el cuaternizador,", "cierre el portal.", "y poder tener pizza infinita!"},
+            {"Quiero un poco de pizza, bro...", "desde que me morí cuando me ", "Llevo mucho esperando..."},
+            {"Debemos destruir el cuaternizador,", "cierre el portal.", "y poder tener pizza infinita!!"},
             {"El Rey Demonio Abzul...", "obedecerle! Somos un pueblo pacífico...", "pasado a su bando, por las promesas", "El Rey Demonio no deja de repetirlo..."},
-            {"poseer a aquel cientifico...", "trabajo sea en vano.", "peligroso de lo que nunca pensasteis.", "del infierno? No me hagas reir."},
+            {"poseer a aquel científico...", "trabajo sea en vano.", "peligroso de lo que nunca pensasteis.", "del infierno? No me hagas reir."},
             {"PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"}
     };
 

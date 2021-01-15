@@ -84,10 +84,10 @@ public class MenuScreen implements Screen {
 
     private void updateButtonLogic() {
         //Aspecto
-        playButton.isTouched();
-        infiniteButton.isTouched();
-        testingButton.isTouched();
-        quitButton.isTouched();
+        playButton.updateTouched();
+        infiniteButton.updateTouched();
+        testingButton.updateTouched();
+        quitButton.updateTouched();
 
         //Lógica
         if (playButton.isJustClicked() && introTimer) {

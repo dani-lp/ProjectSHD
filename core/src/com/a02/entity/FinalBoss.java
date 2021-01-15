@@ -1,7 +1,6 @@
 package com.a02.entity;
 
 import com.a02.screens.GameScreen;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -105,7 +104,6 @@ public class FinalBoss extends Enemy{
                 }
                 break;
         }
-        //this.updateEffect(gs); //TODO: al boss le afectan las trampas?
         if (this.hpBar != null) this.hpBar.update(this, this.getHp());
     }
 
@@ -124,22 +122,5 @@ public class FinalBoss extends Enemy{
                 return this.deathAnimation.getKeyFrame(animationTimer, true);
         }
         return null;
-    }
-
-
-    /**
-     * Añade varios 'minions' a la plantilla de enemigos. Utilizado en el jefe final.
-     */
-    public void addMinions(GameScreen gs) {
-        Enemy minion1 = new Enemy(this.getX() + 8,this.getY() - 8 ,16,16,6,450,50,
-                30,gs.secTimer + 240, 50);
-        Enemy minion2 = new Enemy(this.getX() + 8,this.getY() + 32,16,16,6,450,50,
-                30,gs.secTimer + 240, 50);
-        minion1.loadAnimations();
-        minion2.loadAnimations();
-        minion1.loadIdleTexture();
-        minion2.loadIdleTexture();
-        gs.enemies.add(minion1);
-        gs.enemies.add(minion2);
     }
 }

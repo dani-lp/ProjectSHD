@@ -26,16 +26,6 @@ public class User implements Serializable {
 
     }
 
-    /**
-     * Sólo usado para administradores.
-     * @param admin Nombre de administrador ("admin")
-     */
-    public User(String admin) {
-        this.username = admin;
-        this.password = admin;
-        this.admin = true;
-    }
-
     @Override
     public String toString() {
         return "User{" +
