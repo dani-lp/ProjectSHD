@@ -5,16 +5,11 @@ import com.a02.entity.Enemy;
 public class Node {
 
     private Node nextNode; //Siguiente nodo al que dirigirse.
-    private float x; //Coordenada 'x' del nodo.
-    private float y; //Coordenada 'y' del nodo.
+    private final float x, y; //Coordenadas 'x', 'y' del nodo.
 
     public Node(float x, float y) {
         this.x = x;
         this.y = y;
-    }
-
-    public Node() {
-
     }
 
     @Override
@@ -43,11 +38,6 @@ public class Node {
      */
     public double distanceToNode(Enemy enemy) {
         return Math.sqrt(Math.pow(this.x - enemy.getX(), 2) + Math.pow(this.y - enemy.getY(), 2));
-    }
-
-    public void setCoords(float x, float y) {
-        this.x = x;
-        this.y = y;
     }
 
     public Node getNextNode() {

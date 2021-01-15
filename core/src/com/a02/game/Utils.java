@@ -17,14 +17,6 @@ import java.util.regex.Pattern;
 
 public class Utils {
     /**
-     * Devuelve la posición del mouse en un Vector3.
-     * @return Vector3 posición
-     */
-    public static Vector3 getMousePos() {
-        return new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
-    }
-
-    /**
      * Devuelve la posición relativa a una cámara (320 * 180 píxeles en todos los casos) en un Vector3.
      * @return Vector3 posición
      */

@@ -3,7 +3,6 @@ package com.a02.entity;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
@@ -21,19 +20,13 @@ public class Attacker extends GameObject {
     private String attackType;
     private double angle = 0;
     private final static Logger logger = Logger.getLogger(GameObject.class.getName());
-    private enum State {
-        IDLE, ATTACKING
-    }
     private int timer = 60;
-
-    State state;
 
     public Attacker(float x, float y, int width, int height, int id, String type, int price,
                     boolean unlocked, int hp, String attackType, float attackDamage) {
         super(x, y, width, height, id, type, price, unlocked, hp);
         this.attackType = attackType;
         this.attackDamage = attackDamage;
-        this.state = State.IDLE;
         this.isSelected = false;
         loadTextures();
     }
@@ -62,7 +55,6 @@ public class Attacker extends GameObject {
         super();
         this.attackType = "";
         this.attackDamage = 0;
-        this.state = State.IDLE;
         this.isSelected = false;
         loadTextures();
     }
@@ -71,7 +63,6 @@ public class Attacker extends GameObject {
         super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getId(), other.getType(), other.getPrice(), other.isUnlocked(), other.getHp());
         this.attackType = other.getAttackType();
         this.attackDamage = other.getAttackDamage();
-        this.state = other.state;
         this.isSelected = false;
         this.setAnimation(other.getAnimation());
         this.setTexture(other.getTexture());
@@ -134,18 +125,19 @@ public class Attacker extends GameObject {
                             this.getX() - overlappedArea(gs).getX()) * 180) / Math.PI + 90);
                 }
 
-                //Ataque
+                //Ataque automático
                 if (gs.secTimer % 60 == 0 && !this.isSelected && this.overlappedArea(gs) != null && !this.isGrabbed()) { //Ataque cada segundo
                     gs.shots.add(new Shoot(this.getX() + 8, this.getY() + 9, 2, 2, 2,
                             this.getAttackDamage(), "shoot.png", 5,"n", 0, this.angle));
                     gs.soundPlayer.playArrow();
                 }
-                else if (this.isSelected) { //Ataque seleccionado
+                //Ataque seleccionado
+                else if (this.isSelected) {
                     this.timer++;
 
                     Vector3 focus = getRelativeMousePos();
                     this.angle = ((Math.atan2(this.getY() - focus.y,
-                            this.getX() - focus.x) * 180) / Math.PI + 90);;
+                            this.getX() - focus.x) * 180) / Math.PI + 90);
 
                     if ((Gdx.input.isTouched() || Gdx.input.isKeyPressed(Input.Keys.SPACE)) && this.timer > 60) {
                         double angle = ((Math.atan2(this.getY() - focus.y, this.getX() - focus.x) * 180) / Math.PI + 90);
@@ -196,5 +188,3 @@ public class Attacker extends GameObject {
         return null;
     }
 }
-
-

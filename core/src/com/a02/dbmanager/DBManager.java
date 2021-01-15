@@ -4,9 +4,7 @@ import com.a02.entity.*;
 import com.a02.game.Settings;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class DBManager {
 
@@ -16,8 +14,6 @@ public class DBManager {
     private DBManager() {
 
     }
-
-    //TODO: cerrar rs, ps https://stackoverflow.com/questions/2225221/closing-database-connections-in-java
 
     /**
      * Crea una conexión con la BD.
@@ -58,7 +54,6 @@ public class DBManager {
             stmt.setInt(1, id);
 
             ResultSet rs = stmt.executeQuery();
-
             if (rs.next()) {
                 Enemy enemy = new Enemy();
                 enemy.setId(rs.getInt("ID_E"));
@@ -80,7 +75,7 @@ public class DBManager {
     public HashMap<Integer,Enemy> getAllEnemies() throws DBException {
         try (PreparedStatement stmt = conn.prepareStatement("SELECT * FROM enemy WHERE ID_E<7")) {
             ResultSet rs = stmt.executeQuery();
-            HashMap<Integer,Enemy> enemies = new HashMap<Integer,Enemy>();
+            HashMap<Integer,Enemy> enemies = new HashMap<>();
             while (rs.next()) {
                 Enemy enemy = new Enemy();
                 enemy.setId(rs.getInt("ID_E"));

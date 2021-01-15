@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.a02.entity.Enemy.lineRectCollision;
 import static com.a02.game.Utils.*;
 
 public class GameScreen implements Screen {
@@ -121,7 +120,7 @@ public class GameScreen implements Screen {
         pauseFlag = false;
         currentRound = round;
 
-        font = new BitmapFont(Gdx.files.internal("Fonts/test.fnt"));
+        font = new BitmapFont(Gdx.files.internal("Fonts/gameFont.fnt"));
 
         secTimer = 0;
         animationTimer = 0;
@@ -135,8 +134,8 @@ public class GameScreen implements Screen {
         createObjects(); //Crear objetos
 
         drawingInv = fullInv.sortInventory();
-        msg1 = "en este tutorial veras como jugar," ;
-        msg2 = "clicka el texto para seguir";
+        msg1 = "En este tutorial aprenderás a jugar." ;
+        msg2 = "Haz click en el texto para continuar.";
 
         //Setup por rondas
         loadBeacon(); //Posiciones del beacon
@@ -184,14 +183,6 @@ public class GameScreen implements Screen {
             if (e.getId() != 3) e.setFocus(e.focusNode.getX(), e.focusNode.getY());
             else e.setFocus(beacon.getX(), beacon.getY());
         }
-
-
-        ///////////////////////////////////////// TESTEO DE COLISIONES TODO
-        Obstacle obs = new Obstacle(64,54,32,18);
-        boolean coll = lineRectCollision(60,50,106,82,obs.getX(),obs.getY(),obs.getWidth(), obs.getHeight());
-        System.out.println(coll);
-        /////////////////////////////////////////
-
     }
 
     /**
@@ -261,56 +252,56 @@ public class GameScreen implements Screen {
     private void updateTutorialMessages(int contEnt) {
         switch (contEnt){
             case 1:
-                msg1 = "El objeto colocado en el centro es";
-                msg2 = "el beacon, si se destruye pierdes.";
+                msg1 = "El objeto colocado en el centro es el 'beacon',";
+                msg2 = "o baliza. Si es destruído, serás derrotado.";
                 break;
             case 2:
-                msg1 = "usa los objetos del inventario para";
-                msg2 = "protegerlo, colocarlos costara oro.";
+                msg1 = "Usa los objetos del inventario para protegerlo;";
+                msg2 = "sin embargo, colocarlos te costará oro.";
                 break;
             case 3:
-                msg1 = "conseguiras oro periodicamente o";
-                msg2 = "acabando con enemigos.";
+                msg1 = "Conseguiras oro periódicamente, ";
+                msg2 = "o acabando con enemigos.";
                 break;
             case 4:
-                msg1 = "puedes usar los botones en lo alto";
-                msg2 = "del inventario para navegar ventanas.";
+                msg1 = "Puedes usar los botones en lo alto del inventario";
+                msg2 = "para navegar entre los distintos objetos.";
                 break;
             case 5:
-                msg1 = "tienes 3 tipos de objetos trampas,";
-                msg2 = "defensivos y ofensivos.";
+                msg1 = "Tienes 3 tipos de objetos: atacantes, defensores";
+                msg2 = "y trampas; cada tipo tiene su labor única.";
                 break;
             case 6:
-                msg1 = "los defensivos curan objetos o";
-                msg2 = "ralentizan a los enemigos.";
+                msg1 = "Los objetos ofensivos atacan a los enemigos,";
+                msg2 = "ya sea por proximidad o a distancia.";
                 break;
             case 7:
-                msg1 = "cada trampa tiene un efecto unico,";
-                msg2 = "pero ten cuidado son de un solo uso.";
+                msg1 = "Los objetos defensivos protegen otros objetos,";
+                msg2 = "o ralentizan el avance de los enemigos.";
                 break;
             case 8:
-                msg1 = "los objetos de ataque atacan a";
-                msg2 = "los enemigos a mele o a distancia.";
+                msg1 = "Cada trampa tiene un efecto único; sin embargo,";
+                msg2 = "has de tener cuidado, ya que son de un sólo uso.";
                 break;
             case 9:
-                msg1 = "Por ultimo, puedes controlar ciertos";
-                msg2 = "objetos y usarlos si les haces click.";
+                msg1 = "Por último, puedes controlar ciertos objetos;";
+                msg2 = "para ello, haz click en ellos.";
                 break;
             case 10:
-                msg1 = "pulsando ESPACIO podras disparar con el ";
-                msg2 = "leon o curar aliados con el martillo.";
+                msg1 = "Pulsando ESPACIO/haciendo click podrás disparar";
+                msg2 = "con la ballesta, o curar aliados con el martillo.";
                 break;
             case 11:
-                msg1 = "mientras controles un objeto no podras";
-                msg2 = "colocar otros, pulsa E para dejarlo.";
+                msg1 = "Mientras controles un objeto no podrás colocar";
+                msg2 = "otros; pulsa E para dejar de hacerlo.";
                 break;
             case 12:
-                msg1 = "De la misma forma puedes utilizar";
-                msg2 = "la pala para vender objetos y ganar oro.";
+                msg1 = "De la misma forma, puedes utilizar la pala para";
+                msg2 = "vender objetos recuperar parte de su coste.";
                 break;
             case 13:
-                msg1 = "ATENCION!!! se acerca un enemigo,";
-                msg2 = "veamos como te las arreglas...";
+                msg1 = "ATENCIÓN!!! Se acerca un enemigo.";
+                msg2 = "Veamos cómo te las arreglas...";
                 break;
         }
     }
@@ -321,8 +312,10 @@ public class GameScreen implements Screen {
             if (messagesEnded && enemies.isEmpty()) {
                 Settings.s.setTutorialCheck(false);
                 game.setScreen(new MenuScreen(game));
-                this.roundMusic.stop();
-                this.roundMusic.dispose();
+                if (Settings.s.isMusicCheck()) {
+                    this.roundMusic.stop();
+                    this.roundMusic.dispose();
+                }
             }
         }
 
@@ -339,8 +332,8 @@ public class GameScreen implements Screen {
         }
 
         if (messagesEnded && enemies.isEmpty()){ //Después de eliminar al enemigo
-            msg1 = "Ahora estas listo para el desafio!";
-            msg2 = "Clicka una ultima vez para ir al menu";
+            msg1 = "¡Enhorabuena! Ahora estás listo para el desafío.";
+            msg2 = "Haz click una última vez para ir al menú.";
         }
     }
 
@@ -422,9 +415,6 @@ public class GameScreen implements Screen {
             this.state = State.PLAYING;
             for (GameObject obj:objects) {
                 obj.setSelected(false);
-                if (obj instanceof Defender){
-                    ((Defender) obj).states(0);
-                }
             }
         }
 
@@ -464,13 +454,14 @@ public class GameScreen implements Screen {
             GameObject tempObj = objectIterator.next();
             tempObj.update(this);
             if(tempObj.getHp() <= 0) {
-                if ((tempObj instanceof Attacker && tempObj.getId() == 2) ||
-                        (tempObj instanceof Defender && tempObj.getId() == 3) && tempObj.isSelected()) this.state = State.PLAYING;
+                if (((tempObj instanceof Attacker && tempObj.getId() == 2) || //Si un objeto manejable está seleccionado,
+                        (tempObj instanceof Defender && tempObj.getId() == 3)) && //y éste es destruído, pero por un enemigo
+                                tempObj.isSelected() && this.state != State.DELETING) { //y no por el usuario,
+                    this.state = State.PLAYING;                                     //se vuelve al estado normal de juego
+                }
                 try {
                     map.getOccGrid()[(int) tempObj.getX() / 16][(int) tempObj.getY() / 18] = false;
-                } catch (IndexOutOfBoundsException ignored) {
-
-                }
+                } catch (IndexOutOfBoundsException ignored) {}
                 objectIterator.remove();
             }
         }
@@ -485,7 +476,7 @@ public class GameScreen implements Screen {
                 this.points += 350; //Sumar 350 puntos por eliminar a un enemigo
             }
         }
-        if (queryingMinions) queryMinionLoad();
+        if (queryingMinions) queryMinionLoad(); //Cargar aparición de enemigos por el jefe final (fuera del bucle)
 
         ListIterator<Shoot> shootIterator = shots.listIterator();
         while(shootIterator.hasNext()){
@@ -526,9 +517,9 @@ public class GameScreen implements Screen {
      */
     private void updateMenuLogic() {
         //Botones tocados
-        resumeButton.isTouched();
-        menuButton.isTouched();
-        quitButton.isTouched();
+        resumeButton.updateTouched();
+        menuButton.updateTouched();
+        quitButton.updateTouched();
 
         //Acciones
         if (resumeButton.isJustClicked()){
@@ -606,13 +597,13 @@ public class GameScreen implements Screen {
 
         //Oro
         if (currentRound != 0){
-            font.draw(game.entityBatch, "ORO : " + gold, 5, 175);
+            font.draw(game.entityBatch, "ORO: " + gold, 2, 173);
         } else {
             gold = gold + 100000;
             if (Settings.s.isTutorialCheck()) game.entityBatch.draw(tutoBut.getCurrentTexture(),tutoBut.getX(),tutoBut.getY());
-            font.draw(game.entityBatch, "ORO INFINITY: " , 5, 175);
-            font.draw(game.entityBatch, msg1 , 5, 68);
-            font.draw(game.entityBatch, msg2 , 5, 55);
+            font.draw(game.entityBatch, "ORO: INFINITO" , 2, 173);
+            font.draw(game.entityBatch, msg1 , 8, 62);
+            font.draw(game.entityBatch, msg2 , 8, 52);
         }
 
 
@@ -628,11 +619,11 @@ public class GameScreen implements Screen {
             game.entityBatch.draw(quitButton.getCurrentTexture(), quitButton.getX(), quitButton.getY());
         }
 
-        //////////////////////////////////////////////////////TESTING DE NODOS
+        /////////////////////////VISUALIZAR NODOS NODOS/////////////////////////////
         Texture t = new Texture("shoot.png");
         t.dispose();
         //for (Node node : nodes) game.entityBatch.draw(t, node.getX(), node.getY());
-        //////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
 
         game.entityBatch.end();
 
@@ -642,10 +633,10 @@ public class GameScreen implements Screen {
      * Cambia el inventario visible al que está en uso.
      */
     private void inventorySwap() {
-        allObjectsButton.isTouched();
-        attackerButton.isTouched();
-        defenderButton.isTouched();
-        trapButton.isTouched();
+        allObjectsButton.updateTouched();
+        attackerButton.updateTouched();
+        defenderButton.updateTouched();
+        trapButton.updateTouched();
 
         if (allObjectsButton.isJustClicked()) drawingInv = fullInv.sortInventory();
         if (attackerButton.isJustClicked()) drawingInv = attackInv.sortInventory();
@@ -1070,18 +1061,9 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Devuelve el primer FinalBoss encontrado en el ArrayList de enemigos.
+     * Devuelve el primer FinalBoss encontrado en el ArrayList de enemigos, recursivamente.
      * @return Primer FinalBoss encontrado
      */
-    private FinalBoss findBoss() {
-        for (Enemy boss : enemies) {
-            if (boss instanceof FinalBoss) {
-                return (FinalBoss) boss;
-            }
-        }
-        return null;
-    }
-
     private int recursiveFindBoss(List<Enemy> al, int index) {
         if (al.isEmpty()) return -1;
         else if (al.get(0) instanceof FinalBoss) return index;
@@ -1157,10 +1139,6 @@ public class GameScreen implements Screen {
         }
     }
 
-    public OrthographicCamera getCamera() {
-        return camera;
-    }
-
     public int getGold() {
         return gold;
     }
@@ -1171,10 +1149,6 @@ public class GameScreen implements Screen {
 
     public int getCurrentRound() {
         return currentRound;
-    }
-
-    public boolean isQueryingMinions() {
-        return queryingMinions;
     }
 
     public void setQueryingMinions(boolean queryingMinions) {

@@ -27,20 +27,12 @@ public class UIButton extends Entity {
     }
 
     /**
-     * Comprueba si el botón está tocado pero no pulsado.
-     * @return True si se cumple la condición
+     * Comprueba si el botón está tocado pero no pulsado, y actualiza su estado.
      */
-    public boolean isTouched() {
+    public void updateTouched() {
         Vector3 mousePos = getRelativeMousePos();
-        if (!this.active) return false;
-        if (!(this.overlapsPoint(mousePos.x, mousePos.y) && !Gdx.input.isTouched())) {
-            this.touched = false;
-        }
-        else {
-            this.touched = true;
-            return true;
-        }
-        return false;
+        if (!this.active) return;
+        this.touched = this.overlapsPoint(mousePos.x, mousePos.y) && !Gdx.input.isTouched();
     }
 
     /**

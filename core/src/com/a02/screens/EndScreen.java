@@ -61,8 +61,8 @@ public class EndScreen implements Screen {
     }
 
     private void updateButtonLogic() {
-        menuButton.isTouched();
-        quitButton.isTouched();
+        menuButton.updateTouched();
+        quitButton.updateTouched();
 
         if (menuButton.isJustClicked()) {
             game.setScreen(new MenuScreen(game));

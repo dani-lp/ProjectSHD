@@ -6,14 +6,14 @@ import com.badlogic.gdx.graphics.Texture;
 import java.util.logging.Logger;
 
 public class Shoot extends Entity {
-    private double angle;
-    private int type; //0 para ballesta, 1 para waves
-    private float speed;
-    private float attackdamage;
-    private Texture texture;
+    private final double angle;
+    private final int type; //0 para ballesta, 1 para waves
+    private final float speed;
+    private final float attackdamage;
+    private final Texture texture;
     private int hp;
-    private String dir;
-    private static Logger logger = Logger.getLogger(Shoot.class.getName());
+    private final String dir;
+    private final static Logger logger = Logger.getLogger(Shoot.class.getName());
 
     public Shoot(float x, float y, int height, int width, int speed, float attackdamage,
                  String sprite, int hp, String dir, int type, double angle) { //Disparo ballesta

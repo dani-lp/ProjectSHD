@@ -25,11 +25,11 @@ public abstract class GameObject extends Entity {
     private int maxHp;
     private boolean grabbed;
     private Texture texture;
-    private Vector2 ogPos;
+    private final Vector2 ogPos;
     private Animation<TextureRegion> animation;
     private boolean isSelected;
 
-    private static Logger logger = Logger.getLogger(GameObject.class.getName());
+    private final static Logger logger = Logger.getLogger(GameObject.class.getName());
 
     public GameObject(float x, float y, int width, int height, int id,String type,
                       int price, boolean unlocked, int hp) {

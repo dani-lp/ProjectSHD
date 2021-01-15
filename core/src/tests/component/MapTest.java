@@ -30,11 +30,6 @@ public class MapTest {
     }
 
     @Test
-    public void getSprite() {
-        assertEquals("Test", mapTest.getSprite());
-    }
-
-    @Test
     public void getCoordGrid() {
     }
 

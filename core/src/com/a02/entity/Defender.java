@@ -12,24 +12,12 @@ import static com.a02.game.Utils.*;
 
 public class Defender extends GameObject {
 
-    private enum State {
-        IDLE, HEALING
-    }
-
     private boolean isSelected;
     private ArrayList<GameObject> hurt = new ArrayList<>();
-    State state;
-
-    public void states(int i){
-        if (i == 0){
-            this.state = State.IDLE;
-        }
-    }
 
     public Defender(float x, float y, int width, int height, int id, String type, int price,
                     boolean unlocked, int hp) {
         super(x, y, width, height, id, type, price, unlocked, hp);
-        this.state = State.IDLE;
         this.isSelected = false;
         loadTextures();
     }
@@ -57,7 +45,6 @@ public class Defender extends GameObject {
 
     public Defender() {
         super();
-        this.state = State.IDLE;
         this.isSelected = false;
         loadTextures();
     }
@@ -65,7 +52,6 @@ public class Defender extends GameObject {
     public Defender(Defender other) {
         super(other.getX(), other.getY(), other.getWidth(), other.getHeight(), other.getId(), other.getType(),
                 other.getPrice(), other.isUnlocked(), other.getHp());
-        this.state = other.state;
         this.setAnimation(other.getAnimation());
         this.hurt = other.hurt;
         this.isSelected = false;
@@ -78,54 +64,6 @@ public class Defender extends GameObject {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
-    }
-
-    public void update2(GameScreen gs) {
-        switch (this.state) {
-            case IDLE:
-                if (this.getId() == 0 && !this.isInInventory(gs)) {
-                    hurt = overlappedArea(gs);
-                    if (hurt.size() > 0) {
-                        this.state = State.HEALING;
-                    }
-                } else if (this.getId() == 3 && !this.isInInventory(gs)){
-                    Vector3 mousePos = getRelativeMousePos();
-                    if (this.overlapsPoint(mousePos.x, mousePos.y) && Gdx.input.isTouched() && !(gs.state == GameScreen.State.DELETING)) {
-                        this.isSelected = true;
-                        gs.state = GameScreen.State.SELECTING;
-                        this.state = State.HEALING;
-                    }
-                }
-                break;
-            case HEALING:
-                boolean healed = false;
-                if (this.getId() == 0){
-                    if (gs.secTimer % 120 == 0) {
-                        for (GameObject obj : hurt) {
-                            if (obj.getHp() < obj.getMaxHp()) {
-                                obj.setHp(obj.getHp() + 75);
-                                healed = true;
-                            }
-                        }
-                        if (healed){
-                            this.setHp(this.getHp() - 75);
-                        }
-                    }
-                    break;
-                } else if (this.getId() == 3){
-                    if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-                        Vector3 focus = getRelativeMousePos();
-                        GameObject obj = overlappedObject(gs,focus.x, focus.y);
-                        if (obj != null && obj.getHp() < obj.getMaxHp()) {
-                            obj.setHp(obj.getMaxHp());
-                            this.setHp(0);
-                            this.state = State.IDLE;
-                        }
-                        break;
-                    }
-                }
-        }
-        this.hpBar.update(this, this.getHp());
     }
 
     public void update (GameScreen gs) {
