@@ -147,12 +147,12 @@ public class GameScreen implements Screen {
         //Botones de pausa y inventario
         deleteButton = new UIButton(280, 3, 10, 20, "pala.png", "pala.png");
         pauseButton = new UIButton(301, 3, 16, 16, "pause.png", "pause.png");
-        resumeButton = new UIButton(123, 113, 74, 36,
+        resumeButton = new UIButton(116, 113, 74, 36,
                 "Buttons/resumeButtonIdle.png", "Buttons/resumeButtonPressed.png");
-        menuButton = new UIButton(123, 73, 74, 36,
-                "Buttons/menuButtonIdle.png", "Buttons/menuButtonPressed.png");
-        quitButton = new UIButton(123, 33, 74, 36,
-                "Buttons/quitButtonIdle.png", "Buttons/quitButtonPressed.png");
+        menuButton = new UIButton(116, 73, 74, 36,
+                "Buttons/menuButtonIdle.png","Buttons/menuButtonPressed.png");
+        quitButton = new UIButton(116, 33, 74, 36,
+                "Buttons/quitButtonIdle.png","Buttons/quitButtonPressed.png");
 
         allObjectsButton = new UIButton(259, 162, 15, 15,
                 "Buttons/Inventory/allButtonIdle.png", "Buttons/Inventory/allButtonPressed.png");
@@ -189,7 +189,6 @@ public class GameScreen implements Screen {
 
     /**
      * Renderiza los objetos de juego y actualiza su lógica cada 1/60 segundos.
-     *
      * @param delta Tiempo entre cada frame renderizado
      */
     @Override
@@ -240,8 +239,7 @@ public class GameScreen implements Screen {
             else game.setScreen(new WinScreen(this.game, this.points));
         }
 
-        if ((Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) && secTimer != 0)
-            pauseFlag = !pauseFlag;
+        if ((Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) && secTimer != 0) pauseFlag = !pauseFlag;
         else if (Gdx.input.isKeyJustPressed(Input.Keys.F)) enemies.clear();
 
         updateCursor();
@@ -252,7 +250,6 @@ public class GameScreen implements Screen {
 
     /**
      * Actualiza el texto en las variables String del tutorial (msg1 y msg2)
-     *
      * @param contEnt Contador de "partes" del tutorial
      */
     private void updateTutorialMessages(int contEnt) {
@@ -327,9 +324,9 @@ public class GameScreen implements Screen {
 
         updateTutorialMessages(contEnt); //Actualizar texto
 
-        if (contEnt == 13 && !messagesEnded) {
-            Enemy larry = new Enemy(-15, 90, 16, 16, 1, 500, 300, 15,
-                    this.secTimer + 30, 200);
+        if (contEnt == 13 && !messagesEnded){
+            Enemy larry = new Enemy(-15,90,16,16,1,500,300,15,
+                    this.secTimer + 30,200);
             larry.setFocus(beacon.getX(), beacon.getY());
             larry.loadAnimations();
             larry.loadIdleTexture();
@@ -337,7 +334,7 @@ public class GameScreen implements Screen {
             messagesEnded = true;
         }
 
-        if (messagesEnded && enemies.isEmpty()) { //Después de eliminar al enemigo
+        if (messagesEnded && enemies.isEmpty()){ //Después de eliminar al enemigo
             msg1 = "¡Enhorabuena! Ahora estás listo para el desafío.";
             msg2 = "Haz click una última vez para ir al menú.";
         }
@@ -614,7 +611,7 @@ public class GameScreen implements Screen {
 
         //Menu de pausa
         if (pauseFlag) {
-            game.entityBatch.draw(pauseTexture, 50, 26);
+            game.entityBatch.draw(pauseTexture, 42, 15);
             game.entityBatch.draw(resumeButton.getCurrentTexture(), resumeButton.getX(), resumeButton.getY());
             game.entityBatch.draw(menuButton.getCurrentTexture(), menuButton.getX(), menuButton.getY());
             game.entityBatch.draw(quitButton.getCurrentTexture(), quitButton.getX(), quitButton.getY());
