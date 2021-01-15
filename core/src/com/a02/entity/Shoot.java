@@ -3,6 +3,7 @@ package com.a02.entity;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.graphics.Texture;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class Shoot extends Entity {
@@ -69,14 +70,25 @@ public class Shoot extends Entity {
         this.move();
 
         //Ataque
-        if (this.overlappedEnemy(gs) != null) {
-            Enemy tempEnemy = this.overlappedEnemy(gs);
-            tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackdamage));
-            if (this.type == 0) this.setHp(0);
+        switch (this.type) {
+            case 0 :
+                if (this.overlappedEnemy(gs) != null) {
+                    Enemy tempEnemy = this.overlappedEnemy(gs);
+                    tempEnemy.setHp((int) (tempEnemy.getHp() - this.attackdamage));
+                    this.setHp(0);
+                }
+                break;
+            case 1:
+                if (!this.overlappedEnemies(gs).isEmpty()) {
+                    for (Enemy enemy:this.overlappedEnemies(gs)) {
+                        enemy.setHp((int) (enemy.getHp() - this.attackdamage));
+                    }
+                }
+                break;
         }
 
         //Borrado
-        if (this.getX() < 0 || this.getY() < 0 || this.getX() > 320 || this.getY() > 180){
+        if (this.getX() < -10 || this.getY() < -10 || this.getX() > 320 || this.getY() > 180){
             this.setHp(0);
         }
     }
@@ -99,6 +111,22 @@ public class Shoot extends Entity {
             }
         }
         return null;
+    }
+
+    /**
+     * Devuelve todos los enemigos colisionados por la bala.
+     * @param gs GameScreen de juego
+     * @return Enemigos colisionado
+     */
+    protected ArrayList<Enemy> overlappedEnemies(GameScreen gs) {
+        ArrayList<Enemy> enemyList = new ArrayList<>();
+        for (Enemy enemy : gs.enemies) {
+            if (this.getX() < enemy.getX() + enemy.getWidth() && this.getX() + this.getWidth() > enemy.getX() &&
+                    this.getY() < enemy.getY() + enemy.getHeight() && this.getY() + this.getHeight() > enemy.getY()) {
+                enemyList.add(enemy);
+            }
+        }
+        return enemyList;
     }
 
     public float getSpeed() {

@@ -6,6 +6,8 @@
 package com.a02.game;
 
 import com.a02.screens.MenuScreen;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.Game;
@@ -26,9 +28,22 @@ public class MainGame extends Game {
 
 	public void render() {
 		super.render();
+		updateVolume();
 	}
 
 	public void dispose() {
 		entityBatch.dispose();
+	}
+
+	/**
+	 * Sube o baja el volumen con las teclas de arriba/abajo, o las teclas 'o' y 'l'.
+	 */
+	private void updateVolume() {
+		if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.O)) {
+			Settings.s.incVolume();
+		}
+		else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+			Settings.s.decVolume();
+		}
 	}
 }

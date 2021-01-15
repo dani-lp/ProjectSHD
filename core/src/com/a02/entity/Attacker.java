@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import static com.a02.game.Utils.*;
@@ -165,26 +166,33 @@ public class Attacker extends GameObject {
                 break;
             case 3: //Waves
                 if (gs.secTimer % 120 == 0 && !this.isInInventory(gs)) { //Cada 2 segundos crea 4 disparos en cada una de las direcciones
-                    gs.shots.add(new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
+                    gs.shots.add(new Shoot(this.getX(), this.getY(), 16, 16, 5,
                             this.getAttackDamage(), "onda-export.png", 5,"r", 1));
-                    gs.shots.add(new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
+                    gs.shots.add(new Shoot(this.getX(), this.getY(), 16, 16, 5,
                             this.getAttackDamage(), "onda-export.png", 5,"l", 1));
-                    gs.shots.add(new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
+                    gs.shots.add(new Shoot(this.getX(), this.getY(), 16, 16, 5,
                             this.getAttackDamage(), "onda-export.png", 5,"u", 1));
-                    gs.shots.add(new Shoot(this.getX()-8, this.getY()-9, 14, 14, 5,
+                    gs.shots.add(new Shoot(this.getX(), this.getY(), 16, 16, 5,
                             this.getAttackDamage(), "onda-export.png", 5,"d", 1));
                 }
                 break;
         }
     }
 
-    protected Enemy overlappedArea(GameScreen gs) { //TODO: no selecciona por proximidad, sino por primer enemigo encontrado
+    /**
+     * Devuelve el enemigo más cercano en un área de alcance.
+     * @param gs Screen de juego
+     * @return Enemigo más cercano
+     */
+    protected Enemy overlappedArea(GameScreen gs) {
+        ArrayList<Enemy> enemyArrayList = new ArrayList<>();
         for (Enemy enemy : gs.enemies) {
             if ((enemy.getX() < this.getX() + 50 && enemy.getX() > this.getX() - 50)
                     && (enemy.getY() < this.getY() + 50 && enemy.getY() > this.getY() - 50)) {
-                return enemy;
+                enemyArrayList.add(enemy);
             }
         }
-        return null;
+        if (enemyArrayList.isEmpty()) return null;
+        else return enemyArrayList.get(getNearestEntityIndex(this, enemyArrayList));
     }
 }

@@ -1,5 +1,6 @@
 package com.a02.game;
 
+import com.a02.entity.Entity;
 import com.a02.users.User;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,6 +28,10 @@ public class Utils {
 
     private static boolean isPressed;
 
+    /**
+     * Comprueba si el mouse ha hecho click una sóla vez.
+     * @return Click del ratón
+     */
     public static boolean mouseJustClicked() {
         if (Gdx.input.isTouched() && !isPressed) {
             isPressed = true;
@@ -70,6 +76,13 @@ public class Utils {
         return new Animation<>(frameDuration, animationFrames);
     }
 
+    /**
+     * Lee el archivo de usuario serizalizado parámetro.
+     * @param path Ruta del archivo
+     * @return Mapa extraído del archivo
+     * @throws IOException IOException
+     * @throws ClassNotFoundException ClassNotFoundException
+     */
     public static HashMap<String, User> readSer(String path) throws IOException, ClassNotFoundException {
         HashMap<String, User> map;
         try{
@@ -90,6 +103,12 @@ public class Utils {
         }
     }
 
+    /**
+     * Escribe el archivo con los datos de usuario parámetro.
+     * @param path Ruta del archivo
+     * @param map Datos de usuario
+     * @throws IOException Error de acceso a archivo
+     */
     public static void writeSer(String path, HashMap<String,User> map) throws IOException {
         FileOutputStream fos = new FileOutputStream(path);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -98,6 +117,11 @@ public class Utils {
         oos.close();
     }
 
+    /**
+     * Borra el usuario parámetro del archivo de usuarios.
+     * @param path Ruta del archivo
+     * @param key Nombre de usuario
+     */
     public static void deleteUser(String path, String key) {
         HashMap<String, User> map = null;
         try {
@@ -115,6 +139,10 @@ public class Utils {
         }
     }
 
+    /**
+     * Imprime el mapa parámetro por consola.
+     * @param mp Mapa parámetro
+     */
     public static void printMap(HashMap<String, User> mp) {
         Iterator<Map.Entry<String, User>> it = mp.entrySet().iterator();
         while (it.hasNext()) {
@@ -124,6 +152,11 @@ public class Utils {
         }
     }
 
+    /**
+     * Comprueba con un regex si el email introducido es de forma válida.
+     * @param emailStr Email a comprobar
+     * @return Comprobación de mapa
+     */
     public static boolean validateMail(String emailStr) {
         final Pattern VALID_EMAIL_ADDRESS_REGEX =
                 Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -140,5 +173,34 @@ public class Utils {
     public static double round(double value, int precision) {
         int scale = (int) Math.pow(10, precision);
         return (double) Math.round(value * scale) / scale;
+    }
+
+    /**
+     * Devuelve la distancia entre dos entidades.
+     * @param e1 Entidad 1
+     * @param e2 Entidad 2
+     * @return Distancia entre entidades
+     */
+    public static double distanceBetweenEntities(Entity e1, Entity e2) {
+        return Math.sqrt(Math.pow(e1.getX() - e2.getX(), 2) + Math.pow(e1.getY() - e2.getY(), 2));
+    }
+
+    /**
+     * Devuelve el índice de la entidad más cercana a la entity parámetro de una lista parámetro.
+     * @param entity Entidad 'base'
+     * @param entityList Lista de entidades 'externas'
+     * @return Índice de la entidad más cercana
+     */
+    public static int getNearestEntityIndex(Entity entity, ArrayList<? extends Entity> entityList) {
+        int minDistanceIndex = 0;
+        double minDistance = 400; //Distancia mayor a la diagonal máxima (368 aprox.)
+        for (int entL = 0; entL < entityList.size(); entL++) {
+            double distance = distanceBetweenEntities(entity, entityList.get(entL));
+            if (distance < minDistance ) {
+                minDistance = distance;
+                minDistanceIndex = entL;
+            }
+        }
+        return minDistanceIndex;
     }
 }

@@ -3,8 +3,10 @@ package com.a02.screens;
 import com.a02.component.SoundPlayer;
 import com.a02.entity.UIButton;
 import com.a02.game.MainGame;
+import com.a02.game.Settings;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -36,6 +38,8 @@ public class StoryScreen implements Screen {
 
     private final BitmapFont font;
 
+    private Music taikosMusic = null;
+
     public StoryScreen(MainGame game, int round, int points) {
         this.game = game;
         this.currentRound = round;
@@ -56,6 +60,13 @@ public class StoryScreen implements Screen {
         font = new BitmapFont(Gdx.files.internal("Fonts/gameFont.fnt"));
 
         baseX = -(20 * enemyAnimations.size()) - 16;
+
+        if (Settings.s.isMusicCheck()) {
+            this.taikosMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/SHDtaikos.mp3"));
+            this.taikosMusic.setLooping(true);
+            this.taikosMusic.setVolume(Settings.s.getVolume());
+            this.taikosMusic.play();
+        }
     }
 
     @Override
@@ -91,6 +102,8 @@ public class StoryScreen implements Screen {
         }
 
         game.entityBatch.end();
+
+        this.taikosMusic.setVolume(Settings.s.getVolume());
     }
 
     private void updateButtonLogic() {
@@ -102,11 +115,13 @@ public class StoryScreen implements Screen {
             else {
                 game.entityBatch.setColor(1,1,1, 1);
                 game.setScreen(new GameScreen(game, this.currentRound, this.currentPoints)); //Si no pasa al juego
+                if (Settings.s.isMusicCheck()) taikosMusic.dispose();
             }
         }
         if (skipButton.isJustClicked()) {
             game.entityBatch.setColor(1,1,1, 1);
             game.setScreen(new GameScreen(game, this.currentRound, this.currentPoints));
+            if (Settings.s.isMusicCheck()) taikosMusic.dispose();
         }
     }
 
@@ -225,6 +240,7 @@ public class StoryScreen implements Screen {
         soundPlayer.dispose();
         font.dispose();
         enemyAnimations.clear();
+        if (Settings.s.isMusicCheck()) taikosMusic.dispose();
     }
 
     @Override

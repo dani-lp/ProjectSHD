@@ -43,10 +43,10 @@ public class GameScreen implements Screen {
 
     /**
      * Estado del juego.
-     *  -BUYING: arrastrando un objeto.
-     *  -DELETING: en modo de borrado de objetos.
-     *  -SELECTING: controlando manualmente un objeto.
-     *  -PLAYING: estado "normal" de juego.
+     * -BUYING: arrastrando un objeto.
+     * -DELETING: en modo de borrado de objetos.
+     * -SELECTING: controlando manualmente un objeto.
+     * -PLAYING: estado "normal" de juego.
      */
     public enum State {
         BUYING, DELETING, SELECTING, PLAYING
@@ -65,12 +65,13 @@ public class GameScreen implements Screen {
     public List<Shoot> shots = new ArrayList<>(); //Disparos de juego
     public List<EnemyShoot> enemyShots = new ArrayList<>(); //Disparos de Enemigos
     public List<Obstacle> obstacles = new ArrayList<>(); //Obstaculos en los mapas
-    public HashMap<Integer,Enemy> enems = new HashMap<>();
+    public HashMap<Integer, Enemy> enems = new HashMap<>();
     public List<Texture> locks = new ArrayList<>(); //Obstaculos en los mapas
 
     public Defender beacon; //Punto central que deben destruir los enemigos
 
-    Texture pauseTexture = new Texture("pauseMenu.png"); //Textura del fondo del menú de pausa
+    private Texture pauseTexture = new Texture("pauseMenu.png"); //Textura del fondo del menú de pausa
+    private Texture lockTexture = new Texture("lock.png");
 
     public Inventory drawingInv; //Inventario actual
     //Inventarios precomputados
@@ -135,7 +136,7 @@ public class GameScreen implements Screen {
 
         createObjects(); //Crear objetos
         drawingInv = fullInv.sortInventory();
-        msg1 = "En este tutorial aprenderás a jugar." ;
+        msg1 = "En este tutorial aprenderás a jugar.";
         msg2 = "Haz click en el texto para continuar.";
 
         //Setup por rondas
@@ -149,22 +150,22 @@ public class GameScreen implements Screen {
         resumeButton = new UIButton(123, 113, 74, 36,
                 "Buttons/resumeButtonIdle.png", "Buttons/resumeButtonPressed.png");
         menuButton = new UIButton(123, 73, 74, 36,
-                "Buttons/menuButtonIdle.png","Buttons/menuButtonPressed.png");
+                "Buttons/menuButtonIdle.png", "Buttons/menuButtonPressed.png");
         quitButton = new UIButton(123, 33, 74, 36,
-                "Buttons/quitButtonIdle.png","Buttons/quitButtonPressed.png");
+                "Buttons/quitButtonIdle.png", "Buttons/quitButtonPressed.png");
 
-        allObjectsButton = new UIButton(259,162,15,15,
-                "Buttons/Inventory/allButtonIdle.png","Buttons/Inventory/allButtonPressed.png");
-        attackerButton = new UIButton(273,162,15,15,
-                "Buttons/Inventory/attackerButtonIdle.png","Buttons/Inventory/attackerButtonPressed.png");
-        defenderButton = new UIButton(288,162,15,15,
-                "Buttons/Inventory/defenderButtonIdle.png","Buttons/Inventory/defenderButtonPressed.png");
-        trapButton = new UIButton(302,162,15,15,
-                "Buttons/Inventory/trapButtonIdle.png","Buttons/Inventory/trapButtonPressed.png");
+        allObjectsButton = new UIButton(259, 162, 15, 15,
+                "Buttons/Inventory/allButtonIdle.png", "Buttons/Inventory/allButtonPressed.png");
+        attackerButton = new UIButton(273, 162, 15, 15,
+                "Buttons/Inventory/attackerButtonIdle.png", "Buttons/Inventory/attackerButtonPressed.png");
+        defenderButton = new UIButton(288, 162, 15, 15,
+                "Buttons/Inventory/defenderButtonIdle.png", "Buttons/Inventory/defenderButtonPressed.png");
+        trapButton = new UIButton(302, 162, 15, 15,
+                "Buttons/Inventory/trapButtonIdle.png", "Buttons/Inventory/trapButtonPressed.png");
 
         githubButton = new UIButton(74, 168, 8, 7, "empty.png", "empty.png");
 
-        if (Settings.s.isTutorialCheck()) tutoBut = new UIButton(2,40,252,35,
+        if (Settings.s.isTutorialCheck()) tutoBut = new UIButton(2, 40, 252, 35,
                 "textfield.png", "textfield.png");
 
         camera = new OrthographicCamera();
@@ -188,6 +189,7 @@ public class GameScreen implements Screen {
 
     /**
      * Renderiza los objetos de juego y actualiza su lógica cada 1/60 segundos.
+     *
      * @param delta Tiempo entre cada frame renderizado
      */
     @Override
@@ -206,8 +208,7 @@ public class GameScreen implements Screen {
         //Actualiza lógica de juego sólo si el juego no está en pausa, pero sí realiza el dibujado.
         if (pauseFlag) {
             updateMenuLogic();
-        }
-        else {
+        } else {
             //Actualiza lógica de juego
             updateGameLogic();
 
@@ -221,10 +222,12 @@ public class GameScreen implements Screen {
         //Salida de la GameScreen
         if (beacon.getHp() <= 0) { //Jugador pierde (beacon destruído)
             this.state = State.PLAYING;
-            this.roundMusic.dispose();
+            if (Settings.s.isMusicCheck()) {
+                this.roundMusic.stop();
+                this.roundMusic.dispose();
+            }
             game.setScreen(new EndScreen(Settings.s.getUsername(), points, game));
-        }
-        else if (enemies.isEmpty() && currentRound > 0) { //Jugador gana ronda (todos los enemigos eliminados)
+        } else if (enemies.isEmpty() && currentRound > 0) { //Jugador gana ronda (todos los enemigos eliminados)
             this.points += 5000; //Sumar 5000 puntos al ganar la ronda, más un bonus por el oro restante o por la velocidad
             this.points += this.gold * 0.1;
             if (5000 - this.secTimer > 0) this.points += 5000 - this.secTimer;
@@ -234,24 +237,26 @@ public class GameScreen implements Screen {
                 this.roundMusic.dispose();
             }
             if (currentRound != 5) game.setScreen(new StoryScreen(game, ++currentRound, this.points));
-            else game.setScreen(new WinScreen(this.game,this.points));
+            else game.setScreen(new WinScreen(this.game, this.points));
         }
 
-        if ((Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) && secTimer != 0) pauseFlag = !pauseFlag;
+        if ((Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) && secTimer != 0)
+            pauseFlag = !pauseFlag;
         else if (Gdx.input.isKeyJustPressed(Input.Keys.F)) enemies.clear();
 
         updateCursor();
-        updateVolume();
+        updateMusicVolume();
 
         if (this.currentRound == 4 && this.secTimer == 2000) soundPlayer.playHorn();
     }
 
     /**
      * Actualiza el texto en las variables String del tutorial (msg1 y msg2)
+     *
      * @param contEnt Contador de "partes" del tutorial
      */
     private void updateTutorialMessages(int contEnt) {
-        switch (contEnt){
+        switch (contEnt) {
             case 1:
                 msg1 = "El objeto colocado en el centro es el 'beacon',";
                 msg2 = "o baliza. Si es destruído, serás derrotado.";
@@ -308,7 +313,7 @@ public class GameScreen implements Screen {
     }
 
     private void updateTutorial() {
-        if (tutoBut.isJustClicked()){ //Pasar al siguiente texto
+        if (tutoBut.isJustClicked()) { //Pasar al siguiente texto
             contEnt++;
             if (messagesEnded && enemies.isEmpty()) {
                 Settings.s.setTutorialCheck(false);
@@ -322,9 +327,9 @@ public class GameScreen implements Screen {
 
         updateTutorialMessages(contEnt); //Actualizar texto
 
-        if (contEnt == 13 && !messagesEnded){
-            Enemy larry = new Enemy(-15,90,16,16,1,500,300,15,
-                    this.secTimer + 30,200);
+        if (contEnt == 13 && !messagesEnded) {
+            Enemy larry = new Enemy(-15, 90, 16, 16, 1, 500, 300, 15,
+                    this.secTimer + 30, 200);
             larry.setFocus(beacon.getX(), beacon.getY());
             larry.loadAnimations();
             larry.loadIdleTexture();
@@ -332,7 +337,7 @@ public class GameScreen implements Screen {
             messagesEnded = true;
         }
 
-        if (messagesEnded && enemies.isEmpty()){ //Después de eliminar al enemigo
+        if (messagesEnded && enemies.isEmpty()) { //Después de eliminar al enemigo
             msg1 = "¡Enhorabuena! Ahora estás listo para el desafío.";
             msg2 = "Haz click una última vez para ir al menú.";
         }
@@ -341,6 +346,7 @@ public class GameScreen implements Screen {
     private enum CurrentCursor { //Para optimización de cambio de cursores
         DEFAULT, SELECT, DELETE
     }
+
     private CurrentCursor currentCursor = CurrentCursor.DEFAULT;
 
     private void updateCursor() {
@@ -372,19 +378,8 @@ public class GameScreen implements Screen {
         }
     }
 
-    /**
-     * Sube o baja el volumen con las teclas de arriba/abajo, o las teclas 'o' y 'l'.
-     */
-    private void updateVolume() {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.UP) || Gdx.input.isKeyJustPressed(Input.Keys.O)) {
-            Settings.s.incVolume();
-            this.roundMusic.setVolume(Settings.s.getVolume());
-        }
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN) || Gdx.input.isKeyJustPressed(Input.Keys.L)) {
-            Settings.s.decVolume();
-            this.roundMusic.setVolume(Settings.s.getVolume());
-        }
-
+    private void updateMusicVolume() {
+        this.roundMusic.setVolume(Settings.s.getVolume());
     }
 
     /**
@@ -595,8 +590,7 @@ public class GameScreen implements Screen {
                 if (object.getAnimation() == null) game.entityBatch.draw(object.getTexture(), object.getX(), object.getY());
                 else game.entityBatch.draw(object.getCurrentAnimation(animationTimer), object.getX(), object.getY());
                 if (!object.isUnlocked()){
-                    Texture lock= new Texture("lock.png");
-                    game.entityBatch.draw(lock, object.getX() + 4, object.getY() + 2);
+                    game.entityBatch.draw(lockTexture, object.getX() + 4, object.getY() + 2);
                 }
 
             }
@@ -606,7 +600,7 @@ public class GameScreen implements Screen {
         if (currentRound != 0){
             font.draw(game.entityBatch, "ORO: " + gold, 2, 173);
         } else {
-            gold = gold + 100000;
+            gold = gold + 100000000;
             if (Settings.s.isTutorialCheck()) game.entityBatch.draw(tutoBut.getCurrentTexture(),tutoBut.getX(),tutoBut.getY());
             font.draw(game.entityBatch, "ORO: INFINITO" , 2, 173);
             font.draw(game.entityBatch, msg1 , 8, 62);
@@ -828,7 +822,7 @@ public class GameScreen implements Screen {
                         map.getOccGrid()[j][i] = true;
                     }
                 }
-                gold = 60000; //TODO: oro por defecto
+                gold = 2000;
                 break;
             case 2:
                 loadRound2();
@@ -841,7 +835,7 @@ public class GameScreen implements Screen {
                     map.getOccGrid()[14][i] = true;
                     map.getOccGrid()[15][i] = true;
                 }
-                gold = 60000;
+                gold = 4200;
                 break;
             case 3:
                 loadRound3();
@@ -852,17 +846,17 @@ public class GameScreen implements Screen {
                                 (j <= 5 || j >= 10)) map.getOccGrid()[j][i] = true;
                     }
                 }
-                gold = 60000;
+                gold = 7000;
                 break;
             case 4:
                 loadRound4();
                 map = new Map("emptyMap.png"); //Mapa abierto
-                gold = 60000;
+                gold = 9000;
                 break;
             case 5:
                 loadRound5();
                 map = new Map("bossMap.png"); //3 lados bloqueados, boss final
-                gold = 60000;
+                gold = 10000;
                 break;
             case -2: //TESTING
                 if (!enemies.isEmpty()) enemies.clear();
@@ -1063,16 +1057,26 @@ public class GameScreen implements Screen {
      */
     public void queryMinionLoad() {
         FinalBoss boss = (FinalBoss) enemies.get(recursiveFindBoss(enemies, 0));
-        Enemy minion1 = new Enemy(boss.getX() + 8,boss.getY() - 8 ,16,16,6,450,50,
-                30,secTimer + 240, 50);
-        Enemy minion2 = new Enemy(boss.getX() + 8,boss.getY() + 32,16,16,6,450,50,
-                30,secTimer + 240, 50);
+        Enemy minion1 = new Enemy(boss.getX() + 8,boss.getY() - 8 ,16,16,6,450,40,
+                25,secTimer + 150, 20);
+        Enemy minion2 = new Enemy(boss.getX() + 8,boss.getY() + 32,16,16,6,450,40,
+                25,secTimer + 150, 20);
+        Enemy minion3 = new Enemy(boss.getX() - 8,boss.getY() + 16 ,16,16,6,450,40,
+                25,secTimer + 150, 20);
+        Enemy minion4 = new Enemy(boss.getX() - 8,boss.getY() - 4,16,16,6,450,40,
+                25,secTimer + 150, 20);
         minion1.loadAnimations();
         minion2.loadAnimations();
+        minion3.loadAnimations();
+        minion4.loadAnimations();
         minion1.loadIdleTexture();
         minion2.loadIdleTexture();
+        minion3.loadIdleTexture();
+        minion4.loadIdleTexture();
         enemies.add(minion1);
         enemies.add(minion2);
+        enemies.add(minion3);
+        enemies.add(minion4);
         queryingMinions = false;
     }
 
@@ -1123,6 +1127,7 @@ public class GameScreen implements Screen {
         }
 
         pauseTexture.dispose();
+        lockTexture.dispose();
         soundPlayer.dispose();
     }
 
@@ -1138,17 +1143,13 @@ public class GameScreen implements Screen {
                 this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/forestRoundMusic.mp3"));
                 break;
             case 4:
+            case -1:
                 this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/finalRoundMusic.mp3"));
                 break;
             case 5:
                 this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/tottfiy.mp3"));
                 break;
-            case -1:
-                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/finalRoundMusic.mp3")); //TODO
-                break;
             case -2:
-                this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/testingRoundMusic.mp3"));
-                break;
             default:
                 this.roundMusic = Gdx.audio.newMusic(Gdx.files.internal("Music/testingRoundMusic.mp3"));
                 break;

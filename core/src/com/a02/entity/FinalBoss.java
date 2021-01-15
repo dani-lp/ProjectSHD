@@ -37,7 +37,7 @@ public class FinalBoss extends Enemy{
                 if (gs.secTimer >= this.getStartTime()){
                     if (this.trapEffect != TrapEffect.FREEZE) {
                         this.state = State.WALKING;
-                        this.spawnTimer = 0;
+                        this.spawnTimer = 100;
                     }
                 }
                 break;
@@ -53,7 +53,7 @@ public class FinalBoss extends Enemy{
                     if (!this.overlappedObject(gs).isGrabbed()) this.state = State.ATTACKING;
                 }
                 //Cada 10 segundos hay una probabilidad cada frame de spawnear minions
-                if (this.spawnTimer > 480 && (int)(Math.random() * 100) == 2) { //TODO BALANCE
+                if (this.spawnTimer > 420 && (int)(Math.random() * 100) == 2) { //TODO BALANCE
                     this.state = State.SPAWNING;
                     this.spawningTimer = 0;
                 }
@@ -79,7 +79,7 @@ public class FinalBoss extends Enemy{
                     this.setDeathTimer(gs.secTimer + 60);
                 }
                 //Cada 10 segundos hay una probabilidad cada frame de spawnear minions
-                if (this.spawnTimer > 480 && (int)(Math.random() * 100) == 2) { //TODO BALANCE
+                if (this.spawnTimer > 420 && (int)(Math.random() * 100) == 2) { //TODO BALANCE
                     this.state = State.SPAWNING;
                     this.spawningTimer = 0;
                 }
@@ -88,12 +88,12 @@ public class FinalBoss extends Enemy{
 
             case SPAWNING:
                 if (this.spawningTimer == 0) gs.setQueryingMinions(true);
-                if (this.spawningTimer > 180) { //Después de 4 segundos de spawn vuelve a andar
+                if (this.spawningTimer > 150) { //Después de 4 segundos de spawn vuelve a andar
                     this.state = State.WALKING;
                     this.spawnTimer = 0;
                 }
                 this.spawningTimer++;
-                this.setHp(this.getHp() + 10); //TODO: ajustar
+                if (this.getHp() < 7000)this.setHp(this.getHp() + 10); //TODO: ajustar
                 break;
 
             case DYING:

@@ -16,7 +16,7 @@ public class WinScreen implements Screen {
 
     private final MainGame game;
 
-    private final int  currentPoints; //Pasados entre GameScreen(s)
+    private final int currentPoints; //Pasados entre GameScreen(s)
     private float animationTimer; //Usado para animaciones
     private final UIButton menuButton; //Para pasar a la siguiente frase
     private final UIButton quitButton; //Para saltarse las frases y pasar al jueg
@@ -27,7 +27,7 @@ public class WinScreen implements Screen {
     private float count1;
     private float count2;
     private float count3;
-
+    private final Texture wallpaperTexture;
 
     public WinScreen(MainGame game,  int points) {
         this.game = game;
@@ -35,11 +35,11 @@ public class WinScreen implements Screen {
 
         this.animationTimer = 0;
 
-        menuButton = new UIButton(123, 100, 74, 36,
+        restartButton = new UIButton(123, 87, 74, 36,
+                "Buttons/replayButtonIdle.png","Buttons/replayButtonPressed.png");
+        menuButton = new UIButton(123, 46, 74, 36,
                 "Buttons/menuButtonIdle.png","Buttons/menuButtonPressed.png");
-        quitButton = new UIButton(123, 50, 74, 36,
-                "Buttons/quitButtonIdle.png","Buttons/quitButtonPressed.png");
-        restartButton = new UIButton(123,15,74,36,"Buttons/replayButtonIdle.png","Buttons/replayButtonPressed.png");
+        quitButton = new UIButton(123,5,74,36,"Buttons/quitButtonIdle.png","Buttons/quitButtonPressed.png");
 
         soundPlayer = new SoundPlayer();
 
@@ -48,9 +48,9 @@ public class WinScreen implements Screen {
         count1 = 0;
         count2 = 0.2f;
         count3 = 0.5f;
+
+        wallpaperTexture = new Texture("wallpaperTestOld.png");
     }
-
-
 
     @Override
     public void render(float delta) {
@@ -64,12 +64,13 @@ public class WinScreen implements Screen {
         updateButtonLogic();
 
         game.entityBatch.begin();
+        game.entityBatch.draw(wallpaperTexture, 0, 0);
         game.entityBatch.draw(menuButton.getCurrentTexture(), menuButton.getX(), menuButton.getY());
         game.entityBatch.draw(quitButton.getCurrentTexture(), quitButton.getX(), quitButton.getY());
-        game.entityBatch.draw(restartButton.getCurrentTexture(), quitButton.getX(), quitButton.getY());
+        game.entityBatch.draw(restartButton.getCurrentTexture(), restartButton.getX(), restartButton.getY());
 
-        font.draw(game.entityBatch, "Enhorabuenaaa", 46, 30);
-        font.draw(game.entityBatch, "Gracias por salvarnos!!!", 46, 20);
+        font.draw(game.entityBatch, "Enhorabuenaaa", 100, 160);
+        font.draw(game.entityBatch, "Gracias por salvarnos!!!", 90, 140);
 
         game.entityBatch.draw(pizzAnimation.getKeyFrame(count1,true),35, 42);
         game.entityBatch.draw(pizzAnimation.getKeyFrame(count2,true),254, 101);

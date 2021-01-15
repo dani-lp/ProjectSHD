@@ -290,6 +290,10 @@ public class Enemy extends Entity {
 
     public boolean flipped = false; //Usado para saber si un objeto debe estar dado la vuelta al animarlo
 
+    /**
+     * Mueve al enemigo a su objetivo/focus.
+     * @param gs Screen de juego
+     */
     protected void move(GameScreen gs) {
         double angle = Math.toDegrees(-Math.atan((this.getY() - this.focus.y) / (this.getX() - this.focus.x)));
         float dirX = (float) Math.sin(angle) * Gdx.graphics.getDeltaTime() * this.speed;
@@ -305,6 +309,10 @@ public class Enemy extends Entity {
         }
     }
 
+    /**
+     * Actualiza el sistema de pathfinding del enemigo.
+     * @param gs Screen de juego
+     */
     void updatePathfinding(GameScreen gs) {
         if (this.focusNode == null) {
             this.focusNode = getNearestValidNode(gs);
@@ -342,6 +350,14 @@ public class Enemy extends Entity {
         return validNodes.get(minDistanceIndex);
     }
 
+    /**
+     * Comprueba si un nodo es válido para moverse hacia él, lanzando 4 líneas o 'rayos' desde las 4 esquinas del
+     * rectángulo de colisión a las coordenadas relativas del nodo objetivo. De haber colisión con algún rayo,
+     * se detecta colisión.
+     * @param node Nodo objetivo
+     * @param gs Screen de juego
+     * @return Colisión
+     */
     public boolean isNodeValid(Node node, GameScreen gs) {
         boolean anyColl = false;
         if (gs.obstacles.size() < 1) return true;
@@ -399,11 +415,15 @@ public class Enemy extends Entity {
         return left || right || top || bottom;
     }
 
+    /**
+     * Actualiza el estado de efecto del enemigo (ardiendo, congelado o confundido).
+     * @param gs Screen de juego
+     */
     private void updateEffect(GameScreen gs) {
         switch (this.trapEffect) {
             case BURNING:
                 if ((gs.secTimer % 30 == 0) && (gs.secTimer < this.effectTimer + 180)){
-                    this.hp -= 30;
+                    this.hp -= 60;
                 } else if (gs.secTimer > this.effectTimer + 180) this.trapEffect = TrapEffect.NEUTRAL;
                 break;
             case FREEZE:
@@ -429,6 +449,11 @@ public class Enemy extends Entity {
         }
     }
 
+    /**
+     * Deuvelve una coordenada disponible para movimiento aleatoria.
+     * @param gs Screen de juego
+     * @return Vector2 coordenada
+     */
     private Vector2 getRandomFocus(GameScreen gs) {
         float x = 0;
         float y = 0;
@@ -518,13 +543,20 @@ public class Enemy extends Entity {
         return null;
     }
 
-    protected GameObject overlappedArea(GameScreen gs) { //TODO: no selecciona por proximidad, sino por primer enemigo encontrado
+    /**
+     * Devuelve el GameObject más cercano en un área de alcance.
+     * @param gs Screen de juego
+     * @return GameObject más cercano
+     */
+    protected GameObject overlappedArea(GameScreen gs) {
+        ArrayList<GameObject> objectArrayList = new ArrayList<>();
         for (GameObject obj : gs.objects) {
             if ((obj.getX() < this.getX() + 50 && obj.getX() > this.getX() - 50)
                     && (obj.getY() < this.getY() + 50 && obj.getY() > this.getY() - 50) && !obj.isInInventory(gs) && !(obj instanceof Trap)) {
-                return obj;
+                objectArrayList.add(obj);
             }
         }
-        return null;
+        if (objectArrayList.isEmpty()) return null;
+        else return objectArrayList.get(getNearestEntityIndex(this, objectArrayList));
     }
 }

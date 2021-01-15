@@ -78,7 +78,7 @@ public class Defender extends GameObject {
                             healedObjectCounter++;
                         }
                     }
-                    this.setHp(this.getHp() - healedObjectCounter * 20); //Recibe 20 de daño por cada cura
+                    this.setHp(this.getHp() - healedObjectCounter * 5); //Recibe 20 de daño por cada cura
                 }
                 break;
             case 3: //Repair: cura a un objeto en concreto
@@ -96,7 +96,7 @@ public class Defender extends GameObject {
                 }
 
                 //Selección
-                if (this.overlapsPoint(focus.x, focus.y) && mouseJustClicked()) {
+                if (this.overlapsPoint(focus.x, focus.y) && mouseJustClicked() && this.isUnlocked()) {
                     //Sólo se puede tomar control si no se está comprando ni eliminando
                     if (gs.state == GameScreen.State.PLAYING && !this.isSelected) {
                         gs.state = GameScreen.State.SELECTING;
