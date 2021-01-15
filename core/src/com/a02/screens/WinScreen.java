@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import static com.a02.game.Utils.createAnimation;
 
 public class WinScreen implements Screen {
 
@@ -22,6 +23,11 @@ public class WinScreen implements Screen {
     private final UIButton restartButton;
     private final SoundPlayer soundPlayer;
     private final BitmapFont font;
+    private final Animation<TextureRegion> pizzAnimation;
+    private float count1;
+    private float count2;
+    private float count3;
+
 
     public WinScreen(MainGame game,  int points) {
         this.game = game;
@@ -33,18 +39,25 @@ public class WinScreen implements Screen {
                 "Buttons/menuButtonIdle.png","Buttons/menuButtonPressed.png");
         quitButton = new UIButton(123, 50, 74, 36,
                 "Buttons/quitButtonIdle.png","Buttons/quitButtonPressed.png");
-        restartButton = new UIButton(123,15,18,18,"Buttons/nextButtonIdle.png","Buttons/nextButtonPressed.png");
+        restartButton = new UIButton(123,15,74,36,"Buttons/replayButtonIdle.png","Buttons/replayButtonPressed.png");
 
         soundPlayer = new SoundPlayer();
 
         font = new BitmapFont(Gdx.files.internal("Fonts/gameFont.fnt"));
-
+        pizzAnimation = createAnimation("pizza-sheet.png", 7, 2, 0.05f);
+        count1 = 0;
+        count2 = 0.2f;
+        count3 = 0.5f;
     }
 
 
 
     @Override
     public void render(float delta) {
+        count1 += delta;
+        count2 += delta;
+        count3 += delta;
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -58,7 +71,9 @@ public class WinScreen implements Screen {
         font.draw(game.entityBatch, "Enhorabuenaaa", 46, 30);
         font.draw(game.entityBatch, "Gracias por salvarnos!!!", 46, 20);
 
-
+        game.entityBatch.draw(pizzAnimation.getKeyFrame(count1,true),35, 42);
+        game.entityBatch.draw(pizzAnimation.getKeyFrame(count2,true),254, 101);
+        game.entityBatch.draw(pizzAnimation.getKeyFrame(count3,true),226, 16);
 
         game.entityBatch.end();
     }
