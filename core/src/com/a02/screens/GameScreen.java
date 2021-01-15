@@ -146,11 +146,11 @@ public class GameScreen implements Screen {
         //Botones de pausa y inventario
         deleteButton = new UIButton(280, 3, 10, 20, "pala.png", "pala.png");
         pauseButton = new UIButton(301, 3, 16, 16, "pause.png", "pause.png");
-        resumeButton = new UIButton(123, 113, 74, 36,
+        resumeButton = new UIButton(116, 113, 74, 36,
                 "Buttons/resumeButtonIdle.png", "Buttons/resumeButtonPressed.png");
-        menuButton = new UIButton(123, 73, 74, 36,
+        menuButton = new UIButton(116, 73, 74, 36,
                 "Buttons/menuButtonIdle.png","Buttons/menuButtonPressed.png");
-        quitButton = new UIButton(123, 33, 74, 36,
+        quitButton = new UIButton(116, 33, 74, 36,
                 "Buttons/quitButtonIdle.png","Buttons/quitButtonPressed.png");
 
         allObjectsButton = new UIButton(259,162,15,15,
@@ -620,7 +620,7 @@ public class GameScreen implements Screen {
 
         //Menu de pausa
         if (pauseFlag) {
-            game.entityBatch.draw(pauseTexture, 50, 26);
+            game.entityBatch.draw(pauseTexture, 42, 15);
             game.entityBatch.draw(resumeButton.getCurrentTexture(), resumeButton.getX(), resumeButton.getY());
             game.entityBatch.draw(menuButton.getCurrentTexture(), menuButton.getX(), menuButton.getY());
             game.entityBatch.draw(quitButton.getCurrentTexture(), quitButton.getX(), quitButton.getY());
