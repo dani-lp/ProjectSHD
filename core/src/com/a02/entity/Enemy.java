@@ -72,6 +72,20 @@ public class Enemy extends Entity {
         this.focus = new Vector2(0,0);
     }
 
+    public Enemy(Enemy other){
+        this.id = other.id;
+        this.hp = other.hp;
+        this.attackDamage = other.attackDamage;
+        this.speed = other.speed;
+        this.state = other.state;
+        this.trapEffect = other.trapEffect;
+        this.hpBar = new HealthBar(other, 0);
+        this.goldValue = other.goldValue;
+        this.focus = other.focus;
+        this.setWidth(other.getWidth());
+        this.setHeight(other.getHeight());
+    }
+
     public void loadAnimations() {
         switch (this.getId()){
             case 0:
@@ -244,7 +258,7 @@ public class Enemy extends Entity {
                     if (gs.secTimer % 60 == 0) {
                         double angle = ((Math.atan2(this.getY() - overlappedArea(gs).getY(),
                                 this.getX() - overlappedArea(gs).getX()) * 180) / Math.PI + 90);
-                        EnemyShoot shoot = new EnemyShoot(this.getX() + 18, this.getY() + 9, 2, 2, 2,
+                        EnemyShoot shoot = new EnemyShoot(this.getX() + 8, this.getY() + 8, 2, 2, 2,
                                 this.getAttackDamage(), "spectralShoot.png", 5, angle);
                         gs.enemyShots.add(shoot);
                     }

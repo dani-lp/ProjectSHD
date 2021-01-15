@@ -27,7 +27,6 @@ import java.io.*;
 import java.net.URI;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -66,6 +65,7 @@ public class GameScreen implements Screen {
     public List<Shoot> shots = new ArrayList<>(); //Disparos de juego
     public List<EnemyShoot> enemyShots = new ArrayList<>(); //Disparos de Enemigos
     public List<Obstacle> obstacles = new ArrayList<>(); //Obstaculos en los mapas
+    public HashMap<Integer,Enemy> enems = new HashMap<>();
 
     public Defender beacon; //Punto central que deben destruir los enemigos
 
@@ -81,7 +81,7 @@ public class GameScreen implements Screen {
     public Map map; //Mapa donde se colocan los objetos
     OrthographicCamera camera; //Cámara reescalada
 
-    BitmapFont font; //Fuente para oro/tutorial/etc
+    private final BitmapFont font; //Fuente para oro/tutorial/etc
 
     private final UIButton deleteButton; //Utilizado para quitar objetos ya colocados y recuperar parte de su coste
 
@@ -164,7 +164,7 @@ public class GameScreen implements Screen {
 
         githubButton = new UIButton(74, 168, 8, 7, "empty.png", "empty.png");
 
-        if (Settings.s.isTutorialCheck()) tutoBut = new UIButton(2,40,220,35,
+        if (Settings.s.isTutorialCheck()) tutoBut = new UIButton(2,40,252,35,
                 "textfield.png", "textfield.png");
 
         camera = new OrthographicCamera();
@@ -241,11 +241,11 @@ public class GameScreen implements Screen {
                 this.roundMusic.stop();
                 this.roundMusic.dispose();
             }
-            if (currentRound != 5) game.setScreen(new GameScreen(game, ++currentRound, this.points));
+            if (currentRound != 5) game.setScreen(new StoryScreen(game, ++currentRound, this.points));
             else game.setScreen(new WinScreen());
         }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) pauseFlag = !pauseFlag;
+        if ((Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) && secTimer != 0) pauseFlag = !pauseFlag;
         else if (Gdx.input.isKeyJustPressed(Input.Keys.F)) enemies.clear();
 
         updateCursor();
@@ -428,6 +428,25 @@ public class GameScreen implements Screen {
             }
         }
 
+        if (this.currentRound == -1 && this.secTimer % 60 == 0){
+            int alea = (int) Math.floor(Math.random() * 7 );
+            int ranX = (int) Math.floor(Math.random() * (340 - 20)) -20;
+            int ranY = (int) Math.floor(Math.random() * (240 - 20)) -20;
+
+            if ((ranX > 260 || ranY > 180 || ranX < -10 || ranY < -10) && ranX != 128){
+                Enemy jon = new Enemy(enems.get(alea));
+                jon.setX(ranX);
+                jon.setY(ranY);
+                jon.setStartTime(this.secTimer+10);
+                jon.hpBar.setMaxHP(jon.getHp());
+                jon.setFocus(beacon.getX(), beacon.getY());
+                jon.loadAnimations();
+                jon.loadIdleTexture();
+
+                enemies.add(jon);
+            }
+        }
+
         if (this.state == State.DELETING && mouseJustClicked()) {
             Vector3 mousePos = getRelativeMousePos();
             for (GameObject obj:objects) {
@@ -489,6 +508,7 @@ public class GameScreen implements Screen {
         if (currentRound == 1) {
             if (githubButton.isJustClicked()) {
                 pauseFlag = true;
+                soundPlayer.playGithub();
                 Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
                 if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
                     try {
@@ -611,7 +631,7 @@ public class GameScreen implements Screen {
         //////////////////////////////////////////////////////TESTING DE NODOS
         Texture t = new Texture("shoot.png");
         t.dispose();
-        for (Node node : nodes) game.entityBatch.draw(t, node.getX(), node.getY());
+        //for (Node node : nodes) game.entityBatch.draw(t, node.getX(), node.getY());
         //////////////////////////////////////////////////////
 
         game.entityBatch.end();
@@ -725,10 +745,13 @@ public class GameScreen implements Screen {
         extractEnemies("core/assets/round5.csv");
     }
 
-    public void rondaInfinita(){ // TODO Metodo recursivo pasarle vida beacon y enemigos
-        Enemy larry;
-
-
+    private void loadRoundInfinite() throws DBException {
+        try {
+            DBManager.dbManager.connect("Databases/base.db");
+            enems = DBManager.dbManager.getAllEnemies();
+        } catch (DBException e) {
+            log( Level.INFO, "Error en la conexion a la base de datos", null );
+        }
 
     }
 
@@ -740,6 +763,19 @@ public class GameScreen implements Screen {
             DBManager.dbManager.connect("Databases/base.db");
         } catch (DBException e) {
             log( Level.INFO, "Error en la conexion a la base de datos", null );
+        }
+
+        for (int i = 0; i < 4; i++){
+            try {
+                Attacker att = DBManager.dbManager.getAttacker(i);
+                att.hpBar.setMaxHP(att.getHp());
+                att.loadTextures();
+                objects.add(att);
+                fullInv.insert(att);
+                attackInv.insert(att);
+            } catch (DBException e) {
+                log( Level.INFO, "No se ha podido obtener el objeto de ataque", null );
+            }
         }
 
         for (int i = 0; i < 4; i++){
@@ -765,19 +801,6 @@ public class GameScreen implements Screen {
                 trapInv.insert(trap);
             } catch (DBException e) {
                 log( Level.INFO, "No se ha podido obtener la trampa", null );
-            }
-        }
-
-        for (int i = 0; i < 4; i++){
-            try {
-                Attacker att = DBManager.dbManager.getAttacker(i);
-                att.hpBar.setMaxHP(att.getHp());
-                att.loadTextures();
-                objects.add(att);
-                fullInv.insert(att);
-                attackInv.insert(att);
-            } catch (DBException e) {
-                log( Level.INFO, "No se ha podido obtener el objeto de ataque", null );
             }
         }
 
@@ -843,6 +866,11 @@ public class GameScreen implements Screen {
                 }
                 break;
             case -1: //INFINITO
+                try {
+                    loadRoundInfinite();
+                } catch (DBException e) {
+                    e.printStackTrace();
+                }
                 map = new Map("emptyMap.png");
                 gold = 60000;
                 break;
@@ -989,10 +1017,10 @@ public class GameScreen implements Screen {
         switch (this.currentRound) {
             case 1:
             case 5:
-            case -1:
                 beacon.setX(208);
                 beacon.setY(90);
                 break;
+            case -1:
             case 2:
             case 4:
                 beacon.setX(128);

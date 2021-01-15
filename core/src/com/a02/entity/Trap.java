@@ -101,6 +101,10 @@ public class Trap extends GameObject {
         this.attackDamage = attackDamage;
     }
 
+    /**
+     * Actuliza el estado de la trampa. Ésta se autodestruye al activarse.
+     * @param gs Screen del juego
+     */
     public void update(GameScreen gs) {
         switch (this.state) {
             case IDLE:                                //A larry y al grifo no le afectan las trampas
