@@ -1,5 +1,6 @@
 package com.a02.screens;
 
+import com.a02.component.Countdown;
 import com.a02.component.SoundPlayer;
 import com.a02.entity.Shoot;
 import com.a02.dbmanager.DBException;
@@ -115,6 +116,8 @@ public class GameScreen implements Screen {
     private Music roundMusic;       //Reproductor de musica
     public SoundPlayer soundPlayer;//Reproductor de sonidos
 
+    private Countdown countdown;
+
     public GameScreen(MainGame game, int round, int points) {
         log(Level.INFO, "Inicio del GameScreen", null); //Estado del juego
         //Asigancion de valores por defecto
@@ -185,6 +188,8 @@ public class GameScreen implements Screen {
             if (e.getId() != 3) e.setFocus(e.focusNode.getX(), e.focusNode.getY());
             else e.setFocus(beacon.getX(), beacon.getY());
         }
+
+        loadCountdown();
     }
 
     /**
@@ -352,6 +357,9 @@ public class GameScreen implements Screen {
 
     private CurrentCursor currentCursor = CurrentCursor.DEFAULT;
 
+    /**
+     * Actualiza el cursor si se detecta un cambio de estado de juego.
+     */
     private void updateCursor() {
         switch (this.state) {
             case DELETING:
@@ -519,6 +527,8 @@ public class GameScreen implements Screen {
                 }
             }
         }
+
+        this.countdown.update(this);
     }
 
     /**
@@ -609,7 +619,10 @@ public class GameScreen implements Screen {
         }
 
         //Oro
-        if (currentRound != 0){
+        if (currentRound == -2) {
+            font.draw(game.entityBatch, "COSTE: " + gold, 2, 173);
+        }
+        else if (currentRound != 0) {
             font.draw(game.entityBatch, "ORO: " + gold, 2, 173);
         } else {
             gold = gold + 100000000;
@@ -618,6 +631,8 @@ public class GameScreen implements Screen {
             font.draw(game.entityBatch, msg1 , 8, 62);
             font.draw(game.entityBatch, msg2 , 8, 52);
         }
+
+        this.countdown.draw(this);
 
         //Botones
         game.entityBatch.draw(pauseButton.getCurrentTexture(), pauseButton.getX(), pauseButton.getY());
@@ -706,7 +721,6 @@ public class GameScreen implements Screen {
             } catch (FileNotFoundException e) {
                 log( Level.INFO, "No se ha podido abrir el fichero", null );
             }
-
 
         } catch (DBException e) {
             log( Level.INFO, "No se ha podido obtener el enemigo", null );
@@ -861,7 +875,7 @@ public class GameScreen implements Screen {
                 break;
             case 4:
                 loadRound4();
-                map = new Map("emptyMap.png"); //Mapa abierto
+                map = new Map("round4Map.png"); //Mapa abierto
                 gold = 9000;
                 break;
             case 5:
@@ -1164,6 +1178,30 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * Carga las cuentas atrás del contador, dependiendo de la fase.
+     */
+    private void loadCountdown(){
+        int initialCounter;
+        switch (this.currentRound) {
+            case 1:
+            case 2:
+            case 3:
+                initialCounter = 5;
+                break;
+            case 4:
+                initialCounter = 10;
+                break;
+            case 5:
+                initialCounter = 8;
+                break;
+            default:
+                initialCounter = -1;
+                break;
+        }
+        countdown = new Countdown(130,150, initialCounter);
+    }
+
     public int getGold() {
         return gold;
     }
@@ -1178,6 +1216,14 @@ public class GameScreen implements Screen {
 
     public void setQueryingMinions(boolean queryingMinions) {
         this.queryingMinions = queryingMinions;
+    }
+
+    public boolean isPaused() {
+        return pauseFlag;
+    }
+
+    public MainGame getGame() {
+        return game;
     }
 
     private void log(Level level, String msg, Throwable exception) {

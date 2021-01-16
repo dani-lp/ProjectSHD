@@ -74,7 +74,7 @@ public class Defender extends GameObject {
                     int healedObjectCounter = 0;
                     for (GameObject obj : hurt) {
                         if (obj.getHp() < obj.getMaxHp()) {
-                            obj.setHp(obj.getHp() + 20); //Cura 20 de vida a otros objetos
+                            obj.setHp(obj.getHp() + 10); //Cura 20 de vida a otros objetos
                             healedObjectCounter++;
                         }
                     }

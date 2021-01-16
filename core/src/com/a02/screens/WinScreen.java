@@ -7,6 +7,7 @@ import com.a02.game.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -28,7 +29,8 @@ public class WinScreen implements Screen {
     private float count1;//Contadores para las animaciones para que vayan no sincronizadas
     private float count2;
     private float count3;
-    private final Texture wallpaperTexture; //Textura del fondo
+    private final Texture wallpaperTexture;//Textura del fondo
+    private final Pixmap pm3;
 
     public WinScreen(final String username,MainGame game,  final int points) { //game y points se pasan desde GameScreen
         //Guarda los datos desde un hilo
@@ -60,11 +62,15 @@ public class WinScreen implements Screen {
         count3 = 0.5f;
 
         wallpaperTexture = new Texture("wallpaperTestOld.png");
+
+        pm3 = new Pixmap(Gdx.files.internal("defaultCursor.png"));
     }
 
     @Override
     public void render(float delta) {
-        count1 += delta;    //Actualizar los contadores
+        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm3, 0, 0));
+
+        count1 += delta; //Actualizar los contadores
         count2 += delta;
         count3 += delta;
 
