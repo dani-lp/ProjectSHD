@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.net.URL;
 import java.util.HashMap;
 
 import static com.a02.game.Utils.*;
@@ -27,9 +28,9 @@ public class RegisterWindow extends JFrame {
         setTitle("Register");
         setSize(340,410);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setVisible(true);
         setResizable(false);
-        setIconImage(Toolkit.getDefaultToolkit().createImage("core/assets/boredlion.png"));
+        URL iconURL = getClass().getResource("/boredlion.png");
+        setIconImage(new ImageIcon(iconURL).getImage());
         this.setLocationRelativeTo(null);
         setLayout(new GridLayout(11,1));
 
@@ -154,6 +155,8 @@ public class RegisterWindow extends JFrame {
         add(mailLabelPanel);
         add(mailJTFPanel);
         add(buttonsPanel);
+
+        setVisible(true);
     }
 
     /**

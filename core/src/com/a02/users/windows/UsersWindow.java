@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.net.URL;
 import java.util.HashMap;
 
 import static com.a02.game.Utils.*;
@@ -38,9 +39,9 @@ public class UsersWindow extends JFrame {
         setTitle("User management");
         setSize(740,410);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        setVisible(true);
         setResizable(true);
-        setIconImage(Toolkit.getDefaultToolkit().createImage("core/assets/boredlion.png"));
+        URL iconURL = getClass().getResource("/boredlion.png");
+        setIconImage(new ImageIcon(iconURL).getImage());
         this.setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
@@ -174,6 +175,8 @@ public class UsersWindow extends JFrame {
 
         add(new JScrollPane(table), BorderLayout.CENTER);
         add(leftPanel, BorderLayout.LINE_END);
+
+        setVisible(true);
     }
 
     /**

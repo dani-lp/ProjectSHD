@@ -9,6 +9,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 
 import static com.a02.game.Utils.round;
 
@@ -27,9 +28,9 @@ public class SettingsWindow extends JFrame {
         setTitle("Settings");
         setSize(310,225);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setVisible(true);
         setResizable(true);
-        setIconImage(Toolkit.getDefaultToolkit().createImage("core/assets/boredlion.png"));
+        URL iconURL = getClass().getResource("/boredlion.png");
+        setIconImage(new ImageIcon(iconURL).getImage());
         this.setLocationRelativeTo(null);
 
         setLayout(new GridLayout(4,1));
@@ -160,6 +161,8 @@ public class SettingsWindow extends JFrame {
         add(diffPanel);
         add(checkPanel);
         add(buttonsPanel);
+
+        setVisible(true);
     }
 
     /**

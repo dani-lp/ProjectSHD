@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.net.URL;
 import java.util.HashMap;
 
 import static com.a02.game.Utils.readSer;
@@ -25,9 +26,9 @@ public class LoginWindow extends JFrame{
         setTitle("Login");
         setSize(340,230);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setVisible(true);
         setResizable(false);
-        setIconImage(Toolkit.getDefaultToolkit().createImage("core/assets/boredlion.png"));
+        URL iconURL = getClass().getResource("/boredlion.png");
+        setIconImage(new ImageIcon(iconURL).getImage());
         this.setLocationRelativeTo(null);
         setLayout(new GridLayout(5,1));
 
@@ -134,6 +135,8 @@ public class LoginWindow extends JFrame{
         add(pwdLabelPanel);
         add(pwdTFPanel);
         add(buttonsPanel);
+
+        setVisible(true);
     }
 
     public boolean checkSystem(String user, String pwd) throws FileNotFoundException {
