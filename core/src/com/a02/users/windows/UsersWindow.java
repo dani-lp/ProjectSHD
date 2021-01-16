@@ -1,6 +1,7 @@
 package com.a02.users.windows;
 
 import com.a02.users.User;
+import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
@@ -18,14 +19,18 @@ import static com.a02.game.Utils.*;
 
 public class UsersWindow extends JFrame {
     boolean isEditable = false;
+    boolean isDark;
 
     JTable table;
     HashMap<String, User> map;
 
-    public UsersWindow() {
+    public UsersWindow(final boolean isDark) {
+        this.isDark = isDark;
+
         //1.- Ajustes de ventana
         try {
-            UIManager.setLookAndFeel(new FlatLightLaf());   //UI Look&Feel más moderno y limpio
+            if (isDark) UIManager.setLookAndFeel(new FlatDarkLaf());   //UI Look&Feel más moderno y limpio
+            else UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -40,6 +45,7 @@ public class UsersWindow extends JFrame {
         setLayout(new BorderLayout());
 
         //2.- Creación de componentes
+        addJMenu();
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new GridLayout(10, 1));
         JPanel leftPanel1 = new JPanel();
@@ -126,7 +132,7 @@ public class UsersWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        new RegisterWindow().addWindowListener(new WindowAdapter() {
+                        new RegisterWindow(isDark).addWindowListener(new WindowAdapter() {
                             @Override
                             public void windowClosed(WindowEvent e) {
                                 refreshTable();
@@ -266,5 +272,45 @@ public class UsersWindow extends JFrame {
             map.put(user.getUsername(), user);
         }
         return map;
+    }
+
+    private void refreshUI() {
+        try {
+            if (isDark) UIManager.setLookAndFeel(new FlatDarkLaf());   //UI Look&Feel más moderno y limpio
+            else UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        SwingUtilities.updateComponentTreeUI(this);
+    }
+
+    private void addJMenu() {
+        JMenuBar menuBar = new JMenuBar();
+        this.setJMenuBar(menuBar);
+
+        JMenu fileJMenu = new JMenu("Settings");
+        menuBar.add(fileJMenu);
+
+        final JCheckBoxMenuItem themeJCBMItem = new JCheckBoxMenuItem("Dark theme");
+        themeJCBMItem.setSelected(isDark);
+        fileJMenu.add(themeJCBMItem);
+
+        JMenuItem exitItem = new JMenuItem("Exit");
+        fileJMenu.add(exitItem);
+
+        themeJCBMItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                isDark = themeJCBMItem.getState();
+                refreshUI();
+            }
+        });
+
+        exitItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
     }
 }

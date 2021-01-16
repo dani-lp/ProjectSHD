@@ -3,6 +3,7 @@ package com.a02.users.windows;
 import com.a02.game.MainGame;
 import com.a02.game.Settings;
 import com.a02.users.User;
+import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
@@ -12,10 +13,13 @@ import java.awt.event.*;
 import static com.a02.game.Utils.round;
 
 public class SettingsWindow extends JFrame {
-    public SettingsWindow(final User user){
+    private boolean isDark;
+    public SettingsWindow(final User user, final boolean isDark){
+        this.isDark = isDark;
         //1.- Ajustes de ventana
         try {
-            UIManager.setLookAndFeel(new FlatLightLaf());   //UI Look&Feel más moderno y limpio
+            if (isDark) UIManager.setLookAndFeel(new FlatDarkLaf());   //UI Look&Feel más moderno y limpio
+            else UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -31,6 +35,8 @@ public class SettingsWindow extends JFrame {
         setLayout(new GridLayout(4,1));
 
         //2.- Creación de elementos
+        addJMenu();
+
         JPanel modePanel = new JPanel();
         JPanel diffPanel = new JPanel();
         JPanel checkPanel = new JPanel();
@@ -91,7 +97,7 @@ public class SettingsWindow extends JFrame {
 
         adminButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new UsersWindow();
+                new UsersWindow(isDark);
             }
         });
 
@@ -163,5 +169,45 @@ public class SettingsWindow extends JFrame {
      */
     public static double getDmgMult(double ogValue) {
         return round((ogValue + 5) * 0.1,1);
+    }
+
+    private void refreshUI() {
+        try {
+            if (isDark) UIManager.setLookAndFeel(new FlatDarkLaf());   //UI Look&Feel más moderno y limpio
+            else UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        SwingUtilities.updateComponentTreeUI(this);
+    }
+
+    private void addJMenu() {
+        JMenuBar menuBar = new JMenuBar();
+        this.setJMenuBar(menuBar);
+
+        JMenu fileJMenu = new JMenu("Settings");
+        menuBar.add(fileJMenu);
+
+        final JCheckBoxMenuItem themeJCBMItem = new JCheckBoxMenuItem("Dark theme");
+        themeJCBMItem.setSelected(isDark);
+        fileJMenu.add(themeJCBMItem);
+
+        JMenuItem exitItem = new JMenuItem("Exit");
+        fileJMenu.add(exitItem);
+
+        themeJCBMItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                isDark = themeJCBMItem.getState();
+                refreshUI();
+            }
+        });
+
+        exitItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
     }
 }

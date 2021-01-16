@@ -1,6 +1,7 @@
 package com.a02.users.windows;
 
 import com.a02.users.User;
+import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
@@ -14,10 +15,11 @@ import static com.a02.game.Utils.*;
 
 
 public class RegisterWindow extends JFrame {
-    public RegisterWindow() {
+    public RegisterWindow(boolean isDark) {
         //1.- Ajustes de ventana
         try {
-            UIManager.setLookAndFeel(new FlatLightLaf());   //UI Look&Feel más moderno y limpio
+            if (isDark) UIManager.setLookAndFeel(new FlatDarkLaf());   //UI Look&Feel más moderno y limpio
+            else UIManager.setLookAndFeel(new FlatLightLaf());
         } catch (Exception e) {
             e.printStackTrace();
         }

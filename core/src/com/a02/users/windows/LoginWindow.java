@@ -1,6 +1,7 @@
 package com.a02.users.windows;
 
 import com.a02.users.User;
+import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.*;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import static com.a02.game.Utils.readSer;
 
 public class LoginWindow extends JFrame{
+    private boolean isDark = false;
     public LoginWindow() {
         //1.- Ajustes de ventana
         try {
@@ -21,7 +23,7 @@ public class LoginWindow extends JFrame{
         }
 
         setTitle("Login");
-        setSize(340,210);
+        setSize(340,230);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
         setResizable(false);
@@ -30,6 +32,8 @@ public class LoginWindow extends JFrame{
         setLayout(new GridLayout(5,1));
 
         //2.- Creación de elementos
+        addJMenu();
+
         JPanel userLabelPanel = new JPanel(); //Panel para label de usuario
         JPanel userTFPanel = new JPanel(); //Panel para TextField de usuario
         JPanel pwdLabelPanel = new JPanel();
@@ -78,9 +82,9 @@ public class LoginWindow extends JFrame{
                                     ioException.printStackTrace();
                                 }
                                 if (userJTF.getText().equals("admin")) {
-                                    new UsersWindow();
+                                    new UsersWindow(isDark);
                                 }
-                                else new SettingsWindow(users.get(userJTF.getText()));
+                                else new SettingsWindow(users.get(userJTF.getText()), isDark);
                             }
                         });
                         if (!userJTF.getText().equals("admin")) dispose();
@@ -97,7 +101,7 @@ public class LoginWindow extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        new RegisterWindow();
+                        new RegisterWindow(isDark);
                     }
                 });
             }
@@ -148,5 +152,44 @@ public class LoginWindow extends JFrame{
                     "Invalid user", JOptionPane.ERROR_MESSAGE);
             return false;
         }
+    }
+
+    private void refreshUI() {
+        try {
+            if (isDark) UIManager.setLookAndFeel(new FlatDarkLaf());   //UI Look&Feel más moderno y limpio
+            else UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        SwingUtilities.updateComponentTreeUI(this);
+    }
+
+    private void addJMenu() {
+        JMenuBar menuBar = new JMenuBar();
+        this.setJMenuBar(menuBar);
+
+        JMenu fileJMenu = new JMenu("Settings");
+        menuBar.add(fileJMenu);
+
+        final JCheckBoxMenuItem themeJCBMItem = new JCheckBoxMenuItem("Dark theme");
+        fileJMenu.add(themeJCBMItem);
+
+        JMenuItem exitItem = new JMenuItem("Exit");
+        fileJMenu.add(exitItem);
+
+        themeJCBMItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                isDark = themeJCBMItem.getState();
+                refreshUI();
+            }
+        });
+
+        exitItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
     }
 }
