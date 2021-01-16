@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 
 public class InventoryTest {
 
-    Inventory inventoryTest = new Inventory();
+    Inventory inventoryTest = new Inventory("Inventory/fullInv.png");
 
     @Test
     public void getX() {

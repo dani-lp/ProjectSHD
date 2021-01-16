@@ -129,10 +129,10 @@ public class GameScreen implements Screen {
         animationTimer = 0;
         this.points = points;
 
-        fullInv = new Inventory();
-        attackInv = new Inventory();
-        defInv = new Inventory();
-        trapInv = new Inventory();
+        fullInv = new Inventory("Inventory/fullInv.png");
+        attackInv = new Inventory("Inventory/attackInv.png");
+        defInv = new Inventory("Inventory/defInv.png");
+        trapInv = new Inventory("Inventory/trapInv.png");
 
         createObjects(); //Crear objetos
         drawingInv = fullInv.sortInventory();

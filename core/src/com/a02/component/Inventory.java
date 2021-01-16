@@ -14,8 +14,8 @@ import java.util.ArrayList;
 public class Inventory {
     protected ArrayList<GameObject> objects;
     protected Vector2[] positions;
-    private final String sprite = "inventory.png";
-    private final Texture texture = new Texture(Gdx.files.internal(sprite));
+    private final String sprite;
+    private final Texture texture;
 
     public int getX() {
         return 256;
@@ -30,7 +30,9 @@ public class Inventory {
     /**
      * Constructor de Inventory. Genera las posiciones de forma automática.
      */
-    public Inventory(){
+    public Inventory(String sprite){
+        this.sprite = sprite;
+        texture = new Texture(Gdx.files.internal(sprite));
         this.objects = new ArrayList<>();
         this.positions = new Vector2[15];
         final int currX = 261;
@@ -65,7 +67,7 @@ public class Inventory {
      * @return Inventario copiado
      */
     public Inventory sortInventory(){
-        Inventory order = new Inventory();
+        Inventory order = new Inventory(this.sprite);
         for (GameObject object:this.getObjects()) {    //Objetos del inventario
             order.insert(object);
         }

@@ -23,6 +23,7 @@ public class DesktopLauncher {
 		config.fullscreen = true;
 		config.foregroundFPS = 60;
 		config.addIcon("boredlion.png", Files.FileType.Internal);
+		config.forceExit = false; //Cierre seguro con 'X' o Alt+F4
 		new LwjglApplication(new MainGame(), config);
 	}
 }
