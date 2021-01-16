@@ -101,6 +101,7 @@ public class GameScreen implements Screen {
     private final UIButton trapButton;
 
     private final UIButton githubButton;
+    private final UIButton spawnEnemyButton;
 
     public int secTimer;   //Contador de segundos. Suma 1 cada fotograma.
     float animationTimer;   //Contador para animaciones. Suma el tiempo transcurrido entre fotogramas.
@@ -167,6 +168,8 @@ public class GameScreen implements Screen {
                 "Buttons/Inventory/trapButtonIdle.png", "Buttons/Inventory/trapButtonPressed.png"); //Boton de las trampas del inventario
 
         githubButton = new UIButton(74, 168, 8, 7, "empty.png", "empty.png");   //Boton del easterEgg
+        spawnEnemyButton = new UIButton(3, 3, 18, 18, "Buttons/enemyButtonIdle.png", "Buttons/enemyButtonPressed.png");
+        if (currentRound != -2) spawnEnemyButton.setActive(false);
 
         if (Settings.s.isTutorialCheck()) tutoBut = new UIButton(2, 40, 252, 35,
                 "textfield.png", "textfield.png"); //Activa el boton del tutorial para navegar
@@ -253,6 +256,7 @@ public class GameScreen implements Screen {
         if ((Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) && secTimer != 0) pauseFlag = !pauseFlag;
         else if (Gdx.input.isKeyJustPressed(Input.Keys.F) && !pauseFlag) enemies.clear();
 
+        updateButtonLogic();
         updateCursor();
         updateMusicVolume();
 
@@ -336,12 +340,12 @@ public class GameScreen implements Screen {
         updateTutorialMessages(contEnt); //Actualizar texto
 
         if (contEnt == 13 && !messagesEnded){
-            Enemy larry = new Enemy(-15,90,16,16,1,500,300,15,
+            Enemy tutorialEnemy = new Enemy(-15,90,16,16,1,500,300,15,
                     this.secTimer + 30,200);
-            larry.setFocus(beacon.getX(), beacon.getY());
-            larry.loadAnimations();
-            larry.loadIdleTexture();
-            enemies.add(larry);
+            tutorialEnemy.setFocus(beacon.getX(), beacon.getY());
+            tutorialEnemy.loadAnimations();
+            tutorialEnemy.loadIdleTexture();
+            enemies.add(tutorialEnemy);
             messagesEnded = true;
         }
 
@@ -409,17 +413,7 @@ public class GameScreen implements Screen {
 
         }
 
-        //Botón de eliminar objetos
-        if (deleteButton.isJustClicked()){
-            if (this.state != State.DELETING) {
-                this.state = State.DELETING;
-            }
-            else {
-                this.state = State.PLAYING;
-            }
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.E)){
+        if (Gdx.input.isKeyJustPressed(Input.Keys.E) && this.state != State.BUYING){
             this.state = State.PLAYING;
             for (GameObject obj:objects) {
                 obj.setSelected(false);
@@ -456,8 +450,9 @@ public class GameScreen implements Screen {
             }
         }
 
+        //En el modo práctica, actualiza el precio total del conjunto de objetos utilizado
         if (currentRound == -2){
-            gold=0;
+            gold = 0;
             for (GameObject obj:objects) {
                 if (!obj.isInInventory(this) && obj.getId() != -1){
                     gold += obj.getPrice();
@@ -513,6 +508,33 @@ public class GameScreen implements Screen {
             }
         }
 
+        this.countdown.update(this);
+    }
+
+    /**
+     * Actualiza el estado de los botones de juego.
+     */
+    private void updateButtonLogic() {
+        //Botón de eliminar objetos
+        if (deleteButton.isJustClicked()){
+            if (this.state != State.DELETING) {
+                this.state = State.DELETING;
+            }
+            else {
+                this.state = State.PLAYING;
+            }
+        }
+
+        spawnEnemyButton.updateTouched();
+        if (spawnEnemyButton.isJustClicked()) {
+            Enemy testEnemy = new Enemy(-15,90,16,16,5,750,0,20,
+                    this.secTimer,0);
+            testEnemy.setFocus(beacon.getX(), beacon.getY());
+            testEnemy.loadAnimations();
+            testEnemy.loadIdleTexture();
+            enemies.add(testEnemy);
+        }
+
         if (currentRound == 1) {
             if (githubButton.isJustClicked()) {
                 pauseFlag = true;
@@ -527,8 +549,6 @@ public class GameScreen implements Screen {
                 }
             }
         }
-
-        this.countdown.update(this);
     }
 
     /**
@@ -637,6 +657,8 @@ public class GameScreen implements Screen {
         //Botones
         game.entityBatch.draw(pauseButton.getCurrentTexture(), pauseButton.getX(), pauseButton.getY());
         game.entityBatch.draw(deleteButton.getCurrentTexture(), deleteButton.getX(), deleteButton.getY());
+
+        if (spawnEnemyButton.isActive()) game.entityBatch.draw(spawnEnemyButton.getCurrentTexture(), spawnEnemyButton.getX(), spawnEnemyButton.getY());
 
         //Menu de pausa
         if (pauseFlag) {

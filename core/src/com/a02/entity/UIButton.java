@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
+//import static com.a02.game.Utils.emptyTexture;
 import static com.a02.game.Utils.getRelativeMousePos;
 
 /**
@@ -13,6 +14,7 @@ public class UIButton extends Entity {
 
     private final Texture idleTexture; //Aspecto del botón
     private final Texture pressedTexture;
+    private final Texture emptyTexture = new Texture("empty.png");
 
     private boolean touched = false;
     private boolean pressed;
