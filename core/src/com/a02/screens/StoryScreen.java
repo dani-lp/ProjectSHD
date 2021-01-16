@@ -103,7 +103,7 @@ public class StoryScreen implements Screen {
 
         game.entityBatch.end();
 
-        this.taikosMusic.setVolume(Settings.s.getVolume());
+        if (Settings.s.isMusicCheck()) this.taikosMusic.setVolume(Settings.s.getVolume());
     }
 
     private void updateButtonLogic() {

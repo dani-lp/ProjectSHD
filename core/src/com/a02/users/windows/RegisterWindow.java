@@ -107,7 +107,7 @@ public class RegisterWindow extends JFrame {
                                                 "       Age: " + tempUser.getAge() + "\n" +
                                                 "       Email: " + tempUser.getMail() + "\n",
                                         "Register new user", JOptionPane.YES_NO_OPTION) == 0) {
-                                    if (addUser("users.ser", tempUser)) dispose();
+                                    if (addUser("data/users.ser", tempUser)) dispose();
                                 }
                             }
                             else {

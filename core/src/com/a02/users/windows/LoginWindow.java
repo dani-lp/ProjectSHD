@@ -73,7 +73,7 @@ public class LoginWindow extends JFrame{
                             public void run() {
                                 HashMap<String, User> users = new HashMap<>();
                                 try {
-                                    users = readSer("users.ser");
+                                    users = readSer("data/users.ser");
                                 } catch (IOException | ClassNotFoundException ioException) {
                                     ioException.printStackTrace();
                                 }
@@ -135,7 +135,7 @@ public class LoginWindow extends JFrame{
     public boolean checkSystem(String user, String pwd) throws FileNotFoundException {
         HashMap<String, User> users = new HashMap<>();
         try {
-            users = readSer("users.ser");
+            users = readSer("data/users.ser");
         } catch (IOException | ClassNotFoundException ioException) {
             ioException.printStackTrace();
         }

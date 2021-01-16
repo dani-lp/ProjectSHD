@@ -240,7 +240,7 @@ public class GameScreen implements Screen {
         }
 
         if ((Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) && secTimer != 0) pauseFlag = !pauseFlag;
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.F)) enemies.clear();
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.F) && !pauseFlag) enemies.clear();
 
         updateCursor();
         updateMusicVolume();
@@ -376,7 +376,7 @@ public class GameScreen implements Screen {
     }
 
     private void updateMusicVolume() {
-        this.roundMusic.setVolume(Settings.s.getVolume());
+        if (Settings.s.isMusicCheck()) this.roundMusic.setVolume(Settings.s.getVolume());
     }
 
     /**
@@ -664,7 +664,7 @@ public class GameScreen implements Screen {
      */
     private void extractEnemies(String path) {
         try {
-            DBManager.dbManager.connect("Databases/base.db");
+            DBManager.dbManager.connect("data/Databases/base.db");
         } catch (DBException e) {
             log( Level.INFO, "Error en la conexion a la base de datos", null );
         }
@@ -707,7 +707,7 @@ public class GameScreen implements Screen {
     //Métodos de cargado de rondas
 
     private void loadRound1(){
-        extractEnemies("core/assets/round1.csv");
+        extractEnemies("data/rounds/round1.csv");
         obstacles.add(new Obstacle(64,0,32,18));
         obstacles.add(new Obstacle(64,54,32,18));
         obstacles.add(new Obstacle(64,108,32,18));
@@ -715,11 +715,11 @@ public class GameScreen implements Screen {
     }
 
     private void loadRound2(){
-        extractEnemies("core/assets/round2.csv");
+        extractEnemies("data/rounds/round2.csv");
     }
 
     private void loadRound3() {
-        extractEnemies("core/assets/round3.csv");
+        extractEnemies("data/rounds/round3.csv");
         obstacles.add(new Obstacle(32,108,64,37));
         obstacles.add(new Obstacle(160,108,64,37));
         obstacles.add(new Obstacle(32,17,64,37));
@@ -727,16 +727,16 @@ public class GameScreen implements Screen {
     }
 
     private void loadRound4() {
-        extractEnemies("core/assets/round4.csv");
+        extractEnemies("data/rounds/round4.csv");
     }
 
     private void loadRound5() {
-        extractEnemies("core/assets/round5.csv");
+        extractEnemies("data/rounds/round5.csv");
     }
 
     private void loadRoundInfinite() throws DBException {
         try {
-            DBManager.dbManager.connect("Databases/base.db");
+            DBManager.dbManager.connect("data/Databases/base.db");
             enems = DBManager.dbManager.getAllEnemies();
         } catch (DBException e) {
             log( Level.INFO, "Error en la conexion a la base de datos", null );
@@ -749,7 +749,7 @@ public class GameScreen implements Screen {
      */
     public void createObjects(){
         try {
-            DBManager.dbManager.connect("Databases/base.db");
+            DBManager.dbManager.connect("data/Databases/base.db");
         } catch (DBException e) {
             log( Level.INFO, "Error en la conexion a la base de datos", null );
         }

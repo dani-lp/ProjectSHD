@@ -73,7 +73,7 @@ public class UsersWindow extends JFrame {
         //Tabla
         table = null;
         try {
-            map = readSer("users.ser");
+            map = readSer("data/users.ser");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -94,7 +94,7 @@ public class UsersWindow extends JFrame {
                 if (JOptionPane.showConfirmDialog(null, "Save changed data?",
                         "Save changes", JOptionPane.YES_NO_OPTION) == 0) {
                     try {
-                        writeSer("users.ser", getTableData());
+                        writeSer("data/users.ser", getTableData());
                         refreshTable();
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
@@ -111,7 +111,7 @@ public class UsersWindow extends JFrame {
                     key = table.getModel().getValueAt(row, 0).toString();
                     if (JOptionPane.showConfirmDialog(null, "Delete user '" + key + "'?",
                             "Delete user", JOptionPane.YES_NO_OPTION) == 0) {
-                        deleteUser("users.ser", key);
+                        deleteUser("data/users.ser", key);
                         refreshTable();
                     }
                 }
@@ -240,7 +240,7 @@ public class UsersWindow extends JFrame {
     private HashMap<String, User> getMap() {
         HashMap<String, User> tempMap = null;
         try {
-            tempMap = readSer("users.ser");
+            tempMap = readSer("data/users.ser");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

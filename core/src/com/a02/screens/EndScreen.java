@@ -76,7 +76,7 @@ public class EndScreen implements Screen {
     private void saveMaxScore(String username, int points) {
         HashMap<String, User> map = null;
         try {
-            map = readSer("users.ser");
+            map = readSer("data/users.ser");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -88,7 +88,7 @@ public class EndScreen implements Screen {
         map.put(tempUser.getUsername(), tempUser);
 
         try {
-            writeSer("users.ser", map);
+            writeSer("data/users.ser", map);
         } catch (IOException e) {
             e.printStackTrace();
         }
