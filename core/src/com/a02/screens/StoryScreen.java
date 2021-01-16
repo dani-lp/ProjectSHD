@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -67,10 +68,15 @@ public class StoryScreen implements Screen {
             this.taikosMusic.setVolume(Settings.s.getVolume());
             this.taikosMusic.play();
         }
+
     }
 
     @Override
     public void render(float delta) {
+        Pixmap pm3 = new Pixmap(Gdx.files.internal("defaultCursor.png"));
+        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm3, 0, 0));
+        pm3.dispose();
+
         if (animationTimer == 0 && this.currentRound == 5) soundPlayer.playRoar();
         animationTimer += Gdx.graphics.getDeltaTime();
 

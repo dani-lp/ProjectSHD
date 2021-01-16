@@ -235,7 +235,13 @@ public class GameScreen implements Screen {
                 this.roundMusic.stop();
                 this.roundMusic.dispose();
             }
-            if (currentRound != 5) game.setScreen(new StoryScreen(game, ++currentRound, this.points));
+            if (currentRound != 5) {
+                Pixmap pm3 = new Pixmap(Gdx.files.internal("defaultCursor.png"));
+                Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm3, 0, 0));
+                pm3.dispose();
+                this.currentCursor = CurrentCursor.DEFAULT;
+                game.setScreen(new StoryScreen(game, ++currentRound, this.points));
+            }
             else game.setScreen(new WinScreen(this.game, this.points));
         }
 
