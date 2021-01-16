@@ -36,7 +36,7 @@ public class StoryScreen implements Screen {
     private final UIButton skipButton; //Para saltarse las frases y pasar al juego
     private int convCounter = 0; //Contador de línea
     private final SoundPlayer soundPlayer; //Reproductor de sonido
-
+    private final Pixmap pm3;
     private final BitmapFont font;
 
     private Music taikosMusic = null;
@@ -68,14 +68,12 @@ public class StoryScreen implements Screen {
             this.taikosMusic.setVolume(Settings.s.getVolume());
             this.taikosMusic.play();
         }
-
+        pm3 = new Pixmap(Gdx.files.internal("defaultCursor.png"));
     }
 
     @Override
     public void render(float delta) {
-        Pixmap pm3 = new Pixmap(Gdx.files.internal("defaultCursor.png"));
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm3, 0, 0));
-        pm3.dispose();
 
         if (animationTimer == 0 && this.currentRound == 5) soundPlayer.playRoar();
         animationTimer += Gdx.graphics.getDeltaTime();
@@ -238,6 +236,7 @@ public class StoryScreen implements Screen {
 
     @Override
     public void dispose() {
+        pm3.dispose();
         characterIconTexture.dispose();
         frameTexture.dispose();
         characterNameTexture.dispose();
