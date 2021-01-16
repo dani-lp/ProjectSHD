@@ -2,6 +2,7 @@ package com.a02.screens;
 
 import com.a02.entity.UIButton;
 import com.a02.game.MainGame;
+import com.a02.game.Utils;
 import com.a02.users.User;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -16,31 +17,29 @@ import static com.a02.game.Utils.writeSer;
 
 public class EndScreen implements Screen {
     MainGame game;
-
-    private final UIButton menuButton;
-    private final UIButton quitButton;
-    private final Texture endScreenTexture;
+    private final UIButton menuButton; //Boton de menu
+    private final UIButton quitButton; //Boton de salir
+    private final Texture endScreenTexture; //Textura del fondo
 
     public EndScreen(final String username, final int points, MainGame game) {
         //Guarda los datos desde un hilo
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                saveMaxScore(username, points);
-
+                Utils.saveMaxScore(username, points);
             }
         });
         t.start();
 
         this.game = game;
 
-        Pixmap pm = new Pixmap(Gdx.files.internal("defaultCursor.png"));
+        Pixmap pm = new Pixmap(Gdx.files.internal("defaultCursor.png")); //Cambia el cursor al default
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
         pm.dispose();
 
-        menuButton = new UIButton(73,-150,74,36,
+        menuButton = new UIButton(73,-150,74,36, //Creacion de boton menu
                 "Buttons/menuButtonIdle.png","Buttons/menuButtonPressed.png");
-        quitButton = new UIButton(173,-220,74,36,
+        quitButton = new UIButton(173,-220,74,36, //Creacion de boton salir
                 "Buttons/quitButtonIdle.png","Buttons/quitButtonPressed.png");
         endScreenTexture = new Texture("endScreen.png");
     }
@@ -50,10 +49,10 @@ public class EndScreen implements Screen {
 
         updateButtonLogic();
 
-        menuButton.setY((float) (menuButton.getY() + (70 - menuButton.getY())*0.04));
+        menuButton.setY((float) (menuButton.getY() + (70 - menuButton.getY())*0.04));   //posicionar
         quitButton.setY((float) (quitButton.getY() + (70 - quitButton.getY())*0.04));
 
-        game.entityBatch.begin();
+        game.entityBatch.begin();                               //Dibujado de botones y fondo
         game.entityBatch.draw(endScreenTexture,0,0);
         game.entityBatch.draw(menuButton.getCurrentTexture(), menuButton.getX(), menuButton.getY());
         game.entityBatch.draw(quitButton.getCurrentTexture(), quitButton.getX(), quitButton.getY());
@@ -64,38 +63,18 @@ public class EndScreen implements Screen {
         menuButton.updateTouched();
         quitButton.updateTouched();
 
-        if (menuButton.isJustClicked()) {
+        if (menuButton.isJustClicked()) {   //Cambiar de screen
             game.setScreen(new MenuScreen(game));
         }
-        else if (quitButton.isJustClicked()) {
+        else if (quitButton.isJustClicked()) { //cerrar
             Gdx.app.exit();
             System.exit(0);
         }
     }
 
-    private void saveMaxScore(String username, int points) {
-        HashMap<String, User> map = null;
-        try {
-            map = readSer("data/users.ser");
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        assert map != null;
-        User tempUser = map.get(username);
-
-        if (tempUser.getScoreRecord() < points) tempUser.setScoreRecord(points);
-        map.put(tempUser.getUsername(), tempUser);
-
-        try {
-            writeSer("data/users.ser", map);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
-    public void dispose() {
+    public void dispose() {         //limpiar lo de la screen
         menuButton.disposeButton();
         quitButton.disposeButton();
         endScreenTexture.dispose();

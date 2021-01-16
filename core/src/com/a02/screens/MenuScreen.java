@@ -18,22 +18,22 @@ public class MenuScreen implements Screen {
 
     private boolean introTimer; //Para poder hacer click en el botón de "Menu" en GameScreen sin tocar el de "Round 2"
 
-    private final UIButton playButton;
-    private final UIButton infiniteButton;
-    private final UIButton testingButton;
-    private final UIButton quitButton;
+    private final UIButton playButton; //Para iniciar el modo de rondas normal
+    private final UIButton infiniteButton; //Para iniciar rondas infinitas
+    private final UIButton testingButton; //Para iniciar el modo practica
+    private final UIButton quitButton;  //Para salir
 
-    private final Texture backgroundTexture;
+    private final Texture backgroundTexture; //Textura del fondo del menu
 
-    private final OrthographicCamera camera;
-    private final static Logger logger = Logger.getLogger(MenuScreen.class.getName());
+    private final OrthographicCamera camera; //Para determinar el tamaño base
+    private final static Logger logger = Logger.getLogger(MenuScreen.class.getName()); //Para informar de como va progresando
 
     public MenuScreen(MainGame game) {
         this.game = game;
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, 320, 180);
+        camera.setToOrtho(false, 320, 180); //Crear tamanaño del juego
 
-        playButton = new UIButton(160, 194, 74, 36,
+        playButton = new UIButton(160, 194, 74, 36,                                         //Asigancion de valores por defecto
                 "Buttons/playButtonIdle.png", "Buttons/playButtonPressed.png");
         infiniteButton = new UIButton(240, 194, 74, 36,
                 "Buttons/infiniteButtonIdle.png", "Buttons/infiniteButtonPressed.png");
@@ -46,12 +46,12 @@ public class MenuScreen implements Screen {
 
         introTimer = false;
 
-        Pixmap pm = new Pixmap(Gdx.files.internal("defaultCursor.png"));
+        Pixmap pm = new Pixmap(Gdx.files.internal("defaultCursor.png"));        //Asignar el cursor por defecto
         Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 0, 0));
         pm.dispose();
 
         Logger.getLogger("").setLevel(Level.INFO);
-        Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO);
+        Logger.getLogger("").getHandlers()[0].setLevel(Level.INFO); //Informe de estado de menu del logger
         logger.info("Inicio del MenuScreen");
     }
 
@@ -70,7 +70,7 @@ public class MenuScreen implements Screen {
         camera.update();
         game.entityBatch.setProjectionMatrix(camera.combined);
 
-        game.entityBatch.begin();
+        game.entityBatch.begin();   //Dibujado de botones y texturas
         game.entityBatch.draw(backgroundTexture,0,0);
         game.entityBatch.draw(playButton.getCurrentTexture(),playButton.getX(),playButton.getY());
         game.entityBatch.draw(infiniteButton.getCurrentTexture(),infiniteButton.getX(),infiniteButton.getY());
@@ -78,12 +78,12 @@ public class MenuScreen implements Screen {
         game.entityBatch.draw(quitButton.getCurrentTexture(),quitButton.getX(),quitButton.getY());
         game.entityBatch.end();
 
-        updateButtonLogic();
+        updateButtonLogic(); //Cambiar el estado de los botones
         introTimer = true;
     }
 
     private void updateButtonLogic() {
-        //Aspecto
+        //Aspecto, cambia de un sprite a otro
         playButton.updateTouched();
         infiniteButton.updateTouched();
         testingButton.updateTouched();
@@ -91,7 +91,7 @@ public class MenuScreen implements Screen {
 
         //Lógica
         if (playButton.isJustClicked() && introTimer) {
-            game.setScreen(new StoryScreen(game, 1, 0));
+            game.setScreen(new StoryScreen(game, 1, 0)); //Modo de rondas normal comienza en ronda 1 y va avanzando al superarlas
         }
         if (infiniteButton.isJustClicked() && introTimer) {
             game.setScreen(new GameScreen(game, -1, 0)); //Modo infinito (ronda -1)
@@ -99,14 +99,14 @@ public class MenuScreen implements Screen {
         if (testingButton.isJustClicked() && introTimer) {
             game.setScreen(new GameScreen(game, -2, 0)); //Modo testing (ronda -2)
         }
-        else if (quitButton.isJustClicked() && introTimer) {
+        else if (quitButton.isJustClicked() && introTimer) { //Cerrar la aplicacion
             Gdx.app.exit();
             System.exit(0);
         }
     }
 
     @Override
-    public void dispose() {
+    public void dispose() {         //Limpiado de lo de la screen
         playButton.disposeButton();
         infiniteButton.disposeButton();
         testingButton.disposeButton();

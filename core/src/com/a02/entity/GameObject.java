@@ -181,7 +181,7 @@ public abstract class GameObject extends Entity {
 
                 gs.state = GameScreen.State.PLAYING;
 
-                if (gs.getGold() >= this.price)
+                if (gs.getGold() >= this.price || gs.getCurrentRound() == -2)
                     this.setObjectInGrid(gs);
                 else {
                     gs.soundPlayer.playCoins();

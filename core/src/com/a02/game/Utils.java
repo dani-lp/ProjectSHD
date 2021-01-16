@@ -203,4 +203,30 @@ public class Utils {
         }
         return minDistanceIndex;
     }
+    /**
+     * Guarda el usuario actulizado en el HashMap
+     * @param username Nombre del usuario que esta jugando
+     * @param points Puntuacion que ha obtenido
+     */
+    public static void saveMaxScore(String username, int points) {
+        HashMap<String, User> map = null;
+        try {
+            map = readSer("data/users.ser");        //Deserializar el HashMap de usuarios
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        assert map != null;
+        User tempUser = map.get(username);
+        //Encontrar el usuario que esta jugando y actualizarlo si ha obtenido mayor puntuacion
+        if (tempUser.getScoreRecord() < points) tempUser.setScoreRecord(points);
+        map.put(tempUser.getUsername(), tempUser);
+
+        try {
+            writeSer("data/users.ser", map);    //Serializar el usuario actualizado
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

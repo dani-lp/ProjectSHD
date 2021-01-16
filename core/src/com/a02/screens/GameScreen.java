@@ -110,14 +110,14 @@ public class GameScreen implements Screen {
     public String msg2;
     private UIButton tutoBut = null;
     private int contEnt = 0; //Contador de mensajes de tutorial
-    private boolean messagesEnded = false;
+    private boolean messagesEnded = false;  //Para finalizar el tutorial
 
-    private Music roundMusic;
-    public SoundPlayer soundPlayer;
+    private Music roundMusic;       //Reproductor de musica
+    public SoundPlayer soundPlayer;//Reproductor de sonidos
 
     public GameScreen(MainGame game, int round, int points) {
-        log(Level.INFO, "Inicio del GameScreen", null);
-
+        log(Level.INFO, "Inicio del GameScreen", null); //Estado del juego
+        //Asigancion de valores por defecto
         this.game = game;
         this.state = State.PLAYING;
         pauseFlag = false;
@@ -145,28 +145,28 @@ public class GameScreen implements Screen {
         loadSetup(); //Oro, mapa y ronda
 
         //Botones de pausa y inventario
-        deleteButton = new UIButton(280, 3, 10, 20, "pala.png", "pala.png");
-        pauseButton = new UIButton(301, 3, 16, 16, "pause.png", "pause.png");
+        deleteButton = new UIButton(280, 3, 10, 20, "pala.png", "pala.png"); //Boton para eliminar objetos
+        pauseButton = new UIButton(301, 3, 16, 16, "pause.png", "pause.png"); //Boton de ajustes
         resumeButton = new UIButton(116, 113, 74, 36,
-                "Buttons/resumeButtonIdle.png", "Buttons/resumeButtonPressed.png");
+                "Buttons/resumeButtonIdle.png", "Buttons/resumeButtonPressed.png"); //Boton de volver al juego
         menuButton = new UIButton(116, 73, 74, 36,
-                "Buttons/menuButtonIdle.png","Buttons/menuButtonPressed.png");
+                "Buttons/menuButtonIdle.png","Buttons/menuButtonPressed.png"); //Boton para volver al menu
         quitButton = new UIButton(116, 33, 74, 36,
-                "Buttons/quitButtonIdle.png","Buttons/quitButtonPressed.png");
+                "Buttons/quitButtonIdle.png","Buttons/quitButtonPressed.png");  //Boton para salir del juego
 
         allObjectsButton = new UIButton(259, 162, 15, 15,
-                "Buttons/Inventory/allButtonIdle.png", "Buttons/Inventory/allButtonPressed.png");
+                "Buttons/Inventory/allButtonIdle.png", "Buttons/Inventory/allButtonPressed.png"); //Boton de todos los objetos del inventario
         attackerButton = new UIButton(273, 162, 15, 15,
-                "Buttons/Inventory/attackerButtonIdle.png", "Buttons/Inventory/attackerButtonPressed.png");
+                "Buttons/Inventory/attackerButtonIdle.png", "Buttons/Inventory/attackerButtonPressed.png"); //Boton de los atacantes del inventario
         defenderButton = new UIButton(288, 162, 15, 15,
-                "Buttons/Inventory/defenderButtonIdle.png", "Buttons/Inventory/defenderButtonPressed.png");
+                "Buttons/Inventory/defenderButtonIdle.png", "Buttons/Inventory/defenderButtonPressed.png"); //Boton de los defenders del inventario
         trapButton = new UIButton(302, 162, 15, 15,
-                "Buttons/Inventory/trapButtonIdle.png", "Buttons/Inventory/trapButtonPressed.png");
+                "Buttons/Inventory/trapButtonIdle.png", "Buttons/Inventory/trapButtonPressed.png"); //Boton de las trampas del inventario
 
-        githubButton = new UIButton(74, 168, 8, 7, "empty.png", "empty.png");
+        githubButton = new UIButton(74, 168, 8, 7, "empty.png", "empty.png");   //Boton del easterEgg
 
         if (Settings.s.isTutorialCheck()) tutoBut = new UIButton(2, 40, 252, 35,
-                "textfield.png", "textfield.png");
+                "textfield.png", "textfield.png"); //Activa el boton del tutorial para navegar
 
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 320, 180); //Ajusta la proporción de la cámara
@@ -242,7 +242,7 @@ public class GameScreen implements Screen {
                 this.currentCursor = CurrentCursor.DEFAULT;
                 game.setScreen(new StoryScreen(game, ++currentRound, this.points));
             }
-            else game.setScreen(new WinScreen(this.game, this.points));
+            else game.setScreen(new WinScreen(Settings.s.getUsername(),this.game,this.points));
         }
 
         if ((Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) && secTimer != 0) pauseFlag = !pauseFlag;
@@ -437,13 +437,22 @@ public class GameScreen implements Screen {
             }
         }
 
-        if (this.state == State.DELETING && mouseJustClicked()) {
+        if (this.state == State.DELETING && (mouseJustClicked() || Gdx.input.isKeyPressed(Input.Keys.SPACE))) {
             Vector3 mousePos = getRelativeMousePos();
             for (GameObject obj:objects) {
                 if (obj.overlapsPoint(mousePos.x, mousePos.y) && !obj.isInInventory(this) && obj.getId() != -1){
                     gold += obj.getPrice() * 0.8;
                     obj.setHp(0);
                     break;
+                }
+            }
+        }
+
+        if (currentRound == -2){
+            gold=0;
+            for (GameObject obj:objects) {
+                if (!obj.isInInventory(this) && obj.getId() != -1){
+                    gold += obj.getPrice();
                 }
             }
         }
@@ -609,7 +618,6 @@ public class GameScreen implements Screen {
             font.draw(game.entityBatch, msg1 , 8, 62);
             font.draw(game.entityBatch, msg2 , 8, 52);
         }
-
 
         //Botones
         game.entityBatch.draw(pauseButton.getCurrentTexture(), pauseButton.getX(), pauseButton.getY());
@@ -865,9 +873,6 @@ public class GameScreen implements Screen {
                 if (!enemies.isEmpty()) enemies.clear();
                 map = new Map("emptyMap.png");
                 gold = 0;
-                for (GameObject obj:objects) {
-                    obj.setPrice(0);
-                }
                 break;
             case -1: //INFINITO
                 try {

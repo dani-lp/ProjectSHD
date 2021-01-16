@@ -36,8 +36,8 @@ public class StoryScreen implements Screen {
     private final UIButton skipButton; //Para saltarse las frases y pasar al juego
     private int convCounter = 0; //Contador de línea
     private final SoundPlayer soundPlayer; //Reproductor de sonido
-    private final Pixmap pm3;
-    private final BitmapFont font;
+    private final Pixmap pm3; // Para cambiar el cursor
+    private final BitmapFont font; // Fuente que vamos a dibujar
 
     private Music taikosMusic = null;
 
@@ -50,8 +50,7 @@ public class StoryScreen implements Screen {
         this.alphaTimer = 0;
 
         loadEnemyAnimations();
-
-        characterIconTexture = new Texture(getIconRoute(this.currentRound));
+        characterIconTexture = new Texture(getIconRoute(this.currentRound));    //Asignacion a los valores de botones y texturas
         characterNameTexture = new Texture(getNameRoute(this.currentRound));
         frameTexture = new Texture("storyFrame.png");
         nextButton = new UIButton(296,29,18,18,"Buttons/nextButtonIdle.png","Buttons/nextButtonPressed.png");
@@ -73,9 +72,9 @@ public class StoryScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm3, 0, 0));
+        Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm3, 0, 0)); //Cambio de cursor
 
-        if (animationTimer == 0 && this.currentRound == 5) soundPlayer.playRoar();
+        if (animationTimer == 0 && this.currentRound == 5) soundPlayer.playRoar(); //Grito del boss
         animationTimer += Gdx.graphics.getDeltaTime();
 
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -84,17 +83,17 @@ public class StoryScreen implements Screen {
         if (alphaTimer < 1.0f) alphaTimer += 0.02f;
         game.entityBatch.setColor(1,1,1,alphaTimer);
 
-        updateButtonLogic();
+        updateButtonLogic(); //Cambiar el estado de los botones
 
         game.entityBatch.begin();
 
-        game.entityBatch.draw(frameTexture, 5, 5);
-        game.entityBatch.draw(nextButton.getCurrentTexture(), nextButton.getX(), nextButton.getY());
+        game.entityBatch.draw(frameTexture, 5, 5);                                                  //Dibujado de la textura del marco
+        game.entityBatch.draw(nextButton.getCurrentTexture(), nextButton.getX(), nextButton.getY());       //Dibujado de botones
         game.entityBatch.draw(skipButton.getCurrentTexture(), skipButton.getX(), skipButton.getY());
-        game.entityBatch.draw(characterIconTexture, 10,10);
-        game.entityBatch.draw(characterNameTexture, 14,48);
+        game.entityBatch.draw(characterIconTexture, 10,10);                                         //Dibujado del icono de personaje
+        game.entityBatch.draw(characterNameTexture, 14,48);                                         //Dibujado del nombre
 
-        font.draw(game.entityBatch, topTextLines[this.currentRound - 1][convCounter], 46, 30);
+        font.draw(game.entityBatch, topTextLines[this.currentRound - 1][convCounter], 46, 30);  //Dibujo de lineas
         font.draw(game.entityBatch, botTextLines[this.currentRound - 1][convCounter], 46, 20);
 
         int posCounter = 1;
@@ -107,9 +106,12 @@ public class StoryScreen implements Screen {
 
         game.entityBatch.end();
 
-        if (Settings.s.isMusicCheck()) this.taikosMusic.setVolume(Settings.s.getVolume());
+        if (Settings.s.isMusicCheck()) this.taikosMusic.setVolume(Settings.s.getVolume()); //Iniciar la musica
     }
 
+    /*
+    Funcionamiento de los botones de la ronda
+     */
     private void updateButtonLogic() {
         nextButton.updateTouched();
         skipButton.updateTouched();
@@ -124,7 +126,7 @@ public class StoryScreen implements Screen {
         }
         if (skipButton.isJustClicked()) {
             game.entityBatch.setColor(1,1,1, 1);
-            game.setScreen(new GameScreen(game, this.currentRound, this.currentPoints));
+            game.setScreen(new GameScreen(game, this.currentRound, this.currentPoints));    //Se salta los dialogos y empieza directo
             if (Settings.s.isMusicCheck()) taikosMusic.dispose();
         }
     }
@@ -235,7 +237,7 @@ public class StoryScreen implements Screen {
     }
 
     @Override
-    public void dispose() {
+    public void dispose() { //Limpiar la screen
         pm3.dispose();
         characterIconTexture.dispose();
         frameTexture.dispose();
