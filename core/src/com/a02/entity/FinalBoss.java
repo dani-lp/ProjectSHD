@@ -53,7 +53,7 @@ public class FinalBoss extends Enemy{
                     if (!this.overlappedObject(gs).isGrabbed()) this.state = State.ATTACKING;
                 }
                 //Cada 10 segundos hay una probabilidad cada frame de spawnear minions
-                if (this.spawnTimer > 420 && (int)(Math.random() * 100) == 2) { //TODO BALANCE
+                if (this.spawnTimer > 420 && (int)(Math.random() * 100) == 2) {
                     this.state = State.SPAWNING;
                     this.spawningTimer = 0;
                 }
@@ -79,7 +79,7 @@ public class FinalBoss extends Enemy{
                     this.setDeathTimer(gs.secTimer + 60);
                 }
                 //Cada 10 segundos hay una probabilidad cada frame de spawnear minions
-                if (this.spawnTimer > 420 && (int)(Math.random() * 100) == 2) { //TODO BALANCE
+                if (this.spawnTimer > 420 && (int)(Math.random() * 100) == 2) {
                     this.state = State.SPAWNING;
                     this.spawningTimer = 0;
                 }
@@ -93,7 +93,7 @@ public class FinalBoss extends Enemy{
                     this.spawnTimer = 0;
                 }
                 this.spawningTimer++;
-                if (this.getHp() < 7000)this.setHp(this.getHp() + 10); //TODO: ajustar
+                if (this.getHp() < 7000)this.setHp(this.getHp() + 10);
                 break;
 
             case DYING:
