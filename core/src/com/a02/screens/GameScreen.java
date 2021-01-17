@@ -11,7 +11,6 @@ import com.a02.game.MainGame;
 import com.a02.component.Map;
 import com.a02.game.Settings;
 import com.a02.pathfinding.Node;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -67,12 +66,10 @@ public class GameScreen implements Screen {
     public List<EnemyShoot> enemyShots = new ArrayList<>(); //Disparos de Enemigos
     public List<Obstacle> obstacles = new ArrayList<>(); //Obstaculos en los mapas
     public HashMap<Integer, Enemy> enems = new HashMap<>();
-    public List<Texture> locks = new ArrayList<>(); //Obstaculos en los mapas
-
     public Defender beacon; //Punto central que deben destruir los enemigos
 
-    private Texture pauseTexture = new Texture("pauseMenu.png"); //Textura del fondo del menú de pausa
-    private Texture lockTexture = new Texture("lock.png");
+    private final Texture pauseTexture = new Texture("pauseMenu.png"); //Textura del fondo del menú de pausa
+    private final Texture lockTexture = new Texture("lock.png");
 
     public Inventory drawingInv; //Inventario actual
     //Inventarios precomputados
@@ -784,7 +781,7 @@ public class GameScreen implements Screen {
         extractEnemies("data/rounds/round5.csv");
     }
 
-    private void loadRoundInfinite() throws DBException {
+    private void loadRoundInfinite() {
         try {
             DBManager.dbManager.connect("data/Databases/base.db");
             enems = DBManager.dbManager.getAllEnemies();
@@ -911,11 +908,7 @@ public class GameScreen implements Screen {
                 gold = 0;
                 break;
             case -1: //INFINITO
-                try {
-                    loadRoundInfinite();
-                } catch (DBException e) {
-                    e.printStackTrace();
-                }
+                loadRoundInfinite();
                 map = new Map("emptyMap.png");
                 gold = 60000;
                 break;

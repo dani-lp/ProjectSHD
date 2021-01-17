@@ -22,16 +22,6 @@ public class Node {
     }
 
     /**
-     * Devuelve la distancia de las coordenadas dadas a este nodo.
-     * @param x Coordenada x
-     * @param y Coordenada y
-     * @return Distancia al nodo
-     */
-    public double distanceToNode(float x, float y) {
-        return Math.sqrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2));
-    }
-
-    /**
      * Devuelve la distancia del enemigo dado a este nodo.
      * @param enemy Enemigo objetivo
      * @return Distancia al enemigo

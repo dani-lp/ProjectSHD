@@ -3,17 +3,11 @@ package com.a02.screens;
 import com.a02.entity.UIButton;
 import com.a02.game.MainGame;
 import com.a02.game.Utils;
-import com.a02.users.User;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 
-import java.io.IOException;
-import java.util.HashMap;
-
-import static com.a02.game.Utils.readSer;
-import static com.a02.game.Utils.writeSer;
 
 public class EndScreen implements Screen {
     MainGame game;

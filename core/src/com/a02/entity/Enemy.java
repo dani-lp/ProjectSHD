@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static com.a02.entity.Trap.randomRound3Positions;
 import static com.a02.game.Utils.*;
@@ -481,22 +480,6 @@ public class Enemy extends Entity {
         return new Vector2(x, y);
     }
 
-    /**
-     * Comprueba si existe colisión con algún objeto dentro de una Lista.
-     * @param objects List de objetos con los que es posible hallar colisión.
-     * @return True si hay colisión, false si no la hay.
-     */
-    protected boolean overlapsArray(List<GameObject> objects) {
-        for (GameObject object: objects) {
-            if (!(object instanceof Trap) && !object.isGrabbed()) {
-                if (this.getX() < object.getX() + object.getWidth() && this.getX() + this.getWidth() > object.getX() &&
-                        this.getY() < object.getY() + object.getHeight() && this.getY() + this.getHeight() > object.getY()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     /**
      * Halla qué objeto está colisionando con el enemigo, excluyendo los objetos del inventario.
@@ -533,15 +516,6 @@ public class Enemy extends Entity {
         return null;
     }
 
-    protected Obstacle overlappedObstacle(GameScreen gs) {
-        for (Obstacle obstacle: gs.obstacles) {
-            if (this.getX() < obstacle.getX() + obstacle.getWidth() && this.getX() + this.getWidth() > obstacle.getX() &&
-                    this.getY() < obstacle.getY() + obstacle.getHeight() && this.getY() + this.getHeight() > obstacle.getY() ) {
-                return obstacle;
-            }
-        }
-        return null;
-    }
 
     /**
      * Devuelve el GameObject más cercano en un área de alcance.

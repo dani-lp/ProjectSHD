@@ -29,16 +29,6 @@ public class Trap extends GameObject {
     private State state;
     private Enemy focusedEnemy;
 
-    public Trap(float x, float y, int width, int height, int id, String type, int price,
-                boolean unlocked, int hp, String effect, int attackDamage) {
-        super(x, y, width, height, id, type, price, unlocked, hp);
-        this.attackDamage = attackDamage;
-        this.effect = effect;
-
-        loadTextures();
-
-        this.state = State.IDLE;
-    }
 
     public void loadTextures(){
         switch (this.getId()) {   //Ajuste de textura y efecto

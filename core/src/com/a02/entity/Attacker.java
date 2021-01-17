@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import static com.a02.game.Utils.*;
 
@@ -20,7 +19,6 @@ public class Attacker extends GameObject {
     private float attackDamage;
     private String attackType;
     private double angle = 0;
-    private final static Logger logger = Logger.getLogger(GameObject.class.getName());
     private int timer = 60;
 
     public Attacker(float x, float y, int width, int height, int id, String type, int price,

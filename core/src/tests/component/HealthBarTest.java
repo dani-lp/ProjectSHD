@@ -35,7 +35,7 @@ public class HealthBarTest {
 
     @Test
     public void getCurrentWidth() {
-        assertEquals((int)(hBarTest.getCurrentHP()*14 / hBarTest.getMaxHP()),hBarTest.getCurrentWidth());
+        assertEquals((hBarTest.getCurrentHP()*14 / hBarTest.getMaxHP()),hBarTest.getCurrentWidth());
     }
 
 }

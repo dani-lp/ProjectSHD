@@ -16,7 +16,6 @@ public class Inventory {
     protected Vector2[] positions;
     private final String sprite;
     private final Texture texture;
-
     public int getX() {
         return 256;
     }

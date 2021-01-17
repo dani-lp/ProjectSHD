@@ -4,7 +4,6 @@ import com.a02.screens.GameScreen;
 import com.badlogic.gdx.graphics.Texture;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 public class Shoot extends Entity {
     private final double angle;
@@ -14,7 +13,6 @@ public class Shoot extends Entity {
     private final Texture texture;
     private int hp;
     private final String dir;
-    private final static Logger logger = Logger.getLogger(Shoot.class.getName());
 
     public Shoot(float x, float y, int height, int width, int speed, float attackdamage,
                  String sprite, int hp, String dir, int type, double angle) { //Disparo ballesta

@@ -3,7 +3,6 @@ package com.a02.entity;
 import com.a02.screens.GameScreen;
 import com.badlogic.gdx.graphics.Texture;
 
-import java.util.logging.Logger;
 
 public class EnemyShoot extends Entity{
     private final double angle;
@@ -11,7 +10,6 @@ public class EnemyShoot extends Entity{
     private final float attackdamage;
     private final Texture texture;
     private int hp;
-    private final static Logger logger = Logger.getLogger(Shoot.class.getName());
 
     public EnemyShoot(float x, float y, int height, int width, int speed, float attackdamage, String sprite, int hp,
                   double angle) {

@@ -14,8 +14,6 @@ public class UIButton extends Entity {
 
     private final Texture idleTexture; //Aspecto del botón
     private final Texture pressedTexture;
-    private final Texture emptyTexture = new Texture("empty.png");
-
     private boolean touched = false;
     private boolean pressed;
 

@@ -9,8 +9,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -243,21 +241,6 @@ public abstract class GameObject extends Entity {
                 gs.fullInv.contains(this);
     }
 
-    /**
-     * Devuelve las coordenadas de la casilla en la que está el objeto que realiza la llamada.
-     * @param map Objeto Map
-     * @return Vector2 con las coordenadas
-     */
-    protected Vector2 mapGridCollision(Map map) {
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 10; j++) {
-                if (this.overlaps( map.getCoordGrid()[i][j] , 18, 16)) {
-                    return new Vector2(map.getCoordGrid()[i][j].x, map.getCoordGrid()[i][j].y);
-                }
-            }
-        }
-        return null;
-    }
 
     /**
      * Devuelve el número de casilla con la que colisiona del mapa recibido como parámetro, null si no lo hace,
@@ -280,16 +263,6 @@ public abstract class GameObject extends Entity {
             }
         }
         return null;
-    }
-
-    protected boolean overlapsArrayEnemies(List<Enemy> enemies) { //Devuelve true si la Entity que llama colisiona con la Entity parámetro
-        for (Enemy enemy : enemies) {
-            if (this.getX() < enemy.getX() + enemy.getWidth() && this.getX() + this.getWidth() > enemy.getX() &&
-                    this.getY() < enemy.getY() + enemy.getHeight() && this.getY() + this.getHeight() > enemy.getY()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

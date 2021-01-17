@@ -13,14 +13,7 @@ public class User implements Serializable {
     private boolean admin;
     private int scoreRecord;
 
-    public User(String username, String password, String name, int age, String mail) {
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.age = age;
-        this.mail = mail;
-        this.admin = false;
-    }
+
 
     public User() {
 
