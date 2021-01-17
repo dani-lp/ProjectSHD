@@ -254,7 +254,7 @@ public class GameScreen implements Screen {
         }
 
         if ((Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE) || pauseButton.isJustClicked()) && secTimer != 0) pauseFlag = !pauseFlag;
-        else if (Gdx.input.isKeyJustPressed(Input.Keys.F) && !pauseFlag) enemies.clear();
+        else if (Gdx.input.isKeyJustPressed(Input.Keys.F) && !pauseFlag && currentRound != -1) enemies.clear();
 
         updateButtonLogic();
         updateCursor();

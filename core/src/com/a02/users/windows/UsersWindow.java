@@ -19,7 +19,7 @@ import static com.a02.game.Utils.*;
 
 
 public class UsersWindow extends JFrame {
-    boolean isEditable = false;
+    boolean isEditable = true;
     boolean isDark;
 
     JTable table;
@@ -64,6 +64,7 @@ public class UsersWindow extends JFrame {
         leftPanel1.setBorder(BorderFactory.createEmptyBorder(5,0,0,0));
 
         final JCheckBox editJCB = new JCheckBox();
+        editJCB.setSelected(true);
         JLabel editLabel = new JLabel("Make editable");
         JButton saveButton = new JButton("Save changes");
         JButton deleteButton = new JButton("Delete user");

@@ -106,7 +106,7 @@ public class StoryScreen implements Screen {
 
         game.entityBatch.end();
 
-        if (Settings.s.isMusicCheck()) this.taikosMusic.setVolume(Settings.s.getVolume()); //Iniciar la musica
+        if (Settings.s.isMusicCheck()) this.taikosMusic.setVolume(Settings.s.getVolume()); //Actualizar volumen de música
     }
 
     /*
